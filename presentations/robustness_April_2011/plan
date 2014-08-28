@@ -1,0 +1,63 @@
+
+
+Robustness definition - WTF
+  *determinism
+  *synchronization
+
+Robustness - division/what we deal with
+  * Determinism
+  * Clock resilience
+  * Data resilience
+  * Diangostic and Monitoring- prevention
+
+Requirements (pain in the ass)
+  * we don't know (Control Data size, length Data Master to Data Slave)
+  * need to change some - maybe some more realistic
+  * we need this for precise analysis
+  * discussion: we need more specific req, change of 1 CM lost per year, what
+    is reasonable?
+
+Determinism 
+ * 100us very tight 
+ * we need bypass, 
+ * Discuss: dropping of HP on collision, sending of HP by other then DM, more
+   DMs
+ 
+Clock Resilience
+ * in theory looks beutiful.... but tests needed
+ * topology constraints
+
+Data Path Resilience - 
+ * topology redundancy (Rapids Spanning Tree)
+ * data redundancy     (FEC)
+ * Flow and Congestion control
+
+Data Path Resilience - Topology Redundancy
+ * we need to implement very fast switching  (to loose max single frame)
+ * we want to use RSTP with hardware support and topology constraints
+ * Layers limited
+ * to achieve 1 lost CM per year, initial estimations say we need at least
+   redundancy, with number of ouputs from Data Master
+ * all this efforts bring limited results if we have single connection with the
+   node !!!
+
+Data Path Resilience - data redundancy
+ * for the time being RS + hamming
+ * discuss: we need to know size in advance, how?
+ * discuss: burst of CM info vs no-standard-size ethernet frame for CM > 1500
+   Bytes
+
+Data Path Resilience - Flow and Congestion Control 
+ * blocking of HP traffic from other ports
+
+Monitoring
+ * we want to detect any  lost frame of CM
+ * info about lost CM
+ * synch quality -> we can only measure variation if it comes to quality
+
+DISCUSSION (OHMG):
+- Names: High Priority vs. Standard Priority, Granuality Window, Clock Master
+         Control Message, Control Data/Clock Data/Standard Data, 
+- requrements: 1 CM lost per year
+- hp collisions and who can send them
+- 

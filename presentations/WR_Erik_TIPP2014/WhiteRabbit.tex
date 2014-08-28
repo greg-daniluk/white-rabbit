@@ -1,0 +1,1600 @@
+\documentclass[compress,red]{beamer}
+\mode<presentation>
+\setbeamertemplate{navigation symbols}{}
+
+\usepackage{pgfpages}
+% \setbeameroption{show notes}
+% \setbeameroption{show notes on second screen=right}
+
+\usetheme{Warsaw}
+
+
+%\hypersetup{pdfpagemode=FullScreen} % makes your presentation go automatically to full screen
+
+% define your own colors:
+\definecolor{Red}{rgb}{1,0,0}
+\definecolor{Blue}{rgb}{0,0,1}
+\definecolor{Green}{rgb}{0,1,0}
+\definecolor{magenta}{rgb}{1,0,.6}
+\definecolor{lightblue}{rgb}{0,.5,1}
+\definecolor{lightpurple}{rgb}{.6,.4,1}
+\definecolor{gold}{rgb}{.6,.5,0}
+\definecolor{orange}{rgb}{1,0.4,0}
+\definecolor{hotpink}{rgb}{1,0,0.5}
+\definecolor{newcolor2}{rgb}{.5,.3,.5}
+\definecolor{newcolor}{rgb}{0,.3,1}
+\definecolor{newcolor3}{rgb}{1,0,.35}
+\definecolor{darkgreen1}{rgb}{0, .35, 0}
+\definecolor{darkgreen}{rgb}{0, .6, 0}
+\definecolor{darkred}{rgb}{.75,0,0}
+
+\xdefinecolor{olive}{cmyk}{0.64,0,0.95,0.4}
+\xdefinecolor{purpleish}{cmyk}{0.75,0.75,0,0}
+
+
+\useoutertheme[subsection=false]{smoothbars}
+
+
+% include packages
+\usepackage{etex} % erik as got No room for a new \dimen . \ch@ck ...\else \errmessage {No room for a new #3
+
+\usepackage{subfigure}
+\usepackage{multicol}
+\usepackage{amsmath}
+\usepackage{epsfig}
+
+
+\usepackage{graphicx}
+\usepackage[all,knot]{xy}
+
+\xyoption{arc}
+\usepackage{url}
+\usepackage{multimedia}
+\usepackage{hyperref}
+\usepackage{helvet}
+\usepackage[polish,english]{babel} 
+% \usepackage{epstopdf} % Erik to try ps reading, but does not work
+% \usepackage{epsf} % erik
+% \usepackage{epspdfconversion} % erik
+
+\usepackage[utf8]{inputenc}
+\usepackage{multirow}
+
+\newcommand{\backupbegin}{
+   \newcounter{framenumberappendix}
+   \setcounter{framenumberappendix}{\value{framenumber}}
+}
+\newcommand{\backupend}{
+   \addtocounter{framenumberappendix}{-\value{framenumber}}
+   \addtocounter{framenumber}{\value{framenumberappendix}} 
+}
+
+%%%%%%%%%%%%5
+%\usepackage{geometry}
+%\geometry{verbose,letterpaper}
+%\usepackage{movie15}
+%\usepackage{hyperref}
+%%%%%%%
+
+% greetings, introduce yourself
+
+
+%  \includegraphics[height=5cm]{fig/WRlogo.ps}
+
+
+\title[White Rabbit for Time Transfer \hspace{2em}\insertframenumber/\inserttotalframenumber]
+{White Rabbit for Time Transfer}
+
+\institute{
+   \begin{center}
+    Hardware and Timing Section  \\
+    CERN\\
+   \end{center}
+}
+\author{
+Erik van der Bij
+%Erik van der Bij \& Maciej Lipi\'{n}ski 
+% on behalf of Maciej Lipi\'{n}ski 
+}
+\date{5 June 2014\\Technology and Instrumentation in Particle Physics \\TIPP 2014\\Amsterdam}
+
+
+%\pgfdeclareimage[height=0.6cm]{wr-logo}{../../figures/logo/WRlogo.ps}
+
+\pgfdeclareimage[height=0.6cm]{wr-logo}{../../figures/logo/WRlogo.pdf}
+\logo{\pgfuseimage{wr-logo}}
+\AtBeginSection[]
+
+\begin{document}
+
+\frame{\titlepage}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}<beamer>{Outline}
+    \tableofcontents %[currentsection]
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+\subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{What is White Rabbit?}
+
+\begin{columns}[c]
+	\column{0.8\textwidth}
+	  \begin{itemize}
+		\item Main features of a White Rabbit network:
+		\begin{itemize}
+		  \item transparent,  {\bf high-accuracy} synchronization
+		  \item low-latency,  {\bf deterministic} data delivery
+		  \item designed for  {\bf high reliability}
+		\end{itemize}
+		\item Accelerator's control and timing
+		\item International collaboration
+		\item Based on well-known technologies
+		\item Open Hardware and Open Software
+
+	  \end{itemize}
+	\column{0.3\textwidth}
+		\begin{center}
+		\hspace{-0.5cm}
+%		\includegraphics[width=1.1\textwidth]{../../figures/misc/rabbit.eps}  erik
+		\includegraphics[width=1.1\textwidth]{../../figures/misc/rabbit.pdf}
+
+		\end{center}
+	\end{columns}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{White Rabbit~~~~}
+\subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{White Rabbit -- enhanced Ethernet}
+
+\begin{columns}[c]
+  \column{.47\textwidth}
+ 
+
+  \begin{itemize}
+    \item Few thousands nodes
+    \item Fiber medium
+    \item Up to 10 km fiber links
+    \item Bandwidth: 1 Gbps
+    \item WR Switch: 18 ports
+    \item Non-WR Devices
+    \item Ethernet features (VLAN) \& protocols (SNMP)
+  \end{itemize}
+
+  \column{.6\textwidth}
+    \begin{center}
+%    \includegraphics[width=1.0\textwidth]{../../figures/network/WR_network-ethernet.eps}
+%     \includegraphics[width=1.0\textwidth]{../../figures/network/WR_network-ethernet.pdf}
+    \includegraphics[width=1.0\textwidth]{../../figures/network/wr_network-ethernet.jpg}
+    
+
+    \end{center}
+\end{columns}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{White Rabbit~~~~}
+\subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{White Rabbit -- enhanced Ethernet}
+
+
+\begin{columns}[c]
+  \column{.47\textwidth}
+ 
+  Two separate services (enhancements to Ethernet) provided by WR: 
+  \begin{itemize}
+    \item \color{blue!90}{Synchronization: \\
+accuracy better than 1 ns \\
+precision  (tens of ps sdev skew max)}
+    \item \color{red}{Deterministic, reliable and low-latency Control Data delivery}
+  \end{itemize}
+
+  \column{.6\textwidth}
+    \begin{center}
+%    \includegraphics[width=1.0\textwidth]{../../figures/network/wr_network-enhanced.eps}
+%     \includegraphics[width=1.0\textwidth]{../../figures/network/wr_network-enhanced.pdf}
+    \includegraphics[width=1.0\textwidth]{../../figures/network/wr_network-enhanced_pro.jpg}
+    \end{center}
+\end{columns}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \section{Summary}
+% \subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{White Rabbit applications}
+
+\begin{columns}[c]
+  \column{0.65\textwidth}
+
+    \begin{itemize}
+      \item<1-> Existing applications:
+      \begin{itemize}
+	\item<1-> \textbf<1>{CERN Neutrinos to Gran Sasso}
+      \end{itemize} 
+      \item<2-> Future applications:
+      \begin{itemize}
+	\item<2-> \textbf<2>{CERN and GSI  }
+	\item<3-> \textbf<3>{The Large High Altitude Air Shower Observatory (China)}
+      \end{itemize}         	
+      \item<4-> Potential applications:
+      \begin{itemize}
+	\item<4-> \textbf<4>{Cherenkov Telescope Array}
+	\item<5-> \textbf<5>{European deep-sea research infrastructure (KM3NET)}
+	\item<5->  Long distance Time Transfer
+      \end{itemize}         	
+    \end{itemize}    
+
+  \column{0.55\textwidth}         
+
+
+    \begin{center}
+      \includegraphics<1>[width=0.80\textwidth]{../../figures/applications/OperaTiming2.pdf} \pause
+      \includegraphics<2>[width=0.6\textwidth]{../../figures/applications/gsiANDcern.pdf}   \pause
+      \includegraphics<3>[width=0.85\textwidth]{../../figures/applications/lhaaso.pdf}       \pause
+      \includegraphics<4>[width=0.85\textwidth]{../../figures/applications/cta.pdf}          \pause
+      \includegraphics<5>[width=0.85\textwidth]{../../figures/applications/KM3NeT.pdf}       
+    \end{center}
+
+  \column{0.6\textwidth}         
+\end{columns}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Motivation}
+\subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Origin of White Rabbit Project}
+
+\begin{columns}[c]
+  \column{0.55\textwidth}
+
+    \begin{itemize}
+	\item Renovation of CERN's General Machine Timing (GMT)
+\small
+	\item GMT is great but...:
+	      \begin{itemize}
+	         \item \textbf{Manual calibration} \\ (with CS clock) 
+		  \item \textbf{RS-422}, 500kbps
+		  \item \textbf{Unidirectional} communication
+		  \item Separate network required
+		  \item \textbf{Custom design, complicated maintenance}
+	      \end{itemize}
+	\item White Rabbit is meant to solve these problems
+    \end{itemize}
+
+  \column{0.6\textwidth}
+
+      \begin{center}
+%      \includegraphics<1>[width=1.0\textwidth]{../../figures/misc/GMT-1.eps} \pause
+%      \includegraphics<2>[width=1.0\textwidth]{../../figures/misc/GMT-2.eps} 
+
+      \includegraphics<1>[width=1.0\textwidth]{../../figures/misc/GMT-1.pdf} \pause
+      \includegraphics<2>[width=1.0\textwidth]{../../figures/misc/GMT-2.pdf} 
+      \end{center}
+
+\end{columns}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Time Distribution}
+\subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Time distribution in White Rabbit}
+
+
+\begin{columns}[c]
+  \column{.47\textwidth}
+ 
+  \begin{itemize}
+    \item \textbf{\color{blue!90}{High accuracy/precision synchronization}}
+    \item \color{gray}{Deterministic, reliable and low-latency Control Data delivery}
+  \end{itemize}
+
+  \column{.6\textwidth}
+    \begin{center}
+%    \includegraphics[height=1.0\textwidth]{../../figures/network/wr_network-new.ps}
+%    \includegraphics[height=1.0\textwidth]{../../figures/network/wr_network-new.pdf}
+   \includegraphics[height=1.0\textwidth]{../../figures/network/wr_network-enhanced_pro.jpg}
+    \end{center}
+\end{columns}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \section{}
+% \subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Time Distribution in White Rabbit Network}
+
+  \begin{itemize}
+    \item Synchronization with {\bf sub-ns} accuracy and {\bf tens of  ps} precision
+    \item Combination of
+	\begin{itemize}
+	  \item Precision Time Protocol ({\bf PTP}) synchronization
+	  \item Synchronous Ethernet ({\bf SyncE}) syntonization
+	  \item Digital Dual-Mixer Time Difference ({\bf DDMTD}) phase detection
+	\end{itemize}
+  \end{itemize}
+%     \begin{center}
+%       \includegraphics[width=1.0\textwidth]{fig/phase_tracking.eps}
+%     \end{center}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \section{}
+% \subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Precision Time Protocol (IEEE1588)}
+
+\begin{columns}[c]
+  \column{1.5in}
+      \begin{center}
+%	\includegraphics[height=5cm]{../../figures/protocol/ptp_exchange.eps}
+	\includegraphics[height=5cm]{../../figures/protocol/ptp_exchange.pdf}
+      \end{center}
+  \column{2.5in}
+      \begin{itemize}
+	  \item Packet-based synchronization protocol
+	  \item Synchronizes local clock with the master clock
+	  \item Link delay evaluated by measuring and exchanging packets tx/rx timestamps
+      \end{itemize}
+  \end{columns}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{WR Precision Time Protocol Extension}
+
+  \begin{center}
+%  \includegraphics[height=4cm]{../../figures/protocol/wrLinkModel.eps}
+  \includegraphics[height=4cm]{../../figures/protocol/wrLinkModel.pdf}
+
+  \end{center}
+
+  \begin{columns}[c]
+  \column{1.5in}
+
+    \begin{center}
+      \textbf{Solution for Ethernet over a Single-mode Optical Fiber}
+    \end{center}    
+
+  \column{2.7in}
+
+    \begin{equation}
+      \nonumber asymmetry = \Delta_{tx_m} + \Delta_{rx_s} - \frac{\Delta - \alpha \mu + \alpha \Delta}{2 + \alpha}
+    \end{equation}
+
+  \end{columns}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \section{}
+% \subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Synchronous Ethernet (SyncE)}
+
+ \begin{block}{Common clock for the entire network}
+%    \textbf{Common clock for the entire network}
+    \begin{itemize}
+	 \item All network devices use the same physical layer clock
+	 \item Clock is encoded in the Ethernet carrier and recovered by the receiver chip (PHY).
+    \end{itemize}
+\end{block}
+
+\vspace{-0.2cm}
+
+\begin{center}
+%\includegraphics[height=5cm]{../../figures/misc/synce.eps}
+\includegraphics[height=5cm]{../../figures/misc/synce.pdf}
+\end{center}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \section{}
+% \subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{DDMTD: Phase tracking}
+
+\small
+    \begin{itemize}
+      \item PTP limitation: timestamping granularity
+      \item Solution: take advantage of SyncE and measure phase shift
+    \end{itemize}
+
+  \begin{center}
+%  \includegraphics[height=2.7cm]{../../figures/misc/phase_tracking.eps}
+%   \includegraphics[height=2.7cm]{../../figures/misc/phase_tracking.pdf}
+  \includegraphics[height=3.7cm]{../../figures/misc/phase_tracking_v2.jpg}
+  \end{center}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \section{}
+% \subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{WR PTP}
+
+  \begin{itemize}
+    \item Ongoing standardization effort to include WR into PTPv3
+    \item Extension to PTP (IEEE1588) -- defined as PTP Profile
+%    \item Addresses PTP's limitations \\(granularity, asymmetry, syntonization)
+    \item Compatible with "standard" PTP gear
+%    \item Lab\&field-tested for sub-ns synchronization
+  \end{itemize}
+  \pause
+  \begin{block}{According to ISPCS Plug Fest results ...}
+    \begin{center}
+      \textbf{... White Rabbit is the most accurate PTP implementation in the world!}
+  \end{center}
+  \end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Status}
+%\subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{WR time transfer performance: lab tests}
+
+    \begin{center}
+%    \includegraphics<1>[height=7.0cm]{../../figures/measurements/measSystem.ps}   \pause
+%    \includegraphics<2>[height=6.0cm]{../../figures/measurements/measResults-new.eps}
+%    \includegraphics<1>[height=7.0cm]{../../figures/measurements/measSystem.pdf}   \pause
+    \includegraphics<1>[height=7.0cm]{../../figures/measurements/meas_setup.jpg}   \pause
+    \includegraphics<2>[height=6.0cm]{../../figures/measurements/measResults-new.pdf}
+    \end{center}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Status}
+%\subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{frame}{WR time transfer performance: deployment for CNGS}
+%
+%  \begin{columns}[c]
+%	\column{0.6\textwidth}
+%	  \begin{center}
+%
+%		\hspace{-1cm}
+%%		\includegraphics[width=1.1\textwidth]{../../figures/measurements/histogram-small.eps}
+%		\includegraphics[width=1.1\textwidth]{../../figures/measurements/histogram-small.pdf}
+%		\begin{itemize}
+%		       \item Duration: 31 d, 7 h, 40 s ($2.7*10^6$ samples)
+%		       \item WR Nodes with TDC used
+%		       \item Measurement includes inaccuracy of TDC
+%		       \item Timestamping reference PPS
+%		       	\item Accuracy: 0.517 ns
+%			\item Precision: 0.119 ns (std. dev)
+%		\end{itemize}			
+%
+%
+%	  \end{center}
+%	\column{0.6\textwidth}
+%		\begin{center}
+%%		\includegraphics[width=0.93\textwidth]{../../figures/measurements/performance_testing_setup-detail.v2.eps}
+%		\includegraphics[width=0.93\textwidth]{../../figures/measurements/performance_testing_setup-detail_v2.pdf}
+%		\end{center}
+%  \end{columns}
+%\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Status}
+%\subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Data outdated as was an error in the TDC
+
+%\begin{frame}{WR time transfer performance: deployment for CNGS}
+%
+%  \begin{columns}[c]
+%	\column{0.6\textwidth}
+%	  \begin{center}
+%
+%	    Out of $2.7*10^6$ samples\\
+%			\textbf{\textcolor{blue}{~9 values of $x_{diff}$ [0.0003$\%$]}} \\
+%                       exceeded MTIE=1ns
+%		
+%
+%
+%	  \end{center}
+%	\column{0.6\textwidth}
+%		\begin{center}
+%		\includegraphics[width=0.9\textwidth]{../../figures/measurements/MTIE2.pdf}
+%		\end{center}
+%  \end{columns}
+%\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Status}
+%\subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{WR time transfer performance: temperature tests}
+
+  \begin{columns}[c]
+	\column{0.5\textwidth}
+		\hspace{-1.0cm}
+		\begin{center}
+		\includegraphics[width=1.1\textwidth]{../../figures/measurements/tempTests-trends_v3.pdf}
+		\end{center}
+
+		\begin{center}
+		  \begin{table}[!t] \footnotesize 
+		  \begin{tabular}{ c  c }     
+		  \multicolumn{2}{c}{ }       \\         
+		   \multicolumn{2}{c}{ }       \\    
+		     &    \\ 
+		    &     \\ 
+		  \end{tabular}
+		  \end{table}   		
+		\end{center}
+
+	\column{0.5\textwidth}
+		\hspace{-0.8cm}
+		\begin{center}
+		\includegraphics[width=1.13\textwidth]{../../figures/measurements/tempTests-2-combo.pdf}
+		\end{center}
+
+
+  \end{columns} 
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Data Distribution}
+\subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Data distribution in White Rabbit}
+
+
+\begin{columns}[c]
+  \column{.47\textwidth}
+ 
+  \begin{itemize}
+    \item \color{gray}{High accuracy/precision synchronization}
+    \item \textbf{\color{red}{Deterministic, reliable and low-latency Control Data delivery}}
+  \end{itemize}
+
+  \column{.6\textwidth}
+    \begin{center}
+    \includegraphics[height=1.0\textwidth]{../../figures/network/wr_network-enhanced_pro.jpg}
+    \end{center}
+\end{columns}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Status}
+%\subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Control Data}
+
+\begin{columns}[c]
+  \column{.62\textwidth}
+    \begin{itemize}
+      \item Two types of data:
+	  \begin{itemize}
+	    \item \textcolor{red}{\bf Control Data} (High Priority, HP)
+	    \item Standard Data (Best Effort)
+	  \end{itemize}
+	  \item Characteristics of \textcolor{red}{\bf Control Data}
+	  \begin{itemize}
+	    \item Sent in Control Messages
+	    \item Sent by Data Master(s)
+	    \item Broadcast (one-to-alot)
+	    \item Deterministic and low latency
+	    \item Reliable delivery
+	  \end{itemize}
+    \end{itemize}
+  \column{.6\textwidth}
+   % \vspace{-1cm}
+   % \hspace{-6cm}
+    \begin{center}
+    \includegraphics[height=0.8\textheight]{../../figures/robustness/communication_channel-pro}
+    \end{center}
+
+\end{columns}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{}
+%\subsection{Data Redundancy}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Data Redundancy}
+
+  \begin{itemize}
+    \item Re-transmission of Control Data not possible
+	\item {\bf Forward Error Correction}  -- additional transparent layer:
+	\begin{itemize}
+		\item One Control Message encoded into 4 Ethernet frames,
+		\item Recovery of Control Message from any 2 frames
+	\end{itemize}
+	\item FEC can prevent data loss due to:
+	\begin{itemize}	
+		\item {\bf bit error} 
+		\item {\bf network reconfiguration}
+	\end{itemize}	
+  \end{itemize}
+  
+  	\begin{center}
+      \includegraphics[width=.7\textwidth]{../../figures/robustness/FEC.pdf}
+    \end{center}
+  
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{}
+%\subsection{Topology Redundancy}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Maximum Latency and Redundancy}
+
+\begin{columns}[c]
+  \column{0.65\textwidth}
+
+      \begin{itemize}
+	      \item Upper bound latency by design: \\ $<10us$ for high-priority data
+	      \item On fail of link, reconfigures network automatically while loosing maximum 2 frames
+      \end{itemize}
+% 
+  \column{0.6\textwidth}
+    \begin{center}
+    \includegraphics[width=0.8\textwidth]{../../figures/network/wr_network-enhanced_pro.jpg}
+    \end{center}
+\end{columns}
+\end{frame}
+
+%
+%\begin{frame}{Topology Redundancy}
+%
+%\begin{columns}[c]
+%  \column{0.65\textwidth}
+%
+%      \begin{itemize}
+%	    \item Standard Ethernet solution: Rapid/Multi Spanning Tree Protocol
+%	    \item Reconfiguration time: \textbf{$\approx$ 1s} \\ (best: milliseconds)
+%	    \item \textbf{1s = $\approx$ 82 000} Ethernet Frames lost
+%	    \item Solution:
+%	    \begin{itemize}
+%		  \item take advantage of FEC
+%		  \item speed up (R/M)STP$->$\textbf{eRSTP} or
+%		  \item use multiple paths$->$\textbf{eLACP}
+%	    \end{itemize}
+%
+%      \end{itemize}
+%% 
+%  \column{0.6\textwidth}
+%    \begin{center}
+%    \includegraphics[width=0.65\textwidth]{../../figures/network/wr_network-enhanced_pro.jpg}
+%    \end{center}
+%\end{columns}
+%\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{}
+%\subsection{Topology Redundancy}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{frame}{Determinism and low latency}
+%
+%\begin{columns}[c]
+%  \column{0.6\textwidth}
+%
+%      \begin{itemize}
+%	    \item \textcolor{red}{Control Data}: \\$7^{th}$ Class of Service (priority)
+%	    \item WR Switch:
+%	    \begin{itemize}
+%	      \item Quality of Service: resource reservation
+%	      \item Upper bound latency \\ by design: $<10us$
+%	      \item Cut-through
+%	    \end{itemize}
+%	    \item Careful diagnostics
+%      \end{itemize}
+%% 
+%  \column{0.6\textwidth}
+%    \begin{center}
+%    \includegraphics<1>[width=0.65\textwidth]{../../figures/network/wr_network-enhanced_pro.jpg}% \pause
+%%    \includegraphics<2>[width=0.9\textwidth]{../../figures/robustness/event3.pdf} 
+%    \end{center}
+%
+%\end{columns}
+%
+%\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{System Components}
+\subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{White Rabbit Network Components}
+
+
+    \begin{center}
+    \includegraphics<1>[width=1.0\textwidth]{../../figures/network/WRnetwork-eva.pdf}  % \pause
+%    \includegraphics<2>[width=1.0\textwidth]{../../figures/network/WRNcomponents-2.pdf}
+    \end{center}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{}
+%\subsection{Topology Redundancy}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{White Rabbit Switch (V3)}
+
+    \begin{center}
+%     \includegraphics[width=6.0cm]{../../figures/switch/wrSwitchV3.pdf}
+     \includegraphics[width=6.0cm]{../../figures/switch/wrSwitchV3.jpg}
+    \end{center}
+
+	\begin{itemize}
+	\item Central element of WR network
+	\item Original design optimized for timing, designed from scratch
+	\item 18 1000BASE-BX10 ports
+	\item Capable of driving 10 km of SM fiber
+	\item Open design (H/W and S/W)
+%	\item 200 ps synchronization accuracy
+	\end{itemize}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{}
+%\subsection{Topology Redundancy}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{WR Node: WR PTP Core}
+
+    \begin{center}
+%    \includegraphics<1>[width=1.0\textwidth]{../../figures/node/wrpc_box.pdf} \pause%
+    \includegraphics<1>[width=1.0\textwidth]{../../figures/node/wrpc_overview.png} \pause
+    \includegraphics<2>[width=1.0\textwidth]{../../figures/node/wrpc_inside.png}
+    \end{center}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{}
+%\subsection{Topology Redundancy}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{WR Node: SPEC board}
+
+    \begin{center}
+%    \includegraphics[width=7cm]{../../figures/node/shw_kit-1.pdf}
+    \includegraphics[width=7cm]{../../figures/node/spec.jpg}
+    \end{center}
+
+  \begin{columns}[c]
+    \column{.01\textwidth}
+    \column{.98\textwidth}
+
+	\begin{block}{FMC-based Hardware Kit:}
+%	\textbf{Co-HT FMC-based Hardware Kit:}
+	  \begin{itemize}
+	  \item Carrier boards in PCI-Express, VME, PXIe
+	  \item All carriers are equipped with a White Rabbit port
+	  \item FMCs (FPGA Mezzanine Cards) with ADCs, DACs, TDCs, fine delays, digital I/O
+	  \end{itemize}
+	\end{block}
+
+    \column{.01\textwidth}
+  \end{columns}
+
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{}
+%\subsection{Topology Redundancy}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{WR Node: SPEC board - PCI Express}
+
+    \begin{center}
+    \includegraphics[width=1.0\textwidth]{../../figures/node/specInterior.pdf}
+    \end{center}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{}
+%\subsection{Topology Redundancy}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{WR Node: SVEC board - VME}
+    \begin{center}
+      \includegraphics[width=0.8\textwidth]{../../figures/node/svectop_s.png}
+%    \includegraphics[width=1.0\textwidth]{../../figures/node/specInterior.pdf}
+    \end{center}
+\end{frame}
+
+
+\begin{frame}{WR Node: SPEXI board - PXI Express}
+    \begin{center}
+      \includegraphics[width=0.7\textwidth]{../../figures/node/spexi_v0.png} 
+    \end{center}
+\end{frame}
+
+
+%\begin{frame}{WR Node: ongoing efforts}
+%
+%
+%  \begin{columns}[c]
+%    \column{.7\textwidth}
+%\small
+%      \begin{itemize}
+%        \item \textbf<1>{Compact Universal Timing Endpoint Based on White Rabbit}
+%        \item \textbf<2>{PXI express FMC Carrier Board (SPEXI)}
+%      \end{itemize}
+%
+%    \column{.5\textwidth}
+%
+%    \begin{center}
+%      \includegraphics<1>[width=0.7\textwidth]{../../figures/node/stm.pdf}   \pause
+%      \includegraphics<2>[width=0.8\textwidth]{../../figures/node/spexi_v0.png} 
+%    \end{center}
+%
+%    \column{.01\textwidth}
+%  \end{columns}
+%
+%
+%\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Applications}
+\subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{White Rabbit applications}
+
+  \begin{itemize}
+    \item Control and timing system
+    \item Field bus recommended at CERN
+    \item Time Transfer
+    \item RF distribution
+    \item Distributed oscilloscope
+    \item ...
+  \end{itemize}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{WR-based Control System}
+%\subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{WR at CERN}
+
+    \begin{center}
+%       \includegraphics[width=.8\textwidth]{../../figures/applications/CERN/NT-overview.pdf}
+      \includegraphics[width=.7\textwidth]{../../figures/applications/CERN/NT-overview.jpg}
+    \end{center}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Applications}
+%\subsection{Topology Redundancy}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Ethernet Clock distribution a.k.a. Distributed DDS}
+  \begin{center}
+    \includegraphics[width=\columnwidth]{../../figures/applications/remote_dds.pdf}
+  \end{center}
+  \begin{block}{Distributed Direct Digital Synthesis}
+    \begin{itemize}
+    \item Replaces dozens of cables with a single fiber.
+    \item Works over big distances without degrading signal quality.
+    \item Can provide various clocks (TTC, RF, bunch clock) with a single, standardized link.
+    \item May send many atomic clocks over the same fibre? In both directions?
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+
+
+%\begin{frame}{Distributed DDS - prototype - CERN}
+%  \begin{center}
+%    \includegraphics<1>[width=0.95\textwidth]{../../figures/applications/rf_demo6.pdf} \pause
+%    \includegraphics<2>[width=0.95\textwidth]{../../figures/applications/rf_demo5.pdf} \pause
+%    \includegraphics<3>[width=0.95\textwidth]{../../figures/applications/rf_demo8.pdf}
+%    \end{center}
+%%    \begin{block}{}
+%%      \begin{itemize}
+%%      \item Common clock in the entire network: no skew between ADCs.
+%%      \item Ability to sample with different clocks via Distributed DDS.
+%%      \item External triggers can be time tagged with a TDC and used to reconstruct the original time base in the operator's PC.
+%%      \end{itemize}
+%%    \end{block}
+%\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Applications}
+%\subsection{Topology Redundancy}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{frame}{Distributed RF over White Rabbit - UCL}
+%  \begin{columns}[c]
+%    \column{.7\textwidth}
+%      \begin{itemize}
+%	\item Frequency input: 0 - 200 MHz
+%	\item Total RMS jitter [10Hz ; 5MHz]: 8 ps
+%	\item Input signal bandwidth: 0 - 2 MHz
+%	\begin{itemize}
+%	  \item SSB Phase Noise for 10 MHz transfer
+%	  \begin{itemize}
+%		\item    -65 dBc/Hz @ 1 Hz
+%		\item  -90 dBc/Hz @ 10 Hz
+%		\item -100 dBc/Hz @ 100 Hz
+%		\item -120 dBc/Hz @ 1 kHz
+%		\item  -140 dBc/Hz @ 10 kHz
+%		\item -140 dBc/Hz @ 100 kHz
+%	  \end{itemize}
+%	\end{itemize}
+%%	\item  See poster at IFCS - EFTF: \\
+%%		\emph{An FPGA implementation of the Distributed RF over White Rabbit} \\
+%%		Pedro Moreira, University College London 
+%      \end{itemize}
+%    \column{.4\textwidth}
+%      \begin{center}
+%	\includegraphics[width=1.0\textwidth]{../../figures/applications/rx_10MHz_CsClock_pedro.png}
+%      \end{center}
+%    \column{.01\textwidth}
+%  \end{columns}
+%\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Applications}
+%\subsection{Topology Redundancy}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Distributed oscilloscope}
+  \begin{center}
+    \includegraphics[width=0.9\textwidth]{../../figures/applications/distr_oscill.pdf}
+    \end{center}
+    \begin{block}{}
+      \begin{itemize}
+      \item Common clock in the entire network: no skew between ADCs.
+      \item Ability to sample with different clocks via Distributed DDS.
+      \item External triggers can be time tagged with a TDC and used to reconstruct the original time base in the operator's PC.
+      \end{itemize}
+    \end{block}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Applications}
+%\subsection{Topology Redundancy}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{frame}{Time Transfer}
+%  \begin{columns}[c]
+%    \column{.7\textwidth}
+%      \begin{itemize}
+%	\item WR Network connected to \\ Cs Clock and GPS
+%	\item SPEC + Fine Delay FMC module
+%	\begin{itemize}
+%	  \item Time-to-Digital Converter
+%	  \begin{itemize}
+%	    \item 28 ps resolution
+%	    \item 55ps precision (std.dev)
+%	    \item 300 ps accuracy (WR-timebase)
+%	  \end{itemize}
+%	  \item Pulse Generator:
+%	  \begin{itemize}
+%	    \item Produces pulses at UTC/TAI
+%	    \item Pulse width: 50ns-1s (res: 10ps )
+%	    \item Pulse spacing: 100ns-1s (res: 10ps)
+%	  \end{itemize}
+%	\end{itemize}
+%      \end{itemize}
+%    \column{.4\textwidth}
+%      \begin{center}
+%	\includegraphics[width=0.9\textwidth]{../../figures/applications/CNGS2.pdf}
+%      \end{center}
+%    \column{.01\textwidth}
+%  \end{columns}
+%\end{frame}
+
+
+
+\begin{frame}{NL: Time Distribution over 80 km with amplifiers}
+  \begin{center}
+    \includegraphics<1>[width=0.9\textwidth]{../../figures/applications/VU1_2014.pdf} \pause
+    \includegraphics<2>[width=1.0\textwidth]{../../figures/applications/VU2_2014.pdf}
+    \end{center}
+%    \begin{block}{}
+%      \begin{itemize}
+%      \item Common clock in the entire network: no skew between ADCs.
+%      \item Ability to sample with different clocks via Distributed DDS.
+%      \item External triggers can be time tagged with a TDC and used to reconstruct the original time base in the operator's PC.
+%      \end{itemize}
+%    \end{block}
+\end{frame}
+
+
+\begin{frame}{FI: Time Distribution over 1000 km with amplifiers}
+  \begin{center}
+   \includegraphics<1>[width=1.0\textwidth]{../../figures/applications/mikes1_2014.pdf}
+%    \includegraphics<1>[width=0.9\textwidth]{../../figures/applications/mikes1.pdf} \pause
+%    \includegraphics<2>[width=0.9\textwidth]{../../figures/applications/mikes2.pdf}
+    \end{center}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Applications}
+%\subsection{Topology Redundancy}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \begin{frame}{Time Transfer}
+% 
+%       \begin{center}
+% 	\includegraphics<1>[width=0.9\textwidth]{../../figures/measurements/teAndHist4.eps} \pause
+% 	\includegraphics<2>[width=0.9\textwidth]{../../figures/measurements/MTIE-corrections-long-data.eps}	
+%       \end{center}
+% 
+%  
+% \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Openness}
+\subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Open Hardware}
+
+  \begin{columns}[c]
+    \column{.80\textwidth}
+
+      
+      \begin{itemize}
+        \item Open Hardware advantages:
+         \begin{itemize}
+            \item Get a design just the way we want it
+            \item Peer review
+	     \item Design re-use
+	     \item Healthier relationships with companies
+	\end{itemize}
+        \item Open Hardware Repository (\href{http://ohwr.org}{www.ohwr.org})
+	\item CERN Open Hardware License (OHL)
+      \end{itemize}
+
+    \column{.25\textwidth}
+
+    \begin{center}
+      \includegraphics[width=1.0\textwidth]{../../figures/ohwr/ohr_logo.pdf}  
+    \end{center}
+
+    \column{.01\textwidth}
+  \end{columns}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%\begin{frame}{Why we use Open Hardware ?}
+%  \begin{center}
+%    \includegraphics[width=1.0\textwidth]{../../figures/misc/commercial_vs_proprietary.ps}
+%  \end{center}
+%  \begin{itemize}
+%    \item Get a design just the way we want it
+%    \item Peer review
+%    \item Healthier relationship with companies
+%  \end{itemize}
+%\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Openness}
+%\subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Open Hardware Repository \href{http://ohwr.org}{-- www.ohwr.org}}
+
+ \begin{center}
+   \includegraphics[height=6cm]{../../figures/ohwr/ohr_spec_top.pdf}
+ \end{center} 
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Openness}
+%\subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{CERN Open Hardware License \href{http://ohwr.org/cernohl}{-- ohwr.org/cernohl}}
+    
+    \begin{block}{Provides a solid legal basis}
+      \begin{itemize}
+        \item Open Software licences not usable (GNU, GPL, \dots)
+        \item Developed by Knowledge and Technology Transfer Group
+        \item Defines conditions of using \& modifying licenced material
+      \end{itemize}
+   \end{block}
+
+   \begin{block}{Same principles as Open Software}
+      \begin{itemize}
+        \item Anyone can see the source (design documentation)
+        \item Anyone is free to study, modify and share
+        \item Any modification and distribution under same licence
+        \item Persistence makes everyone profit from improvements
+      \end{itemize}
+   \end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Applications}
+%\subsection{Topology Redundancy}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Open Hardware works -- ohwr.org}
+	\begin{block}{Projects}
+   \begin{itemize}
+	\item 86 active projects
+	\begin{itemize}
+		\item 53 initiated by CERN groups, 33 by other institutes
+	   \end{itemize}
+%	\item 3.6 developers on average 
+   \end{itemize}
+	\end{block}
+
+\begin{block}{Types of designs}
+\begin{itemize}
+	\item 75 hardware designs (of which 44 FMC projects)
+	\item 31 re-usable IP blocks (some included in HW projects)
+	\item General tools
+	\begin{itemize}
+		\item Production test environment (Python based)
+		\item Image processing
+		\item Wishbone slave generator, crossbar
+	\end{itemize}
+   \end{itemize}
+	\end{block}
+\textcolor{gray}{data from June 2014}
+\end{frame}
+
+
+
+
+\begin{frame}{Dispelling the commercial vs open myth}
+ \begin{center}
+   \includegraphics[height=5.8cm]{../../figures/ohwr/commercial_vs_proprietary.png}
+ \end{center} 
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Summary}
+\subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Summary}
+
+
+    \begin{itemize}
+      \item White Rabbit
+      \begin{itemize}
+%	\item $<$ 1ns accuracy
+	\item better than 1 ns accuracy, tens of ps precision
+	\item Tested up to 10 km (and even 1000 km :-)
+	\item 2000 nodes
+      \end{itemize}
+      \item WR components available from industry
+      \begin{itemize}
+	\item PCIe, PXIe, VME, Switch
+      \end{itemize}
+      \item Fully open design: Hardware, Gateware, Software
+      \item Large community in various fields
+      \item Proven results
+      \item Project still under development, open for improvements
+      \item Ready to have fun with!
+    \end{itemize}    
+
+\begin{center}
+\href{http://ohwr.org/projects/white-rabbit}{ohwr.org/projects/white-rabbit}
+\end{center}
+
+ 
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \section{Q\&A}
+% \subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Questions and answers}
+
+    \begin{center}
+    \includegraphics[height=4.0cm]{../../figures/logo/WRlogo.jpg}
+    \end{center}
+
+\begin{center}
+\href{http://ohwr.org/projects/white-rabbit}{ohwr.org/projects/white-rabbit}
+\end{center}
+\end{frame}
+
+
+\end{document}  % NO BACKUP SLIDES
+
+\appendix
+\backupbegin
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{extras}
+% \subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Extras}
+
+    \begin{center}
+      Extras
+    \end{center}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{CERN control system}
+\subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{CERN}
+
+\begin{columns}[c]
+  \column{0.55\textwidth}
+    \begin{center}
+
+      \begin{itemize}
+	\item 6 accelerators
+	\item LHC: 27km perimeter
+	\item Thousands of devices to be controlled and synchronized
+	\item A huge real-time distributed system
+      \end{itemize}
+
+    \end{center}
+  \column{0.6\textwidth}
+    \begin{center}
+      \includegraphics[width=6.5cm]{../../figures/applications/CERN/accelerators.pdf}
+    \end{center}
+\end{columns}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \section{}
+% \subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{A simplified explanation of CERN control system (1)}
+
+      \begin{center}
+      \includegraphics[width=1.0\textwidth]{../../figures/applications/CERN/event1.pdf}
+      \end{center}
+
+  \begin{itemize}
+    \item {\bf Events} -- points in time at which actions are triggered
+    \item Each event is identified by an {\bf ID}
+  \end{itemize}
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \section{}
+% \subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{A simplified explanation of CERN control system (2)}
+
+      \begin{center}
+      \includegraphics[width=1.0\textwidth]{../../figures/applications/CERN/event2.pdf}
+      \end{center}
+
+  \begin{itemize}
+    \item Devices are subscribed to events 
+    \item Each device "knows" what to do on particular event
+  \end{itemize}
+
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \section{}
+% \subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{A simplified explanation of CERN control system (3)}
+
+      \begin{center}
+      \includegraphics[width=.8\textwidth]{../../figures/applications/CERN/event3.pdf}
+      \end{center}
+
+  \begin{itemize}
+    \item Each event (ID) has a trigger time associated
+	\item A set of events is sent as a single {\bf Control Message (CM)}
+	\item CM is broadcast to all the end devices (nodes)
+	\item CM is sent in advance ({\bf Granularity Window})
+  \end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \section{}
+% \subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{A simplified explanation of CERN control system (4)}
+
+\begin{columns}[c]
+  \column{0.55\textwidth}
+   {\bf Granuality Window: }
+    \begin{center}
+      \begin{itemize}
+	    \item Controller-input to node-output (i.e. pulse)
+	    \item Maximum bound latency {\bf guaranteed } by the system
+	    \item Processing and network latency included
+      \end{itemize}
+
+    \end{center}
+  \column{0.6\textwidth}
+    \begin{center}
+      \begin{center}
+      \includegraphics[width=.8\textwidth]{../../figures/applications/CERN/gw.pdf}
+      \end{center}
+    \end{center}
+\end{columns}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \section{}
+% \subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{A simplified explanation of CERN control system (5)}
+
+      \begin{center}
+      \includegraphics[width=.7\textwidth]{../../figures/applications/CERN/accNetworks.pdf}
+      \end{center}
+
+  \begin{itemize}
+    \item 4 accelerator networks
+    \item Separate {\bf Data Master (DM)} for each network
+    \item \textcolor{green!90}{LIC Data Master} communicates with other DMs and control devices in their networks
+    \item Broadcast of {\bf Control Messages} within network(s)
+  \end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Time Distribution in White Rabbit}
+
+  \begin{itemize}
+    \item Synchronization with {\bf sub-ns} accuracy over fiber
+    \item Combination of
+	\begin{itemize}
+	  \item Precision Time Protocol ({\bf PTP}) synchronization
+	  \item Synchronous Ethernet ({\bf SyncE}) syntonization
+	  \item Digital Dual-Mixer Time Difference ({\bf DDMTD}) phase detection
+	\end{itemize}
+%    \item Reliability-oriented.
+    \item WR Link:
+  \end{itemize}
+
+  \begin{center}
+  \includegraphics[height=3cm]{../../figures/protocol/wrLink.pdf}
+  \end{center}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{White Rabbit PTP}
+\subsection{}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{PTP is OK but ...}
+
+  \resizebox{11cm}{!} 
+  {
+    \begin{tabular}{ r c l }
+  {\bf What are the issues...} 	& {\bf and}      & {\bf ... how we address them}  \\
+				&     		 &        \\
+      PTP-base		 	& \multirow{2}{*}{$\Rightarrow$}  & \multirow{2}{*}{SyncE }\\
+      syntonization	        &      		 &        \\
+				&      		 &        			\\
+      limited             	&\multirow{2}{*}{$\Rightarrow$}  	 & SyncE \\
+      precision and resolution  &      		 & DDTMD phase detection\\
+				&    		 &        \\
+			        &      		 & SyncE  \\
+      unknown link asymmetry    & $\Rightarrow$  & DDTMD phase detection \\
+				&      		 & WR Link Delay Model \\
+				&      		 &        \\
+      \multicolumn{3}{c}{WR extension to PTP ({\bf WRPTP}) for } \\
+      \multicolumn{3}{c}{extra data exchange and logic} \\
+    \end{tabular}
+  }
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Timestamps}
+\subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Fine Delay Measurement}
+
+  \begin{center}
+  \includegraphics[width=10.0cm]{../../figures/protocol/link_model.pdf}
+  \end{center}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Link Asymmetry}
+% \subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Link Asymmetry}
+
+  \begin{center}
+  \includegraphics[height=4cm]{../../figures/protocol/wrLinkModel_init.pdf}
+  \end{center}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Link Delay Model}
+%\subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Link Delay Model}
+
+  \begin{align}
+    \nonumber delay_{ms} &= \Delta_{tx_m} + \delta_{ms} + \Delta_{rx_s} \\
+    \nonumber delay_{sm} &= \Delta_{tx_s} + \delta_{sm} + \Delta_{rx_m}
+  \end{align}
+
+   \vspace{0.2cm}
+
+  \begin{center}
+DELAYMODEL.EPS FILE
+%  \includegraphics[height=2.5cm]{../../figures/protocol/delaymodel.eps}   ERIK PROBLEM CONVERTING FILE
+  \end{center}
+
+\begin{columns}[c]
+  \column{2.8in}
+
+    \begin{center}
+      \textbf{Relative Delay Coefficient ($\alpha$)} \\
+      for 1000BASE-BX10 over a Single-mode Optical Fiber
+    \end{center}
+
+  \column{1.5in}
+    \begin{center}
+      \begin{equation}
+      \nonumber \delta_{ms} = (1 + \alpha) \, \delta_{sm}
+      \end{equation}
+    \end{center}
+    \vspace{0.5cm}
+\end{columns}
+  
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Link Delay Model}
+% \subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Fixed Delays}
+
+  \begin{center}
+  \includegraphics[width=11.0cm]{../../figures/protocol/asymmetries.pdf}
+  \end{center}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Link Delay Model: fiber optic solution}
+
+  \begin{center}
+  \includegraphics[height=4cm]{../../figures/protocol/wrLinkModel.pdf}
+  \end{center}
+
+  \begin{columns}[c]
+  \column{1.5in}
+
+    \begin{center}
+      \textbf{Solution for Ethernet over a Single-mode Optical Fiber}
+    \end{center}    
+
+  \column{2.7in}
+
+    \begin{equation}
+      \nonumber asymmetry = \Delta_{tx_m} + \Delta_{rx_s} - \frac{\Delta - \alpha \mu + \alpha \Delta}{2 + \alpha}
+    \end{equation}
+
+  \end{columns}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{PTP\&SyncE}
+% \subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{PTP and SyncE in WR}
+
+  \begin{itemize}
+    \item Compatibility with PTP verified
+    \item Compatibility with SyncE for further study
+    \item Frequency distribution aligned with PTP's logic topology
+%    \item Synchronous Status Message (SSM) mechanism not supported in WR
+    \item PTP's Announce messages used for WR-peers recognition
+  \end{itemize}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \section{WRPTP}
+% \subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{White Rabbit extension to PTP (WRPTP)}
+
+  \begin{itemize}
+    \item WR-peers recognition
+    \item Calibration (fixed delays measurement)
+    \item Exchange of WR-data
+    \item Support of redundancy
+    \item Mapping over IEEE802.3/Ethernet
+  \end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{WR-peer recognition and WR-data exchange}
+
+  \begin{columns}[c]
+  \column{.5\textwidth} 
+
+    \begin{center}
+    \includegraphics[width=5.0cm]{../../figures/protocol/WR-peer_recognision-1.pdf}
+    \newline
+    Two WR devices
+    \end{center}
+    
+  \column{.5\textwidth}
+
+    \begin{center}
+    \includegraphics[width=5.0cm]{../../figures/protocol/WR-peer_recognision-2.pdf}
+    \newline
+    WR and non-WR device
+    \end{center}
+     
+  \end{columns}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{WR Link Setup }
+
+  \begin{columns}[c]
+  \column{.5\textwidth} 
+
+      \begin{center}
+      \includegraphics[width=5.5cm]{../../figures/protocol/wrLinkSetup.pdf}
+      \end{center}
+
+
+  \column{.5\textwidth} 
+
+      \begin{itemize}
+	\item Frequency locking
+	\item Calibration
+	\item Exchange of WR-parameters
+	\item WR Finite State Machine
+	\item WR Signaling Messages
+      \end{itemize}
+
+  \end{columns}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsection{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Modified Best Master Clock Algorithm (mBMCA)}
+
+    \begin{center}
+    \includegraphics[height=7.0cm]{../../figures/protocol/mBMCvsBMC.pdf}
+    \end{center}
+
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \section{H/W for WR}
+% \subsection{H/W for WR}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}{Clock Recovery System and mBMCA}
+
+%{\it [problem with a presentation flow]}
+
+  \begin{center}
+  \includegraphics[width=11.8cm]{../../figures/protocol/wrCRS_plus_mBMC.pdf}
+  \end{center}
+
+\end{frame}
+
+
+
+
+\backupend
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
