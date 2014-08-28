@@ -13,5 +13,5 @@ figs:
 
 clean :
 #	$(MAKE) clean -C fig 
-	rm -f *.eps *.pdf *.dat *.log *.out *.aux *.dvi *.ps
+	rm -f *.eps *.pdf *.dat *.log *.out *.aux *.dvi *.ps *.nav *.snm *.toc
 
