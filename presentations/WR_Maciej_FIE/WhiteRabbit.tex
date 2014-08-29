@@ -313,39 +313,30 @@ Maciej Lipi\'{n}ski \\
 % \section{}
 % \subsection{}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\setbeamertemplate{background}{\includegraphics[width=0.95\paperwidth]{figs/syncE.v2.eps}} 
 \begin{frame}{Synchronous Ethernet (SyncE)}
-
-\begin{columns}[c]
-\column{0.11\textwidth}
-\column{0.99\textwidth}
-    \begin{itemize}    
-      \item All network devices use the same physical layer clock
-      \item Clock is encoded in the Ethernet carrier and recovered by the receiver chip (PHY).
-    \end{itemize}
-    \vspace{6.7cm}
-\end{columns}
+  \begin{center}
+  \begin{itemize}
+   	\item All network devices use the same physical layer clock
+    \item Clock is encoded in the Ethernet carrier and recovered by the receiver chip (PHY).
+  \end{itemize}
+  \includegraphics[width=.9\textwidth]{../../figures/misc/synce.eps}
+  \end{center}
 
 \end{frame}
-\setbeamertemplate{background}{} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \section{}
 % \subsection{}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\setbeamertemplate{background}{\includegraphics[width=0.95\paperwidth]{figs/ddmtd.v2.eps}} 
 \begin{frame}{DDMTD: Phase Tracking}
-
-\begin{columns}[c]
-\column{0.01\textwidth}
-\column{0.99\textwidth}
+	\begin{center}
     \begin{itemize}
       \item PTP limitation: timestamping granularity
       \item Solution: take advantage of SyncE and measure phase shift
     \end{itemize}
-    \vspace{3.9cm}
-\end{columns}
+		\includegraphics[width=.9\textwidth]{../../figures/misc/phase_tracking_v2_simple.eps}
+	\end{center}
+
 \end{frame}
-\setbeamertemplate{background}{} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \section{White Rabbit PTP}
 % \subsection{}
@@ -664,7 +655,7 @@ Maciej Lipi\'{n}ski \\
   \column{0.6\textwidth}
     \begin{center}
 %     \includegraphics<1>[width=0.65\textwidth]{../../figures/network/wr_network-new.ps} \pause
-    \includegraphics[width=0.9\textwidth]{../../figures/robustness/event3.eps} 
+    \includegraphics[width=0.9\textwidth]{../../figures/applications/CERN/event3.eps}
     \end{center}
 
 \end{columns}
@@ -849,7 +840,7 @@ Maciej Lipi\'{n}ski \\
 \begin{frame}{CERN Neutrinos to Gran Sasso (CNGS)}
 
     \begin{center}
-      \includegraphics[height=0.5\textheight]{figs/cngs-general.v2.eps} 
+      \includegraphics[height=0.5\textheight]{../../figures/applications/cngs-general.eps}
 %       \includegraphics<2>[height=0.7\textheight]{figs/cngs-timing-3.eps}
     \end{center}
 
@@ -870,7 +861,7 @@ Maciej Lipi\'{n}ski \\
 
     \begin{center}
 %       \includegraphics<1>[height=0.5\textheight]{figs/cngs-general.v2.eps} \pause
-      \includegraphics[height=0.7\textheight]{figs/cngs-timing-3.eps}
+      \includegraphics[height=0.7\textheight]{../../figures/applications/cngs-timing-31.eps}
     \end{center}
 
     \begin{center}
@@ -925,10 +916,10 @@ Maciej Lipi\'{n}ski \\
 
 
     \begin{center}
-      \includegraphics<1>[width=0.85\textwidth]{figs/gsi.eps}   \pause
+      \includegraphics<1>[width=0.85\textwidth]{../../figures/applications/gsi.eps}   \pause
       \includegraphics<2>[width=0.85\textwidth]{../../figures/applications/tunka.eps}        \pause
       \includegraphics<3>[width=0.85\textwidth]{../../figures/applications/lhaaso.eps}       \pause
-      \includegraphics<4>[width=0.85\textwidth]{figs/superGPS.eps}       \pause
+      \includegraphics<4>[width=0.85\textwidth]{../../figures/applications/superGPS.eps}       \pause
       \includegraphics<5>[width=0.85\textwidth]{../../figures/applications/cta.eps}          \pause
       \includegraphics<6>[width=0.85\textwidth]{../../figures/applications/iter.eps}         \pause
       \includegraphics<7>[width=0.85\textwidth]{../../figures/applications/KM3NeT.eps}       
