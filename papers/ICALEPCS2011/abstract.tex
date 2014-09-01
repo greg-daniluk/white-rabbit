@@ -1,0 +1,27 @@
+\begin{abstract}
+
+White Rabbit (WR) is a time-deterministic, low-latency Ethernet-based network which enables 
+transparent, sub-ns accuracy timing distribution. It is being developed to replace 
+the General Machine Timing (GMT) 
+%\cite{biblio:GMT} 
+system currently used at CERN and will become 
+the foundation for the control system of the Facility for Antiproton and Ion Research (FAIR) 
+at GSI. High reliability is an important issue in WR's design, 
+since unavailability of the accelerator's 
+control system will directly translate into expensive downtime of the machine. 
+A typical WR network is required to lose not more than a single message per year. 
+Due to WR's complexity, the translation of this real-world-requirement into 
+a reliability-requirement constitutes an interesting issue on its own -- a WR network 
+is considered functional only if it provides all its services to all its clients at any time. 
+This paper defines reliability in WR and describes how it was addressed by dividing it into 
+sub-domains: deterministic packet delivery, data 
+%redundancy, 
+resilience, 
+topology redundancy and clock 
+resilience. The studies show that the Mean Time Between Failure (MTBF) of the WR Network 
+is the main factor affecting its reliability. Therefore, probability calculations for 
+different topologies were performed using the "Fault Tree analysis" and analytic estimations. 
+Results of the study show that the requirements of WR are demanding. Design changes might be needed 
+and further in-depth studies required, e.g. Monte Carlo simulations. Therefore, a direction 
+for further investigations is proposed.
+\end{abstract}

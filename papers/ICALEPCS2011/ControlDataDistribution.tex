@@ -1,0 +1,108 @@
+\section{Data Resilience}
+
+
+\subsection{Forward Error Correction}
+\label{sec:fec}
+
+The objective of the FEC scheme is to decrease the loss rate of the CMs, preferably, 
+to less then one per year. WR uses as a physical medium Fiber Optic and CAT-5. The number 
+of received corrupted bits compared to the total number of received bits is called Bit Error Rate 
+(BER). The value of BER  characterizes a physical medium and can be used to characterize the entire 
+switched network.
+%  if the following factors are taken into account: 
+% (1) {\it type of cabling} (fiber/twisted pair),
+% (2) {\it logic topology},
+% (3) {\it network address} (broadcast/unicast).
+A WRN can be seen as a Packet Erasure Channel (PEC) or as a Binary Erasure Channel (BEC) depending 
+on the effect of a bit error on the frame. If the frame is lost (e.g. dropped by the switch due to 
+a corrupted header or lost during switch-over between redundant components), the WRN is a PEC. 
+If the bit error happens in the link between a switch and node, a corrupted frame 
+\modified{can be used (optional)}
+%is used 
+to attempt frame recovery. In such case, the channel is called BEC. Each type of channel requires 
+a different FEC solution. Therefore two concatenated FECs are used in WR. 
+Reed-Solomon (R-S) %\cite{biblio:r-s} 
+%\cite{biblio:coding} 
+coding is used for the PEC and 
+allows to encode k original-frames into n encoded-frames ($n>k$). 
+Reception of any k encoded-frames can be used to decode the original frames. 
+\modified{Hamming coding with additional parity (SEC-DED)} 
+%Hamming coding 
+is used for the BEC and allows to detect up to two simultaneous bit errors and 
+correct a single error.
+These two schemes (R-S and Hamming) are combined to encode each CM -- it is 
+split into two and encoded using R-S into four messages (two original and two 
+with redundant data). Each of the four messages is then encoded using Hamming. Such encoded 
+messages are sent in a burst of 4 Ethernet frames. Reception of any two of these frames enables 
+to decode the original Control Messages. 
+A systematic analysis, using the BER characteristic of the WRN, proves that the presented FEC scheme 
+guarantees less than single CM lost per year due to physical medium 
+imperfection, as can be seen from Table~\ref{tab:gsi_cern_fec}. 
+
+\begin{table}[ht]
+ 	\begin{center}
+\caption{GSI and CERN FEC characteristics.}
+\begin{tabular}{|p{4cm}|c|c|} \hline
+%	\cline{2-3}
+%	&  \multicolumn{2}{|c|}{Use Case} \\ \cline{2-3}
+\rowcolor{gray!35}{}
+{\bf Parameter}	&  {\bf GSI} & {\bf CERN} \\ \hline
+	\multicolumn{1}{|p{4cm}|}{Control Message length} & 500 bytes & 1500 bytes     \\ \hline
+	\multicolumn{1}{|p{4cm}|}{Control Message per year} & $3.145 10^{11} $ &$  3.145 10^{8} $ \\ \hline
+	\multicolumn{1}{|p{4cm}|}{Max Bit Correct.} & 1 & 1  \\ \hline
+%	\multicolumn{1}{|p{4cm}|}{Parity-Check Bits} & 13    &  13   \\ \hline
+%	\multicolumn{1}{|p{4cm}|}{PEC Code Overhead} & 3  & 2 \\ \hline
+%	\multicolumn{1}{|p{4cm}|}{Payload Length} & 400 b  & 800b \\ \hline
+	\multicolumn{1}{|p{4cm}|}{Payload Length} & \modified{294 bytes}  & \modified{854 bytes} \\ \hline
+	\multicolumn{1}{|p{4cm}|}{Num Encoded Frames} & 4  & 4 \\ \hline
+	\multicolumn{1}{|p{4cm}|}{Needed Frames to Receiver} & 2 & 2 \\ \hline
+	\multicolumn{1}{|p{4cm}|}{Probability of Loosing a CM} & $10^{-14}$ & $10^{-13}$\\ \hline
+	\end{tabular}   
+	
+	\label{tab:gsi_cern_fec}
+	\end{center}
+\end{table}
+
+\subsection{Rapid Spanning Tree Protocol (RSTP)}
+
+In an Ethernet network with redundant topology, the problem of loops (causing "broadcast storms") 
+is handled by the Rapid Spanning Tree Protocol (RSTP)
+% \cite{biblio:IEEE8021D}
+. It creates a loop-free 
+logical topology by blocking appropriate ports in switches, and unblocks them in case of topology 
+break (due to element failure).
+
+The functionality provided by the RSTP is essential for the WRN. However, the convergence speed 
+provided by the standard implementation of the RSTP (milliseconds 
+%\cite{biblio:RSTPperf} 
+at best) 
+would cause many CMs to be lost during the process. This is not acceptable, we need 
+a solution which is fast enough to prevent loosing the CMs at all. Since we know the 
+size-range of the CMs (Table~\ref{tab:requirements}) and how they are FEC-encoded into Ethernet frames,
+we can calculate the maximum value of the convergence time: 3$\mu s$. This time is smaller than 
+the duration of transmitting a single frame with FEC-encoded CM -- this ensures that no more than 
+two frames with FEC-encoded CM are lost, thus the CM can be recovered.
+
+In order to achieve a convergence time of 3$\mu s$, the switch-over between active 
+and backup connections needs to be performed in the hardware as soon as the link-down is detected. 
+It can only be done if the alternative topology is known in advance. The knowledge of alternative 
+topology is translated into an RSTP-assignment of alternative and backup roles of switch ports, 
+i.e at least one port with alternative role must be identified in every switch 
+(except the topology-root switch).    
+%\modified{, i.e at least one port with each of these roles must be identified in every switch}.
+%
+%If at least one port of a switch is assigned an alternative role, it means that 
+%the RSTP algorithm establishes more than one path to the topology-root switch and therefore 
+%the alternative topology is know in advance. 
+%Such ports are identified when the RSTP algorithm establishes more than one path to the 
+%topology-root switch and all paths can be used simultaneously, 
+%
+If we ensure, by restricting the topology, that RSTP identifies the alternative links, 
+we can use its data to feed the hardware, consequently achieving the required convergence time 
+and staying standard-compatible: 
+the hardware switch-over is just a faster RSTP-driven convergence. The required topology 
+restrictions, described in \cite{biblio:robustness}, greatly overlap with these imposed by 
+the Time Distribution. 
+
+ 
+

@@ -1,0 +1,53 @@
+\section{Determinism}
+
+% The delivery latency of an Ethernet frame varies with cable length and the number of hops (switches) 
+% it has to traverse to reach its destination, the traffic load on the way and 
+% the assigned Class of Service (CoS, \cite{bilbio:vlan}). 
+A carefully configured and properly used WRN offers deterministic Ethernet frame delivery 
+thanks to the implementation of CoS and the fact that the delay introduced by the switch can be 
+verified by analysis of {\bf publicly available source code} \cite{biblio:whiteRabbit}. 
+Such analyses were performed to verify the worst-case upper bound 
+delivery latency of a CM against the requirements listed in the Table~\ref{tab:requirements}. 
+The results, presented in Table~\ref{tab:CMlatency} ({\it Store-and-forward} column), 
+take into account the fact that a CM is encoded into 4 Ethernet frames (as required by the FEC 
+and described in the next Section), it is sent with the highest priority (CoS) and it always 
+traverses 3 hops.
+
+\begin{table}[ht]
+\caption{Control Message(CM) deliver latency estimations.} 
+\centering
+
+	\begin{tabular}{| c | c | c | c | c | c |}          \hline
+\rowcolor{gray!35}{}
+               & \multicolumn{4}{|>{\columncolor{gray!35}}c|}{\textbf{CM deliver latency}}                    \\ \cline{2-5}
+\rowcolor{gray!35}{}
+\textbf{CM size}& \multicolumn{2}{|>{\columncolor{gray!35}}c|}{\textbf{Store-and-forward}} 
+                &\multicolumn{2}{|>{\columncolor{gray!35}}c|}{\textbf{Cut-through}}                           \\\cline{2-5}
+\multicolumn{1}{|>{\columncolor{gray!35}}c|}{} &
+\multicolumn{1}{|>{\columncolor{gray!35}}c|}{GSI} &
+\multicolumn{1}{|>{\columncolor{gray!35}}c|}{CERN} &
+\multicolumn{1}{|>{\columncolor{gray!35}}c|}{GSI} &
+\multicolumn{1}{|>{\columncolor{gray!35}}c|}{CERN} \\ \hline
+%		&    GSI           & CERN          &    GSI           & CERN          \\ \hline
+%200 bytes      & ???$\mu s$       & ???$\mu s$    & ??$\mu s$        & ???$\mu s$    \\ \hline
+500 bytes      & 221$\mu s$       & 283$\mu s$    & 76$\mu s$        & 118$\mu s$    \\ \hline
+1500 bytes     & 285$\mu s$       & 325$\mu s$    & 102$\mu s$       & 142$\mu s$    \\ \hline
+5000 bytes     & 324$\mu s$       & 364$\mu s$    & 162$\mu s$       & 202$\mu s$    \\ \hline
+\end{tabular}
+\label{tab:CMlatency}
+\end{table}
+
+The analysis revealed that GSI's requirements are not fulfilled: the upper-bound delivery latency
+for the required size of CM and max distance of 2km is greater then 100$\mu s$. 
+
+The solution to decrease delivery latency is targeted into the CD only and 
+takes advantage of its characteristics (broadcast within a VLAN, sent by privileged node). 
+We propose to break the highest priority of 
+the CoS into two (unicast and broadcast) and use the highest priority broadcast Ethernet traffic only for 
+the CD. Moreover, this particular traffic shall be forwarded using the cut-through method 
+(unlike the store-and-forward method used normally in the switch) which can be effectively fast 
+for the broadcast traffic with a single source (DM). The results, 
+presented in Table~\ref{tab:CMlatency} ({\it Cut-through} column), show a significant improvement. 
+The solution requires hardware-supported cut-through forwarding in the switch as described 
+in \cite{biblio:robustness}. 
+
