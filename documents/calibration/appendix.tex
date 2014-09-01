@@ -1,0 +1,332 @@
+\section{Mathematical proofs}
+
+\subsection{Reference fiber latency}
+\label{subsec:app_filat}
+The same pair of WR Devices is used for all three connections in this procedure.
+That is why, when considering round-trip delay after subtracting the bitslide
+values, the transmission and reception delays of both devices are summed
+together and remain constant for fiber $f_1$, $f_2$, $f_1 + f_2$:
+\begin{equation}
+	\Delta = \Delta_{TXM} + \Delta_{RXM} + \Delta_{TXS} + \Delta_{RXS}
+\end{equation}
+
+When two fibers $f_1$, $f_2$ are joined together the fiber latency for this
+connection will be the sum of $\delta_1$ and $\delta_2$. After eliminating the 
+bitslide value, the remaining part of a round trip delay consists of the 
+following elements:
+\begin{equation}
+	delay_{MM1}' = \Delta + \delta_1\\
+\end{equation}
+\begin{equation}
+	delay_{MM2}' = \Delta + \delta_2\\
+\end{equation}
+\begin{equation}
+	delay_{MM3}' = \Delta + \delta_1 + \delta_2
+\end{equation}
+
+This equation system has three unknowns and after solving gives the formulas for
+the round-trip fiber latencies:
+\begin{align}
+	\delta_1 = delay_{MM3}' - delay_{MM2}'\\
+	\delta_2 = delay_{MM3}' - delay_{MM1}'
+\end{align}
+
+\subsection{Fiber asymmetry}
+\label{subsec:app_fiasym}
+
+In this step of the calibration procedure two WR connections with the same pair
+of devices are established. For each of them the offset between the WR Slave and
+WR Master is calculated by the WR PTP software as:
+\begin{equation}
+	offset_{MS} = t_1 - t_2 + delay_{MS}
+\end{equation}
+
+\noindent where $delay_{MS}$ is an estimated one-way link delay. When $\alpha$ is
+initially equal to 0, $delay_{MS}$ is estimated as half of the round-trip
+delay, which results in a distorted offset between the two devices:
+\begin{equation}
+	offset_{MS}' = t_1 - t_2 + \frac{1}{2} delay_{MM}
+\end{equation}
+
+\noindent Then $skew_{PPS}$ measured with an oscilloscope is equal to the
+uncompensated link asymmetry (the sum of the fiber asymmetry and hardware
+asymmetry):
+\begin{align}
+  \label{equ:app_fiasym:skew1}
+  skew_{PPS1} &= offset_{MS1} - offset'_{MS1} = delay_{MS1} - \frac{1}{2} delay_{MM1}\\
+  \label{equ:app_fiasym:skew2}
+  skew_{PPS2} &= offset_{MS2} - offset'_{MS2} = delay_{MS2} - \frac{1}{2} delay_{MM2}
+\end{align}
+
+\noindent We also know what factors build up the round trip delays and one-way
+delays for both connections. Please notice since the same pair of the devices is
+used in both cases, fixed hardware delays stay the same:
+\begin{align}
+  delay_{MM1} &= \Delta + \delta_1\\
+  delay_{MM2} &= \Delta + \delta_2\\
+  delay_{MS1} &= \Delta_{TXM} + \Delta_{RXS} + \delta_{MS1}\\
+  delay_{MS2} &= \Delta_{TXM} + \Delta_{RXS} + \delta_{MS2}\\
+     \delta_1 &= \delta_{MS1} + \delta_{SM1}\\
+     \delta_2 &= \delta_{MS2} + \delta_{SM2}
+\end{align}
+
+\noindent Using the formulas above, equations \ref{equ:app_fiasym:skew1} and
+\ref{equ:app_fiasym:skew2} can be expanded:
+\begin{align}
+  skew_{PPS1} &= \Delta_{TXM} + \Delta_{RXS} + \delta_{MS1} - \frac{1}{2}\Delta
+  - \frac{1}{2} \delta_1\\
+  skew_{PPS2} &= \Delta_{TXM} + \Delta_{RXS} + \delta_{MS2} - \frac{1}{2}\Delta
+  - \frac{1}{2} \delta_2
+\end{align}
+
+\noindent Subtracting the two skew measurements eliminates any asymmetry due to
+fixed hardware delays:
+\begin{align}
+  \label{equ:app_fiasym:skew_pps}
+  skew_{PPS} &= skew_{PPS2} - skew_{PPS1}\\
+             &= \Delta_{TXM} + \Delta_{RXS} -
+  \Delta_{TXM} - \Delta_{RXS} + \delta_{MS2} - \delta_{MS1} - \frac{1}{2}\Delta + \frac{1}{2}\Delta -
+  \frac{1}{2} \delta_2 + \frac{1}{2} \delta_1 \nonumber\\
+  &= \delta_{MS2} - \delta_{MS1} - \frac{1}{2}\delta_2 + \frac{1}{2}\delta_1
+\end{align}
+
+\noindent However, if fiber $f_1$ is just a few meters long, then its asymmetry is
+negligible. That means its one-way Master-to-Slave latency equals half of the
+total fiber latency:
+\begin{equation}
+  \delta_{MS1} = \frac{1}{2} \delta_1
+\end{equation}
+
+\noindent This results in a simplified formula describing $skew_{PPS}$:
+\begin{align}
+  skew_{PPS} &= \delta_{MS2} - \frac{1}{2}\delta_2 = \delta_{MS2} -
+  \frac{1}{2}\delta_{MS2} - \frac{1}{2}\delta_{SM2} \nonumber\\
+  \label{equ:app_fiasym:final_skew}
+  &= \frac{1}{2}(\delta_{MS2} - \delta_{SM2})
+\end{align}
+
+\noindent Having in mind that $\alpha = \frac{\delta_{MS} - \delta_{SM}}{\delta_{SM}}$,
+using the already known value of the $f_2$ round-trip latency $\delta_2$ and
+equations \ref{equ:app_fiasym:skew_pps}, \ref{equ:app_fiasym:final_skew} we get
+the expression for $\alpha$ used in the calibration procedure:
+
+\begin{equation}
+	\alpha = \frac{2(skew_{PPS2} - skew_{PPS1})}{\frac{1}{2}\delta_2 -
+	(skew_{PPS2} - skew_{PPS1})}
+\end{equation}
+
+\subsection{WR Device calibration}
+\label{subsec:apx:devices}
+
+After the WR PTP daemon on a Slave device is synchronized to Master, the
+$skew_{PPS}$ observed on an oscilloscope can be treated as an error of
+a clock correction on the Slave side:
+\begin{equation}
+	\label{equ:devices:corrs}
+	corr = corr_{ideal} - skew_{PPS}
+\end{equation}
+
+The correction value that should be applied to the Slave clock by the daemon
+($corr_{ideal}$) is calculated based on timestamps and a $delay_{MS}$ estimation:
+\begin{equation}
+	corr_{ideal} = t_1 - t_2 + delay_{MS_{ideal}}
+\end{equation}
+The one-way delay is the sum of the fiber latency, Master transmission delay and
+Slave reception delay:
+\begin{equation}
+	\label{equ:devices:ideal_delay}
+	delay_{MS_{ideal}} = \frac{1+\alpha}{2+\alpha}(delay_{MM} - \Delta) + 
+	\Delta_{TXM} + \Delta_{RXS}
+\end{equation}
+
+However, the Slave reception delay used by the daemon is the result of the first
+4 steps of the procedure in \ref{subsec:devices} ($\frac{1}{2}\Delta_S$). That means,
+it has to be corrected by an asymmetry coefficient $\beta$ to get the right 
+value that produces $corr_{ideal}$ above:
+\begin{equation}
+	\label{equ:devices:delta_rxs}
+	\Delta_{RXS} = \frac{1}{2}\Delta_S + \beta
+\end{equation}
+
+The round-trip delay value and the sum of hardware delays are fixed,
+which means the same asymmetry factor has to be subtracted from the Slave
+transmission delay to preserve those sums:
+\begin{equation}
+	\label{equ:devices:delta_txs}
+	\Delta_{TXS} = \frac{1}{2}\Delta_S - \beta
+\end{equation}
+
+\noindent Taking it back to equation \ref{equ:devices:ideal_delay} we get:
+\begin{equation}
+	delay_{MS_{ideal}} = \frac{1+\alpha}{2+\alpha}(delay_{MM} - \Delta) + 
+	\Delta_{TXM} + \frac{1}{2}\Delta_S + \beta
+\end{equation}
+
+However, the Master to Slave delay calculated by the daemon using the values without
+the asymmetry taken into account is:
+\begin{equation}
+	delay_{MS} = \frac{1+\alpha}{2+\alpha}(delay_{MM} - \Delta) + 
+	\Delta_{TXM} + \frac{1}{2}\Delta_S
+\end{equation}
+
+So the correction value for the reception asymmetry is also the difference
+between the $delay_{MS}$ estimations:
+\begin{equation}
+	delay_{MS_{ideal}} = delay_{MS} + \beta
+\end{equation}
+
+\noindent Putting this back into the equation for $corr_{ideal}$:
+\begin{equation}
+	corr_{ideal} = t_1 - t_2 + delay_{MS} + \beta
+\end{equation}
+
+\noindent Please remember though, $t_1 - t_2 + delay_{MS}$ is in fact the correction
+value ($corr$) derived from the coarse (without asymmetry) Slave delays:
+\begin{equation}
+	corr_{ideal} = corr + \beta
+\end{equation}
+
+Comparing the equation above with \ref{equ:devices:corrs}:
+\begin{equation}
+	\beta = skew_{PPS}
+\end{equation}
+
+That means, the difference between 1-PPS signals observed on the oscilloscope
+has to be used as the correction factor for the coarse delays of the Slave
+device.\\
+
+The asymmetry of each calibrated Tx/Rx delay is set to compensate also the
+asymmetry of the WR Calibrator. Equations \ref{equ:devices:delta_rxs} and
+\ref{equ:devices:delta_txs} can be expanded to show the
+components of asymmetry $\beta$ of two WR Devices calibrated to the same WR
+Calibrator (where $\beta_C$ is the calibrator asymmetry and $\beta_1$,
+$\beta_2$ are the internal asymmetries of each device):
+\begin{align}
+	\Delta_{TX1} = \frac{1}{2}\Delta_1 - \beta_{C1} = \frac{1}{2}\Delta_1 - \beta_1 + \beta_C \\
+	\Delta_{RX1} = \frac{1}{2}\Delta_1 + \beta_{C1} = \frac{1}{2}\Delta_1 + \beta_1 - \beta_C \\
+	\Delta_{TX2} = \frac{1}{2}\Delta_2 - \beta_{C2} = \frac{1}{2}\Delta_2 - \beta_2 + \beta_C \\
+	\Delta_{RX2} = \frac{1}{2}\Delta_2 + \beta_{C2} = \frac{1}{2}\Delta_2 + \beta_2 - \beta_C
+\end{align}
+
+After connecting those two WR Devices together, the transmission circuits of
+each one communicate with the reception circuits of the other, resulting in a
+one-way link delay (without fiber propagation latency):
+\begin{align}
+	\Delta_{1-2} = \Delta_{TX1} + \Delta_{RX2} = \frac{1}{2}\Delta_1 - \beta_1 + \beta_C + \frac{1}{2} 
+		\Delta_2 + \beta_2 - \beta_C  = (\frac{1}{2}\Delta_1 - \beta_1) +
+		(\frac{1}{2}\Delta_2 + \beta_2) \\
+	\Delta_{2-1} = \Delta_{TX2} + \Delta_{RX1} = \frac{1}{2}\Delta_2 - \beta_2 + \beta_C + \frac{1}{2}
+		\Delta_1 + \beta_1 - \beta_C = (\frac{1}{2}\Delta_2 - \beta_2) + 
+		(\frac{1}{2}\Delta_1 + \beta_1)
+\end{align}
+
+This proves that devices which have been calibrated using the same WR Calibrator
+can use the asymmetries found during the calibration process to synchronize one
+another.
+
+\subsection{Measurement with a loop-back fiber}
+For both measurements the same loop-back fiber, optical transmitter and optical
+receiver are used. There is also a requirement in the measurement procedure
+(section \ref{subsec:loopback}) saying that both transmitter and receiver should
+have a constant delay that doesn't vary for each connection. That means, for
+both steps, the loop-back link has some unknown latency $\delta_{L}$.\\
+
+In the first case, the 1-PPS skew measured on the WR Master side can be represented
+with the formula:
+\begin{equation}
+\label{equ:loopback:skew1}
+skew_{PPS1} = t_{PPSM1} - (t_{PPSS1} + \delta_{L})
+\end{equation}
+where $t_{PPSM1}$ is a WR Master absolute time of 1-PPS generation, $t_{PPSS1}$
+is a WR Slave absolute time of 1-PPS generation. The latency of the loop-back
+fiber $\delta_{L}$ is added to $t_{PPSS1}$, because in the first step the Slave
+1-PPS signal observed on the WR Master side is delayed by $\delta_{L}$
+picoseconds.\\
+
+In the second step, the situation is reversed. The measurement is made on the WR
+Slave side, which means the 1-PPS generated from the WR Master is observed
+$\delta_{L}$ picoseconds later:
+\begin{equation}
+\label{equ:loopback:skew2}
+skew_{PPS2} = (t_{PPSM2} + \delta_{L}) - t_{PPSS2}
+\end{equation}
+
+The actual $skew_{PPS}$ that we want to measure within this procedure is the
+difference between the absolute time of the 1-PPS generation on Master and Slave:
+\begin{equation}
+\label{equ:lookback:offset}
+skew_{PPS} = t_{PPSM1} - t_{PPSS1} = t_{PPSM2} - t_{PPSS2}
+\end{equation}
+Of course we can make those subtractions equal only because the measurement in
+both cases is done when WR Master and WR Slave are synchronized. Now, putting
+together equations \ref{equ:loopback:skew1}, \ref{equ:loopback:skew2} and
+\ref{equ:lookback:offset} the following system of equations with two unknowns is
+produced:
+\begin{align}
+skew_{PPS1} = skew_{PPS} - \delta_{L}\\
+skew_{PPS2} = skew_{PPS} + \delta_{L}
+\end{align}
+Solving it creates the final formula to calculate the 1-PPS skew between the WR
+Master and the WR Slave:
+\begin{equation}
+skew_{PPS} = \frac{1}{2} (skew_{PPS1} + skew_{PPS2})
+\end{equation}
+
+\subsection{Recovering the calibrator}
+The new WR Calibrator has unknown transmission and reception delays as any
+other, uncalibrated WR Device. We represent them using the mean
+(coarse) delay ($\Delta_{C2}$) and the asymmetry factor ($\beta_{C2}$):
+\begin{align}
+	\Delta_{TXC2} = \frac{1}{2}\Delta_{C2} - \beta_{C2}\\
+	\Delta_{RXC2} = \frac{1}{2}\Delta_{C2} + \beta_{C2}
+\end{align}
+
+We already know from the previous sections that a WR Device (D1) calibrated to
+the primary calibrator (C1) compensates its own asymmetry but also the asymmetry
+of the WR Calibrator:
+\begin{align}
+	\Delta_{TXD1} = \frac{1}{2}\Delta_{D1} - \beta_{D1} + \beta_{C1} \\
+	\Delta_{RXD1} = \frac{1}{2}\Delta_{D1} + \beta_{D1} - \beta_{C1}
+\end{align}
+
+In an ideal case, when each WR Device knows its delays, the Master-to-Slave
+(one-way) delay without the fiber propagation latency would be:
+\begin{equation}
+\label{equ:recc:delaymsideal}
+	\Delta_{D1-C2_{ideal}} = \Delta_{TXD1_{ideal}} + \Delta_{RXC2_{ideal}} = \frac{1}{2}\Delta_{D1} - \beta_{D1} + \frac{1}{2}\Delta_{C2} + \beta_{C2}
+\end{equation}
+
+On the other hand, since the WR Device \emph{D1} compensates also the asymmetry
+of the primary calibrator \emph{C1} and initially $\beta_{C2}$ is unknown (set
+to 0), the actual fixed delay for \emph{D1}-\emph{C2} connection is:
+\begin{equation}
+\label{equ:recc:delayms}
+	\Delta_{D1-C2} = \frac{1}{2}\Delta_{D1} - \beta_{D1} + \beta_{C1} + \frac{1}{2}\Delta_{C2}
+\end{equation}
+
+Comparing equations \ref{equ:recc:delayms} and \ref{equ:recc:delaymsideal} it
+can be noticed that the factor $\beta_{C1}$ partially compensates the asymmetry
+of the new calibrator \emph{C2}. The uncompensated part:
+\begin{equation}
+	\beta'_{C2} = \beta_{C2} - \beta_{C1}
+\end{equation}
+produces an additional skew of the 1-PPS signals in the same way as the
+uncompensated asymmetry of the WR Device in section \ref{subsec:apx:devices}:
+\begin{equation}
+	skew_{PPS} = \beta_{C2} - \beta_{C1}
+\end{equation}
+
+This remaining asymmetry of the \emph{D1}-\emph{C2} connection is compensated in
+the calibration procedure by using the 1-PPS skew as the correction factor.
+Then, the transmission and reception delays of the new calibrator \emph{C2} are
+presented in the equations:
+\begin{align}
+	\Delta_{TXC2} = \frac{1}{2}\Delta_{C2} - skew_{PPS} = \frac{1}{2}\Delta_{C2} - \beta_{C2} + \beta_{C1}\\
+	\Delta_{RXC2} = \frac{1}{2}\Delta_{C2} + skew_{PPS} = \frac{1}{2}\Delta_{C2} + \beta_{C2} - \beta_{C1}
+\end{align}
+
+Each of them has the asymmetry factor $\beta_{C2}$ reduced by $\beta_{C1}$ so
+that the actual hardware asymmetry is reduced only partially. The remaining,
+uncompensated part equals the asymmetry of the primary calibrator \emph{C1}, so
+that the new calibrator \emph{C2} behaves for all practical purposes as the old
+calibrator \emph{C1}.

@@ -1,0 +1,107 @@
+\def\us{\char`\_}
+
+\documentclass[a4paper, 12pt]{article}
+%\documentclass{article}
+
+\usepackage{fullpage}
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata,shapes}
+\usepackage{multirow}
+\usepackage{color}
+\usepackage[latin1]{inputenc}
+\usepackage{verbatim}
+\usepackage{amsmath}
+\usepackage{times,mathptmx}
+\usepackage{chngcntr}
+\usepackage{hyperref}
+%\usepackage{draftwatermark}
+
+\usepackage{listings}
+\usepackage{cancel}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% creating subsubsubsection notation
+% src: http://www.latex-community.org/forum/viewtopic.php?f=5&t=791
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setcounter{secnumdepth}{6}
+\renewcommand\theparagraph{\Alph{paragraph}}
+
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+                                     {-3.25ex\@plus -1ex \@minus -.2ex}%
+                                     {0.0001pt \@plus .2ex}%
+                                     {\normalfont\normalsize\bfseries}}
+\renewcommand\subparagraph{\@startsection{subparagraph}{5}{\z@}%
+                                     {-3.25ex\@plus -1ex \@minus -.2ex}%
+                                     {0.0001pt \@plus .2ex}%
+                                     {\normalfont\normalsize\bfseries}}
+\counterwithin{paragraph}{subsubsection}
+\counterwithin{subparagraph}{paragraph}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\eqoffset}[1]{%
+  {\ensuremath{%
+      {\text{offset}}_{#1}}%
+  }%
+}
+\newcommand{\eqdelay}[1]{{\text{delay}}_{#1}}
+\newcommand{\eqasymm}{{\text{asymmetry}}}
+
+\begin{document}
+
+\title{White Rabbit calibration procedure\\[0.5cm]
+\large {version 1.0}}
+\author{Grzegorz Daniluk\\ CERN BE-CO-HT}
+
+\maketitle
+\thispagestyle{empty}
+
+\begin{figure}[ht!]
+  \centering
+  \vspace{1.3cm}
+  \includegraphics[width=0.50\textwidth]{../../figures/logo/WRlogo.ps}
+  \label{fig:wr_logo}
+\end{figure}
+
+\newpage
+
+\newpage
+
+\newpage
+
+\tableofcontents
+
+\newpage
+\input{intro.tex}
+
+\newpage
+\section{Definitions}
+\input{definitions.tex}
+
+\newpage
+\input{requirements.tex}
+
+\newpage
+\section{Calibration procedures}
+\label{sec:calib_proc}
+\input{procedure.tex}
+
+\newpage
+\input{distant_tricks.tex}
+
+\newpage
+\input{recover_calibrator.tex}
+
+\appendix
+\newpage
+\input{appendix.tex}
+\newpage
+\input{errors.tex}
+
+\newpage
+\bibliographystyle{unsrt}
+\bibliography{references}
+
+\end{document}

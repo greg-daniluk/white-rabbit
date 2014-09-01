@@ -1,0 +1,50 @@
+Before going further into the calibration procedure, some initial definitions
+have to be clarified:
+
+\begin{itemize}
+
+	\item {\bf WR Device}: any device that supports White Rabbit
+		synchronization over an optical link. This can be e.g. the White Rabbit
+		Switch, the SPEC board, or any custom hardware made for a specific
+		application. A WR Device can run as WR Master or/and WR Slave.
+
+	\item {\bf WR Calibrator}: any White Rabbit Device selected from the 
+		available set that is used as a reference to calibrate the 
+		rest of the White Rabbit Devices used in a synchronization system.
+
+	\item {\bf WR Device TX latency} ($\Delta_{TX}$): WR PTP packet delay 
+		from the moment it is timestamped in the transmission circuit
+		inside the FPGA (WR Endpoint module) to the moment when the 
+		transmitted packet reaches a fiber link. It is the sum of: 
+		transmission delay inside FPGA chip; propagation delay of 
+		electronic components and PCB traces; SFP transmitter delay.
+
+	\item {\bf WR Device RX latency} ($\Delta_{RX}$): WR PTP packet delay 
+		from the moment it reaches the receiving SFP module, to the 
+		moment it is timestamped in the reception circuit inside the FPGA (WR
+		Endpoint module). It is the sum of: SFP receiver delay; 
+		propagation delay of electronic components and PCB traces; 
+		reception delay inside FPGA chip.
+
+	\item {\bf WR Device asymmetry} (2$\beta$): the difference between the TX 
+		latency $\Delta_{TX}$ and the RX latency $\Delta_{RX}$.
+
+	\item {\bf Fiber round-trip latency} ($\delta$): the total round-trip 
+		delay of a fiber link (without the Tx/Rx latencies of the WR Devices). 
+		It is the sum of the one-way propagation delays: Master-to-Slave 
+		($\delta_{MS}$) and Slave-to-Master ($\delta_{SM}$).
+
+	\item {\bf Relative delay coefficient} ($\alpha$): the parameter describing 
+		the asymmetry (the difference between $\delta_{MS}$ and 
+		$\delta_{SM}$) of the fiber used in a White Rabbit network. It 
+		is the relative difference of Master-to-Slave and Slave-to-Master 
+		propagation delays ($\alpha = \frac{\delta_{MS} - \delta_{SM}}
+		{\delta_{SM}}$).
+
+	\item {\bf Round trip delay} ($delay_{MM}$): the total packet delay on 
+		a White Rabbit link. It is the sum of communicating parties (Master and
+		Slave) fixed delays ($\Delta_{TXM}$, $\Delta_{RXM}$, $\Delta_{TXS}$,
+		$\Delta_{RXS}$), bitslide values ($\epsilon_M$,
+    $\epsilon_S$) and fiber round-trip latency ($\delta$).
+
+\end{itemize}

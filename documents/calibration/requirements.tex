@@ -1,0 +1,29 @@
+\section{Equipment requirements}
+
+The calibration procedure described in this document makes no assumption on what 
+kind of WR device will be used as a WR Calibrator or what kind of fiber (length, 
+producer) is placed in between WR Devices. However, there are a few general 
+requirements listed below. The first two of them are essential for the
+Calibrator pre-calibration steps described in section
+\ref{sec:procedure:calibrator}.\\
+
+WR Calibration needs:
+\begin{itemize}
+	\item two fiber cables having different lengths, one of them is a few
+		kilometers long (to make $\alpha$ coefficient measurement precise), while
+		the other is a few meters long.
+	\item two pieces of a WR Device selected to be the Calibrators: this means two
+		exactly the same WR Devices, having the same PCB design, the same bitstream
+		downloaded into the FPGA and using complementary SFP transceivers (the same
+		producer, matching Tx/Rx WDM wavelengths\footnote{Check the list of
+		supported SFP transceivers http://www.ohwr.org/projects/white-rabbit/wiki/SFP});
+	\item all WR Devices (i.e. the Calibrator and devices under calibration)
+		capable of producing 1-PPS output from their local clock 
+		and providing it through an on-board connector or test point;
+	\item two oscilloscope cables of the same delay (i.e. the same type and
+		length) or different but known delays so that the correction
+		could be made for all oscilloscope measurements described in
+		the document;
+	\item a device of any producer that is able to measure time
+		spans of less than 1ns for measuring 1-PPS skew. This can be an oscilloscope or timer/counter device e.g. Pendulum CNT-91.
+\end{itemize}
