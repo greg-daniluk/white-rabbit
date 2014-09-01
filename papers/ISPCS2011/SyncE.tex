@@ -1,0 +1,49 @@
+\section{Synchronous Ethernet}
+
+
+Synchronous Ethernet (SyncE, \cite{biblio:SynchE}) plays a very
+important role in timing distribution over the WRN -- it is
+responsible for clock syntonization. The reference clock is used to
+encode the outgoing data stream.  The same clock is retrieved on the
+other side of the physical link (by a so-called slave) using a
+PLL. SyncE allows to use phase detector technologies to achieve
+sub-nanosecond synchronization by increasing the precision of
+timestamps far beyond the that allowed by the 125MHz clock resolution
+(8ns).
+
+The WR switch implementation of PLLs used to retrieve frequency from the
+encoded data is designed to accommodate multiple sources of frequency (physical
+links) with a single source being used (active) at a given time. A seamless
+switching of the active source is one of the goals of the design. This enables
+network topology redundancy. Additionally, the PLL uses a precise PTP link delay
+measurement to correct the clock phase.
+
+The WR clock recovery system uses Digital Dual Mixer Time Difference
+(DDMTD) phase detection \cite{biblio:WRproject}. It consists of two
+units: the Helper PLL (HPLL) and the Main PLL (MPLL), as depicted in
+\figurename~\ref{}.
+
+The MPLL uses offset frequency (\ref{equation:offsetFreq}, DMTD clock)
+produced by the HPLL.
+\begin{equation}
+  \label{equation:offsetFreq}
+     f_{offset}[ns] =  125[MHz] * \frac{2^N}{2^N+ \Delta}
+\end{equation}
+
+The DMTD clock produced by the VCXO is locked to the output of the
+multiplexer of all the possible reference frequencies (uplinks or
+external clock). The holdover unit incorporated into the HPLL
+automatically switches the reference source in case of failure of the
+currently used source.
+
+The MPLL uses a DDMTD for each input channel (reference and feedback
+clocks) to produce phase tags. The phase tags, corrected with the
+phase shift obtained by WRPTP, are sent to the control
+algorithm. Thus, the output reference clock produced by the MPLL is an
+in-phase copy of the grandmaster clock. At any time, all the reference
+channels are compared with the feedback channel and their frequency
+and phase errors are ready for the dual PI controller. Such a solution
+enables fast switching between different frequency sources. Although
+the detection of reference channel failure is fast (3 symbols, X
+time), to avoid instability of the produced reference clock, a delay
+buffer can be implemented to accommodate the failure detection time.

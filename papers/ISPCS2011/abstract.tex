@@ -1,0 +1,27 @@
+\begin{abstract}
+%\boldmath
+
+  This article describes time distribution in a White Rabbit Network. 
+  We start by presenting a short overview of the White~Rabbit
+  project explaining its requirements to highlight the importance of
+  the timing aspects of the system. We then introduce the
+  technologies used to achieve high clock accuracy, stability and
+  resilience in all the components of the network. In particular,
+  the choice of the IEEE~1588-2008 (PTP) and Synchronous Ethernet 
+  standards are explained. In order to accommodate 
+  hardware-supported mechanisms to increase PTP synchronization accuracy, 
+  we introduce the White Rabbit extension to PTP (WRPTP).
+  The hardware used to support WRPTP is presented. 
+  Measured results of WRPTP performance demonstrate sub-nanosecond accuracy over a 5km 
+  fiber optic link with a precision below 10ps and 
+  a reduced PTP-message exchange rate. Tests of the implementation show 
+  full compatibility with existing PTP gear.
+\end{abstract}
+% IEEEtran.cls defaults to using nonbold math in the Abstract.
+% This preserves the distinction between vectors and scalars. However,
+% if the conference you are submitting to favors bold math in the abstract,
+% then you can use LaTeX's standard command \boldmath at the very start
+% of the abstract to achieve this. Many IEEE journals/conferences frown on
+% math in the abstract anyway.
+
+% no keywords

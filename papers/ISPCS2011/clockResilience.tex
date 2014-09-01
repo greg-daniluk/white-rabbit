@@ -1,0 +1,123 @@
+\section{Clock Resilience}
+
+While the previous chapter described WRPTP focusing on a single
+Master-to-Slave link, clock resilience needs to be considered in terms
+of the entire WR Network.
+
+\subsection{Clock Path redundancy}
+
+In a WRN, the clock is distributed along so-called \textit{clock
+  paths}. A path is understood as the cables and switches by which
+information is sent from the transmitter (node/switch) to the receiver
+(switch/node). The continuity of clock distribution -- existence of
+clock paths to all WRN components -- is essential in ensuring clock
+resilience. Therefore, clock path redundancy is introduced. This
+allows to prevent a \textit{single point of failure} \footnote{Failure
+  of a single network component.} from affecting clock distribution
+and inevitably translates into network topology redundancy, which is
+supported by the \textcolor{red}{WR Switch}. The \textcolor{red}{WR
+  Switch V2 (WRSv2)} has two uplinks which can be connected to
+separate sources of timing (downlinks of other \textcolor{red}{WR
+  Switches} or a node being \textit{grandmaster}). Redundancy of the
+WRN is limited by a number of factors:
+\begin{itemize}
+\item Latency of data delivery which limits the number of network
+  layers.
+\item SyncE which enforces a tree-like network structure and ensures
+  high-quality frequency distribution only through a limited number of
+  switches.
+\item Data delivery reliability which enforces a tree-like topology
+  with the roles of ports defined \textit{a priori} by the Rapid
+  Spaning Tree Protocol (RSTP) algorithm (\cite{biblio:IEEE8021D},
+  \cite{biblio:Robustness}).
+\end{itemize}
+Studies (\cite{biblio:Robustness}) suggest that, given the limitations
+in topology, the two uplinks of WRSv2 might be not sufficient to
+achieve high network reliability. The next version of the
+\textcolor{red}{WR Switch (WRSv3)} will eliminate this limitation.
+
+The choice of an active clock path -- the uplink which is used for
+syntonization and synchronization -- is made based on the RSTP
+algorithm.
+
+\subsection{Switch-over}
+
+The redundancy of clock path ensures continuity of clock distribution
+but introduces a possible instability of the recovered clock during
+the process of switching between sources (active uplink), further
+called \textit{switch-over}. Syntonization and synchronization are
+governed by SyncE and WRPTP respectively.  Therefore, both need to
+take account of stability during \textit{switch-over}.
+
+\subsubsection{SyncE-wise}
+
+The White Rabbit clock recovery unit (described in
+Sec.~\ref{sec:hwSupport}), by design, enables multiple inputs (RX
+clocks). The phase and frequency errors of all the input clocks are
+continuously tracked and fed into the VCTCXO control algorithm and a
+\textcolor{red}{delay can be introduced to wait for freqency/phase
+  error validation}, if tests show such a need. Therefore, SyncE-wise
+switch-over is considered seamless for syntonization.
+\textcolor{blue}{I would need some numbers and tests here}
+
+\subsubsection{WRPTP-wise}
+
+Since a WRN is a set of independent M-to-S link connections, WRPTP is
+unaware of whether a given link is active or not. Delay and offset
+measurements are performed on all the links all the time and the
+information is provided to the clock recovery unit (see
+\figurename~\ref{fig:PLL}). Therefore, the switch-over is unnoticible
+for WRPTP and shall be seamless for synchronization.
+\textcolor{blue}{ Measurement of "backup" offset and delay with
+  reference to the primary one - idea by Tomek to further decrease
+  switch-over instability }
+
+\subsection{External conditions variation}
+
+Apart from the switch-over process, another potential source of clock
+instability is a variation of external conditions,
+e.g. temperature. It affects the characteristics of the physical
+connections, consequently changing the delay introduced by the medium
+--the variable delay ($\delta_{ms,sm}$).  It is important to note that
+frequency distributed over SyncE is not affected by this
+phenomenon. Therefore, only synchronization over WRPTP, i.e. delay
+change, needs to be compensated. This is done by periodically
+measuring the delay through a standard exchange of PTP messages. The
+frequency of measurements needs to be greater then the speed of
+temperature changes, which is reasonably slow.
+\textcolor{red}{Therefore, a much lower rate of message exchange than
+  in standard PTP is sufficient.}
+
+\subsection{Loss of WRPTP-messages}
+
+PTP employs timeouts to address PTP-specific message loss, provoking
+repetition of operations and re-sending of messages. WRPTP uses the
+same idea during the \textit{WR Link Setup} (see
+Sec.~\ref{sec:wrLinkSetup}) repeating operations and re-sending WR
+management messages in case of message loss. The measurement of the
+offset and delay in WRPTP is much more tolerant to multiple message
+loss. Unlike standard PTP, WRPTP is responsible only for
+synchronization (syntonization is done through SyncE). After achieving
+synchronization with the master at the beginning of the connection,
+the offset changes only due to temperature-related delay
+variation. The rate of delay measurements through the PTP-message
+exchange is supposed to be much greater than the rate of change of
+physical medium parameters. Therefore, multiple PTP-message loss is
+tolerated with no effects on clock stability.  \textcolor{blue}{we
+  should probably have a sanity check in the PTP daemon for ruling out
+  impossible corrections, i.e. very fast changes probably due to a
+  measurement or transmission error}
+
+\subsection{Cascading Boundary Clocks}
+
+A switch can be seen as a boundary clock. In standard PTP, a cascade
+of boundary clocks faces nonlinear decreasing synchronization accuracy
+problems due to error accumulation.  \textcolor{blue}{
+  \begin{itemize}
+  \item if it is possible to make measurements (we need $\geq$ 3
+    switches), measurements here
+  \item the deterioration should be due to SyncE...
+  \item measurements would answer the question: how many layers of
+    switches we can have.
+\end{itemize}
+}
