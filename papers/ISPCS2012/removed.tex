@@ -1,0 +1,19 @@
+The synchronization between UTC time base at GPS receiver and measurement point is performed 
+using two independent systems (running in parallel):
+\begin{enumerate}
+  \item General Machine Timing at CERN and detectors' timing system (e.g OPERA's) at LNGS.
+  \item White Rabbit at CERN and LNGS.
+\end{enumerate}
+\figurename~\ref{fig:operaTiming} depicts synchronization of the OPERA \cite{biblio:TOF} 
+detector and delays introduced by each of its elements. Additionally, the new White Rabbit 
+installation is presented in the figure to indicate its role in the synchronization. 
+
+The former systems (1) have been in operation for CNGS time transfer since 2010. 
+Their accuracy is achieved by hand-evaluating delays introduced by each element of the timing 
+systems at CERN and LNGS using methods described in 
+\cite{biblio:BECOHT_CNGS} and \cite{biblio:TOF}.
+The latter system, White Rabbit, has been installed at CERN and LNGS very recently. 
+It enables to transfer the common UTC time base from the GPS 
+receiver to the measurement points automatically compensating for the delays and their variation. 
+Its installation setup is described in the next section. 
+
