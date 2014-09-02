@@ -1,0 +1,292 @@
+/*
+-------------------------------------------------------------------------------
+-- Title      : RTU spec
+-- Project    : White Rabbit Switch
+-------------------------------------------------------------------------------
+-- File       : wrsw_rtu_spec.txt
+-- Authors    : Maciej Lipinski (maciej.lipinski@cern.ch)
+-- Company    : CERN BE-CO-HT
+-- Created    : 2010-10-06
+-- Last update: 2010-10-08
+-- Description: This file contain RTU specification for developers
+--              of components which need to communicate with RTU
+--              (mainly software developers).
+-------------------------------------------------------------------------------
+
+*/
+
+
+1. What does RTU do ?: 
+  RTU takes packet source & destination MAC addresses, VLAN ID
+  and priority and decides where and with what final priority (after
+  evaluating the per MAC-assigned priorities, per-VLAN priorities, 
+  per-port and per-packet) the packet shall be routed.
+
+2. Hardware interface (inputs/outputs to/from other HDL components)
+2.1 ZBT SRAM
+  The main hash table is stored in ZBT SRAM. The memory is organized
+  in the following way:
+      addr 0: bucket 0 consists of [entry 1] [entry 2] [entry 3] [entry 4]
+      addr 1: bucket 1 consists of [entry 1] [entry 2] [entry 3] [entry 4]
+
+  "entry" in the memory is called "MAC entry" in this doc.
+  Its layout is defined in data_layout_in_mems.odt. 
+  There are four entries in one bucket. The address of a bucket is calculated
+  as a hash of MAC and FID. The hash is defined by a polynomial (see 3.1).
+  A MAC entity is 8 words (8x32 bits), 5 words of data and 3 empty words 
+  (to make the addressing easier). 
+  An address of MAC entry has the following structure:
+      16 bit  - bank
+  15 - 5 bits - hash address 
+  4  - 3 bits - (bucket) number of MAC entry in the bucket (0-4)
+  2  - 0 bits - zeros (this is the address inside MAC entry)
+
+2.2 N-port input/output interface.
+  SEE: wrsw_rtu.vhd
+
+2.2 WISHBONE
+  The communication with uProcessor is performed through Wishbone Interface.
+  The interface is defined in wrsw_rtu_wb.wb, described in wrsw_rtu_wb.html
+  and implemented in wrsw_rtu_wb.vhd & wrsw_rtu_wb.h files.
+  It is described in details (software-wise) in section 3.
+
+3. Software interface (talking with uProcessor):
+  RTU communicates with uP using Wishbone interface (generated from
+  wrsw_rtu_wb.wb, described in details in wrsw_rtu_wb.html).
+  The wishbone bus enables communication between uP and RTU by a set
+  of registers, memories and FIFOs.  For software developers, the header
+  can be also generated using wrsw_rtu_wb.wb
+  (see documentation/specifications/hdlspec/WRSW_RTU/wrsw_rtu_wb.h).
+  
+3.1 RTU Global Control registers 
+  Settings concerning entire RTU can be specified using this reg. It includes 
+    - turning on/off the RTU (G_ENA),
+    - setting active memory banks (HT_BSEL & HCAM_BSEL)
+    - specifying polynomial for hash calculation
+
+  The bank which is set to be active is accessed (read) by the RTU (HW).
+  The bank which is NOT set to be active (inactive bank) is accessed by
+  the software through wishbone. HT_BSEL defines active bank of Main
+  hastbable which is accessed from SW by writing to MFIFO_R0 & MFIFO_R1
+  registers (see 3.4). HCAM_BSEL defines active bank of Hash collision
+  memory (HCAM) which is accessed from S/W directly at address 0x4000
+  (see wrsw_rtu_wb.html).
+
+3.2 Port Control Register xxx
+  For each port xxx such a control register is defined. See wrsw_rtu_wb.html
+  for details of the register's layout.
+
+3.3 Unrecognized request FIFO (UFIFO)
+
+  It is a set of FIFOs (r0 - r4) which hold data of unrecognized
+  (not found in hash table) MAC entry (source & destination MAC,
+  priority, PID, VID, etc). It shall be used by S/W for learning process. 
+  
+  There is an interrupt associated with the UFIFO which informs uP that
+  the there is data to be read from UFIFO.
+
+3.4 Main hash table 
+  The main hash table is kept in ZBT SRAM. It is addressed by hash calculated
+  using polynomial defined in "RTU Global Control Register" (see 3.1).
+  uP has only write access to this memory. It should be written by the
+  learning algorithm. 
+
+  The main hash table is only read by RTU and only written to by S/W
+ (through MFIFO).
+  
+  Basic write access to hash table shall be done in the following way:
+  - write 1 to MFIFO_R0 (AD_SEL defines whether AD_VAL is address or data),
+  - write address (to which data should be written) to MFIFO_R1,
+  - write 0 to MFIFO_R0 (AD_SEL defines whether AD_VAL is address or data),
+  - write data to MFIFO_R1 (minimum one MAC entry, so 5 words,
+    a bunch of data is considered for write to SRAM
+    only if the number of data words is greater or equal to
+    c_wrsw_entry_words_number (5), which is a parameter in: 
+    /home/maciejl/wrdev_v3/hdl/common/global_defs.vhd).
+ 
+  The consecutive writes to MFIFO_R1 (AD_SEL = 0) are written to consecutive  
+  SRAM memory addresses (atomic write) as long as one of the following
+  conditions is met:
+  - MFIFO is empty (all data written to MFIFO_R1 have been written to SRAM),
+  - next address is written to MFIFO_R1 (AD_SEL = 1); in such case,
+    an atomic write to SRAM is finished. and the next address is written
+    with the provided data in the successive atomic write.
+
+  The layout of the MAC entry is defined in data_layout_in_mems.odt.
+  The MAC entry fields are described in rtu_sim.c file.
+
+  If two consecutive MAC entries are to be written to SRAM,
+  they can be written with one atomic write operation
+  (e.g.: when writing new MAC entry to the same bucket, so the end_of_bucket
+  field needs to be updated in the previous MAC entry):
+    MAC entry address  \
+    MAC entry data     /   atomic write
+    3 empty words     /
+    MAC entry data   /   
+  
+  Otherwise, write one MAC entry at a time, so :
+    MAC entry address  \
+    MAC entry data     /   atomic write
+    MAC entry address  \   
+    MAC entry data     /   atomic write
+    [...]
+
+
+  The address supplied shall have the following layout
+  (defined also in data_layout_in_mems.odt) :
+  15 - 5 bits - hash address
+  4  - 3 bits - (bucket) number of MAC entry in the bucket (0-4)
+  2  - 0 bits - zeros (this is the address inside entry)
+
+  The data written by S/W is written to the inactive bank. It is not 
+  used by RTU until the active bank is switched (see 3.1).
+  
+
+  ----------------------------------------------------------------------------
+  IMPORTANT: An exact mirror of SRAM memory needs to be kept in local memory. 
+             This is because it is not possible to read ZBT SRAM from uP.
+             There is only write access from uP to ZBT SRAM through MFIFO.
+  ----------------------------------------------------------------------------
+
+  S/W should know, by checking against local copy of Main hash table,
+  to which entry in given bucket, a MAC entry 
+  should be written, and if there is free place in a give bucket. 
+
+3.5 Hash collisions memory (HCAM)
+
+  It is accessed directly (address = 0x4000), write and read.
+  MAC entry data layout provided in data_layout_in_mems.odt applies.
+  
+  The address supplied shall have the following layout
+  (also in data_layout_in_mems.ods) :
+      8 bit  - bank - is ignored, it is defined by HCAM_BSEL (see 3.1)
+  7 - 3 bits - HCAM address
+  2 - 0 bits - MAC entry word address
+
+  The data written to HCAM is written by RTU to the inactive bank. It is not 
+  used by RTU until the active bank is switched (see 3.1).
+  
+  Read access is also to inactive bank; therefore,
+  it is advised to keep mirror of HCAM in the local memory.
+  
+3.6 Aging bitmap for main hash table.
+  
+  Aging memory is common for both banks ( and it is not cleared when
+  the banks are switched, it is clear-on-read). '1' indicates that the
+  "MAC entry" at the corresponding hash address in main hash table has
+  been accessed (matched). 
+
+  Software should read the Aging bitmap periodically to check which MAC
+  entries are accessed, which shall enable implementation of aging
+  (deletion of MAC entries representing devices removed from the 
+  network).
+
+3.6 Aging register for HCAM
+  
+  Each bit corresponds to one MAC entry in HCAM memory.
+  The same rules as in 3.6 apply.
+  
+3.7 VLAN table
+
+  Each word of VLAN table (32 bits) represents one VLAN entry
+  (no bank switching implemented). The layout of VLAN entry is defined
+  in data_layout_in_mems.ods
+ 
+3.8 IRQ
+  
+  There is only one interrupt generated by RTU. This is an interrupt 
+  associated with the UFIFO. 
+
+  There are four registers associated with interrupts in WB interface:
+  - rtu_eic_idr : interrupt disable
+  - rtu_eic_ier : interrupt enable
+  - rtu_eic_imr : interrupt mask
+  - rtu_eic_isr : interrupt status register
+  It is described in details in wrsw_rtu_wb.html file.
+
+  In general, all the interrupts inputted to WB interface
+  (by H/W) are multiplexed into one interrupt signal (see: wb_irq_o). 
+  When the uP receives it, it needs to read 'rtu_eic_isr' register 
+  to check which irq it was. 
+  The interrupt associated with UFIFO does not required to be cleaned
+  (i.e. by writing rtu_eic_isr). This is because the interrupt is 
+  triggered by the level of UFIFO empty signal. Once UFIFO is read out, 
+  the interrupt is cleaned automatically.
+
+  For example S/W implementation of the interrupts (generated by WB)
+  handling, please see the code:
+  trunk/software/drivers/wr_vic/wr_vic.c
+  
+4 HASH address
+  
+  Below table gives the kinds of hashes which are implemented by RTU
+  and their hex representation of polynomial (to be supplied to RTU
+  Global Control registers, see 3.1).
+  
+  -----------------------------------------------------------
+  --|        name   |      polly equation     | polly (hex) |
+  -----------------------------------------------------------
+  --|  CRC-16-CCITT | 1+x^5+x^12+x^16         |    0x1021   |
+  --|  CRC-16-IBM   | 1+x^2+x^15+x^16         |    0x8005   |
+  --|  CRC-16-DECT  | 1+x^3+x^7+x^8+x^10+x^16 |    0x0589   |
+  -----------------------------------------------------------
+  
+  Please, refer an example S/W implementation of these hashes in the file:
+  /home/maciejl/wrdev_v3/software/tests/test_rtu/rtu_common.c 
+  If you want to implement the calculation in a more efficient way,
+  please make sure you've got the same result as the example implementations
+  (which were tested against RTU H/W implementation).
+  
+  
+5 RTU algorithm
+
+  The exact lookup algorithm is described in rtu_sim.c file. This algorithm 
+  was used to simulate and test RTU.
+  
+--------------------------------------------------------------------------
+                           AUXILIARY: 
+--------------------------------------------------------------------------
+
+0) Wishbone interface generator:
+   The project is detailed here: http://www.ohwr.org/projects/wishbone-gen. 
+   In short, the *.wb file enables to generate:
+   - vhdl/verilog source,
+   - C header
+   - html description of the interface
+   For RTU, the .wb file, html info and C header can be found here:
+   documentation/specifications/hdlspec/WRSW_RTU/ . 
+   The vhd file is in RTU sources: hdl/modules/wrsw_rtu/wrsw_rtu_wb.vhd. 
+   
+1) RTU spec files (documentation/specifications/hdlspec/WRSW_RTU)
+   wrsw_rtu_spec.txt -------- this file.
+   data_layout_in_mems.ods -- here is defined the layout of RTU memories:
+                               MAC entry, VLAN entry
+   rtu_sim.c ---------------- software simulation of the hardware algorithm,
+                              based on this file hardware algorithm
+                              was implemented (much easier to read for S/W
+                              people than HDL code :). It is used in RTU test
+                              application.  There outcome of this simulation
+                              is compared with the outcome of HW implementation
+                              when the test application is run.
+   wrsw_rtu_wb.wb ----------- Wishbone file, defines RTU's wishbone interface,
+                              based on it, the below files are generated 
+			      (and wrsw_rtu_wb.vhd found in RTU sources) :
+   wrsw_rtu_wb.h ------------ header with S/W addresses
+   wrsw_rtu_wb.html --------- describes the RTU's Wishbone interface in
+                              user-friendly way (LOOK HERE)
+
+2) RTU test application (/software/tests/test_rtu/):
+   -------------------------- application written in C, it compares outcome
+                              of the hardware matching and software simulation.
+   rtu_test_main.c ---------- detailed description of how the test app. works
+                              can be found here
+   rtu_hw.c ----------------- the interface with hardware is implemented here
+   rtu_sim.c ---------------- software simulation of the hardware algorithm,
+                              based on this file hardware algorithm was
+                              implemented (much easier to read for S/W people
+                              than HDL code :). The outcome of this simulation
+                              is compared with the outcome of HW implementation
+                              when the test application is run
+                              
+3) Example code:
+  - IRQ handling ------------ here: trunk/software/drivers/wr_vic/wr_vic.c

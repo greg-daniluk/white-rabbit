@@ -1,0 +1,457 @@
+
+Switch endpoint spec
+Tomasz Wlostowski, 2009/04/13
+ver 0.0.1
+--------------------------------------
+
+TOC:
+--------
+
+0. Introduction
+1. General idea
+2. Block diagram
+	2.1. RX path
+	2.2. TX path
+	2.3. Endpoint controller
+	2.4. Generic parameters
+3. Interface description
+	3.0. Common/miscellanous signals
+	3.1 PHY interface
+	3.2. Host (switch fabric) interface
+	3.3. RTI (Routing Table Interface).
+	3.4. Wishbone system bus
+4. Registers
+	4.0. EPx_RST - Endpoint reset register
+	4.1. EPx_CTL - Endpoint control registers:
+	4.2. EPx_STAT - Endpoint status register
+	4.3. EPx_IER - Endpoint interrupt enable register
+	4.4. EPx_ISR - Endpoint interrupt status register
+	4.5. EPx_ACT_CTL - Endpoint statistics accounting control register
+	4.6. EPx_ACT_CNTR_xxx - Endpoint statistics counter register family
+	4.7. EPx_TX_TS_FIFO_STATUS - Endpoint TX timestamping block FIFO status register
+	4.8. EPx_TX_TS_FIFO_TAG   - Endpoint TX timestamping unit frame tag register
+	4.9. EPx_TX_TS_FIFO_TSVAL - Endpoint TX timestamping unit timestamp value register
+	4.10. EPx_TX_LCR - TX Link Control Register value register
+	4.11. EPx_RX_LCR - RX Link Control Register value register
+
+
+0. Introduction
+
+	I wrote part of this stuff being in hospital, drugged a little bit with analgesics. So, if you find this document stupid/crazy/immature, don't hestitate to give some feedback :) Also, let me apologize for the quality of diagrams, they were drawn on my laptop using touchpad. The diagrams show my personal vision of the design. You don't have to use the exact structure I've proposed, just try to keep the interfaces compatible with descriptions. If something is left unexplained, do it as you wish - or ask me if you have any doubts. 
+
+1. General idea
+
+	Switch endpoint block implements some functionality of typical Ethernet MAC + some WR-specific extensions, like timestamping, fragmentation and HP/SP frames. Frames are passed from/to Host (Switch Fabric Interface). The endpoint also performs initial frame header analysis, distinguishes HP, SP, fragmented/contiunation frames. Parsed header data is passed via RTI to Routing Table Unit.
+
+2. Block diagram
+
+The general block diagram is on fig.1. It can be split into 3 parts:
+
+2.1. Upper part contains the RX path. It gets the raw data from PHY, decodes it, checks the alignment using both 8b10b decoder and PHY sync/pass line. Decoded data is then transferred to main switch clock (refclk_i) domain using clock alignment FIFO. 
+
+Then RX data is passed to RX deframer. Purpose of this block is to:
+- decode (8b10b) data stream
+- detect frame preambles, headers, CRCs
+- check frame integrity (FCS, header CRC32 for HP)
+- detect frame type: SP, HP, unicast, multicast, broadcast
+- parse frame headers (extract src/dst address, ethertype, HP flags, VLAN id/priority) and pass the data to Routing Table Interface).
+- timestamp received packets and pass the timestamp and source-port ID data to Switch Fabric i/f
+
+There is also separate preamble detection block, operating in parallel to RX deframer in phy_rbclk_i clock domain. Its purpuse is to generate trigger signal for taking precise RX timestamps. 
+
+2.2. Lower part of image shows the TX path. Its purpose is to:
+- take high-level frame data
+- encapsulate it, calculate all necessary checksums, add preamble, SFDs, EPDs, optional carrier extension
+- encode with 8b10b
+- be able to interrupt frame currently being transmitted. 
+- timestamp certain packets and record the timestamps.
+
+Output data stream is then eventually passed though clock alignment FIFO (of same structure as one in RX path) and 8b-10b encoded. TX alignment FIFO is optional, and it should be possible to enable/disable it in entity parametrs. In case of downlink endpoint we don't need it at all, as the PHY is clocked with refclk_i. Uplink PHYs may be clocked both using compensated REFCLK or with loopbacked RBCLK - in this case alignment logic is necessary.
+
+Note for RX FIFO:
+For nonsynchronous mode it should compensate for local/remote frequency difference (~64 bytes should be enough for that) and during inter-frame gap, RX framing logic should purge it to avoid overflows. 
+For sync mode it should ONLY compensate for phase shift between refclk_i and phy_rbclk_i, not introducing any excessive delay, as it may affect determinism of switch for HP frames.
+
+2.3. Center part contains Wishbone bus slave allowing for access to endpoint registers and timestamping unit. 
+
+Timestamping unit gathers both RX and TX timestamps, using counter clocked by refclk_i. Timestamps are gathered upon detection of SFD in data stream. Timestamps should be taken on both refclk_i edges (or you can use counter running at 2*refclk_i freq - it's up to you to decide) - see drawing 2 for explanation.
+
+2.4. Generic parameters
+
+Only one :)
+- TX_PATH_CLK_SOURCE: allowing for selection of clock for PHY transmit path between rbclk_i and refclk_i
+
+3. Interface description
+
+	This section contains descriptions of interface signals.
+
+3.0. Common/miscellanous signals
+
+- refclk_i - 125 MHz reference clock input. Master clock for entire switch.
+- refclk2_i - 62.5 MHz reference clock (refclk/2, phase-aligned). Master clock for host interface and Wishbones
+- rst_n_i - global switch reset input (active low). Resets all endpoint logic
+- rst_ts_n_i - ASYNCHRONOUS reset of endpoint's timestamp counter. Active low.
+- pps_i - PPS signal input, synchronous to refclk_i. Rising edge resets timestamp counters.
+
+
+3.1 PHY interface
+
+	Endpoint block should primarily support TLK1221 GbE PHY from Texas Instruments. As most fiber PHYs are quite similar to each other, it shouldn't be very difficult to port endpoint design to use another chip. PHY interface uses following signals: (for detailed documentation, see TLK1221 datasheet)
+
+TEMPLATE: signal_name [bus range] <clock domain>, driven by: block - description
+
+PHY TX path:
+
+- phy_td_o [9:0] <refclk_i/phy_rbclk_i>, driven by: TX path 8b10b-encoder
+	PHY transmit data, 8b10b-encoded.
+
+- phy_enable_o <refclk_i/phy_rbclk_i>, driven by: EPx_CTL register, bit PHY_EN
+ 	PHY enable signal, active high during normal PHY operation
+
+- phy_syncen_o <refclk_i/phy_rbclk_i>, driven by: EPxCTL register, bit PHY_SYNCEN
+	PHY synchronization logic enable. High level enables internal comma detection and channel alignment stuff
+	in PHY. It should be held high during normal operation.
+
+- phy_loopen_o <refclk_i/phy_rbclk_i>, driven by: EPxCTL register, bit PHY_LOOPEN
+	PHY loopback mode enable. Active high, normally should be driven low (used for testing/initialization
+	purposes)
+
+- phy_prbsen_o <refclk_i/phy_rbclk_i>, driven by: EPxCTL register, bit PHY_PRBSEN
+	PHY pseudo-random bit sequence generator enable. Active high, normally should be driven low (used for   	
+	testing/initialization purposes)
+
+
+PHY RX path:
+- phy_rbclk_i <clock signal>, driven by: PHY RBCLK0 output
+	Byte clock recovered from received Ethernet data stream.
+
+- phy_rd_i <phy_rbclk_i>, driven by: PHY RDx outputs
+	Received raw data stream, 8b10b-encoded, comma-aligned.
+
+- phy_sync_pass_i <phy_rbclk_i (check the doc)>, driven by: PHY SYNC/PASS pin
+	PHY sync detect signal (see TLK1221 datasheet for details)
+
+3.2. Host (switch fabric) interface
+
+This interface connects the endpoint with switch fabric (commutation field) and packet buffer/scheduler logic. 
+ 
+RX path signals (all synchronous to refclk2_i):
+
+- rx_enable_i, driven by: fabric i/f
+	'1' enables reception operation. When it's asserted high in the middle of the frame, endpoint should start reception operation with the next
+	incoming frame.
+
+- rx_frame_stb_o, driven by: RX deframer
+	RX frame strobe signal, indicating beginning of reception of ethernet frame. It's asserted 1 for single 		
+	REFCLK cycle upon detection of valid preamble and SFD.
+
+- rx_data_o [15:0], driven by: RX deframer
+	Received data bus. Outputs entire frame data, starting from DST MAC and ending with FCS value and 
+	additional out-of-band data. To reduce the fabric clock for easier FPGA implementation, single clock cycle allows for transferring
+	two bytes of frame data. First byte is MSB, the second one - LSB.
+
+- rx_data_bytesel_o, driven by: RX deframer
+    '1' Indicates single byte transfer on rx_data_o. May occur only at the end of block of data (e.g. frame, header, tag or OOB).
+    Transferred byte is the MSB of rx_data_o.
+   
+    
+- rx_data_valid_o, driven by: RX deframer
+	'1' indicates that current byte on rx_data_o is valid frame byte.
+
+- rx_hdr_begin_stb_o, driven by: RX deframer
+	RX header begin strobe signal. Asserted hi for one REFCLK cycle when the deframer detects beginning of frame header.
+
+- rx_hdr_done_stb_o, driven by: RX deframer
+	RX header done strobe signal. Asserted hi for single REFCLK cycle after RX deframer has parsed frame 			
+	headers and outputted them to rx_data_o. Along with assertion of this signal, rx_is_hp_o, rx_hp_flags_o, rx_is_fragmented_o, 
+	rx_is_frag_cont_o, rx_is_pause_o, rx_is_unicast_o, rx_is_multicast_o, rx_is_broadcast_o are set to proper 
+	values. The data passed afterwards to rx_data_o is frame payload data.
+
+- rx_oob_begin_stb_o, driven by: RX deframer
+	RX out-of-band data begin strobe signal. Asserted hi for one REFCLK cycle after all the frame payload data (with FCS)
+	has been outputted to rx_data_o bus and RX deframer is about to send source port ID and reception timestamp to Switch fabric i/f.
+
+- rx_oob_done_stb_o, driven by: RX deframer
+	RX out-of-band data end strobe signal. Asserted hi for one REFCLK cycle upon sending source port ID and RX timestamp to rx_data_o.
+
+- rx_done_stb_o, driven by: RX deframer
+	RX done strobe signal. Asserted hi for one REFCLK cycle upon reception of entire frame (with header/OOB data).
+
+- rx_idle_o, driven by: RX deframer
+	RX path idle signal, active hi if RX path is not doing anything interesting	(when it's receiving commas or 
+	link idle pattern )
+
+- rx_sync_o, driven by: RX deframer, sync detect logic
+	RX sync signal. Derived from phy_sync_pass_i and by checking correctness of phy_rd_i by 802.x-compliant 
+	sync FSM. High state means link is synchronized. When de-synchronization occurs during frame reception, 
+	operation is aborted and error code shall be issued. When rx_sync_o is low, RX deframer may not output any 
+	data to fabric interface.
+
+- rx_error_stb_o, driven by: RX deframer
+	RX error signal. Asserted hi for 1 REFCLK cycle along with rx_done_stb_o if an error has been
+	detected. Detection of error causes immediate abort of reception operation. Along with assertion of 
+	rx_error_o, error code shall be output on rx_error_code_o.
+
+- rx_error_code_o, driven by: RX deframer
+	RX error code. Asserted along with rx_error_o. 	Proposed error codes are below:
+
+	type t_mac_rx_error_code is std_logic_vector(3 downto 0);
+
+	constant c_RXERR_INVALID_CRC: 			t_mac_rx_error_code := "0000";
+	constant c_RXERR_ENCODING_ERROR:		t_mac_rx_error_code := "0001";
+	constant c_RXERR_FRAME_TOO_LONG: 		t_mac_rx_error_code := "0010";,
+	constant c_RXERR_FRAME_TOO_SHORT: 		t_mac_rx_error_code := "0011";,
+	constant c_RXERR_INVALID_HEADER: 		t_mac_rx_error_code := "0100";
+	constant c_RXERR_GAP_VIOLATION: 		t_mac_rx_error_code := "0101";
+	constant c_RXERR_HP_HEADER_INVALID: 		t_mac_rx_error_code := "0110";
+	constant c_RXERR_LINK_OUT_OF_SYNC: 		t_mac_rx_error_code := "0111";
+	
+
+RX frametype signals:
+
+- rx_is_hp_o, driven by: RX deframer
+	High state means that current frame contains valid HP header. It's asserted along with rx_hdr_done_stb_o.
+
+- rx_hp_flags_o, driven by: RX deframer
+	Value of hp_flags field extracted from HP frame header. 
+
+- rx_is_fragmented_o, driven by: RX deframer
+	High state means that current frame has been fragmented (e.g. broken frame marker has been detected). 
+	Signal is asserted along with rx_done_stb_o.
+
+- rx_is_frag_cont_o, driven by: RX deframer
+	Hi state indicates that currently received frame contains SP frame continuation header. Asserted along with 
+	rx_hdr_done_stb_o.
+	
+- rx_is_pause_o, driven by: RX deframer
+	Hi state indicates that we've just received PAUSE frame. Delay value extracted from frame shall be 
+	outputted to rx_pause_count_o.
+
+- rx_pause_count_o [15:0], driven by: RX deframer
+	Value of pause interval. 
+
+- rx_is_unicast_o: driven by: RX deframer
+- rx_is_multicast_o: driven by: RX deframer
+- rx_is_broadcast_o: driven by: RX deframer
+	'1' means that frame is unicast/multicast/broadcast frame. Asserted along with rx_hdr_done_stb_o.
+
+
+
+TX path signals (all synchronous to refclk2_i)
+
+-	tx_data_i[15:0], driving: TX framer.
+	Transmit path data input. Should contain full frame data (WITHOUT preamble, SFD and FCS, which are added by TX framer).
+
+-   tx_data_bytesel_i, driving: TX framer.
+    '1' Indicates single-byte transfer on tx_data_i. Transmitted byte is placed on tx_data_i[15:8] (MSB).
+
+-	tx_enable_i, driving: TX framer, 8b10b encoder, etc.
+	TX path enable. Active high.
+
+-	tx_frame_stb_i, drives: TX framer.
+	RX frame strobe signal, Should be asserted for single REFCLK cycle in order to start transmission of the 	
+	frame. Upon assertion, TX framer begins transmission of preamble, SFD, headers. Frame data should be 
+	supplied on tx_data_i when tx_input_ready goes high.
+
+-	tx_oob_begin_i, drives: TX framer
+	Single REFCLK-long '1' indicates beginning of out-of-band data for this frame (e.g. frame tag value). 
+
+-	tx_oob_end_i, drives: TX framer
+	Single REFCLK-long '1' indicates end of out-of-band data for this frame (e.g. frame tag value). 
+
+- 	tx_input_ready_o: driven by: TX framer.
+	TX framer input ready - '1' means that TX framer is ready to accept data ib tx_data_i.
+
+-	tx_data_valid_i: driving TX framer.
+	TX input data byte valid. '1' means that byte currently transferred on tx_data_i is valid frame byte. Since TX framer contains small (~16
+	byte) FIFO, we can suspend frame data during frame transmission for few clock cycles by driving this signal low.
+
+-	tx_idle_o, driven by: TX framer.
+	Active '1' when TX framer is not transmitting anything. Goes '1' after transmission of the frame and 12-
+	byte inter-frame gap. Goes '0' upon assertion of tx_frame_stb_i.
+
+- 	tx_is_hp_i, drives: TX framer.
+	Asserted with tx_frame_stb_i. '1' means that we want to transmit HP frame, bypassing FIFOs. HP frame data 
+	shall be sent immediately when tx_input_ready goes high in single block. 
+
+- 	tx_preemptible_o, driven by: TX framer
+	Asserted '1' when frame is long enough (e.g. it fits the min. 64-byte requirement) to be fragmented.
+	When it's 0 you can only abort the frame and retransmit it later.
+
+- 	tx_fragment_i, drives: TX framer.
+	Assertion '1' for single refclk_i cycle during frame transmission causes the frame to be fragmented. 
+	TX framer should generate proper markers and CRC + IFG. TX framer should store necessary data 
+	(previous fragment CRC and last transmitted byte offset). 
+
+-	tx_continue_i, drives: TX framer.
+	Assertion '1' for single refclk_i cycle along with rx_frame_stb_i causes TX framer to generate continuation
+	SP frame. When tx_input_ready goes high, host interface should continue sending frame data starting at previous offset.
+
+-	tx_end_frame_i: drives TX framer.
+	Assertion '1' for single refclk_i cycle tells the TX framer that we're done sending frame data. TX framer 
+	shall then generate proper CRC and IFG, then go idle.
+
+-	tx_send_pause_i: drives TX framer.
+	Assertion '1' for single refclk_i cycle along with rx_frame_stb_i causes TX framer to send 802.x PAUSE frame
+	with counter value supplied by tx_pause_count_i input.
+
+- 	tx_pause_count_i[15:0]: drives TX framer.
+	Value of pause interval. 
+
+-	tx_abort_i, drives: TX Framer.
+	TX abort input. Immediately aborts currently transmitted frame, with INVALID FCS.
+
+
+- 	tx_error_stb_o, driven by: TX framer
+	TX error signal. Asserted hi for 1 REFCLK cycle if an error has been
+	detected. Detection of error causes immediate abort of transmit operation (generating frame with invalid FCS)
+	Along with assertion of tx_error_o, error code shall be output on tx_error_code_o.
+
+- 	tx_error_code_o, driven by: TX framer
+	TX error code. Asserted along with tx_error_o. 	Proposed error codes are below:
+
+	type t_mac_tx_error_code is std_logic_vector(3 downto 0);
+
+	constant c_TXERR_LINK_OUT_OF_SYNC: 		t_mac_rx_error_code := "0000";
+	constant c_TXERR_BUFFER_UNDERRUN: 		t_mac_rx_error_code := "0001";	-- TX buffer underrun error (e.g. FIFO is empty in the middle of 
+											-- transmission of the frame
+
+
+3.3. RTI (Routing Table Interface).
+
+	This i/f is used by endpoints to send frame header data to Routing Table Unit. RTU then takes the decision 
+where (and sometimes, when) to send the frame. RTU contains independent port (with cache) for each RTI interface. 
+
+RTI signals (all synchronous to refclk_i)
+
+- rti_idle_i, driven by: RTU
+	'1' means that RTU port is idle and ready to accept RTU request.
+
+- rti_rq_begin_o, driven by: endpoint
+	Assertion '1' for single refclk_i cycle indicates beginning of new RTU request. After then, endpoint shall
+	send the parsed frame header data on rti_data_o and rti_field_o lines.
+
+- rti_data_o [7:0], driven by: endpoint
+- rti_field_o [6:0] , driven by: endpoint
+	RTU request data. rti_field_o contains address of current header field (e.g 0000 = 1st byte of 
+	destination MAC, 1000 = first byte of SRC mac, etc....), rti_data_o contains the value.
+
+- rti_data_valid_o, driven by: endpoint
+	'1' indicates that current data on rti_data_o and rti_field_o is valid.
+
+- rti_rq_done_o, driven by: endpoint
+	Assertion '1' for single refclk_i cycle indicates an end of RTU request. After some clock cycles RTU shall 	
+	respond with routing decision.
+
+3.4. Wishbone system bus
+
+	Wishbone bus is used for accessing endpoint register. It's a
+	standard Wishbone interface with two interrupt lines. WB bus is
+	synchronous to refclk2_i.
+
+Additional IRQ lines:
+-	sys_irq_o: '1' indicates pending interrupt request. 
+-	sys_irq_ack_i: '1' indicates that interrupt controller has received the interrupt request. When endpoint 
+	sees this signal asserted, it shall de-assert it's sys_irq_o output.
+
+
+4. Registers.
+
+There is no strict register map. Detailed addresses and bit offsets have to be agreed between H/W module designer and driver developer.
+My proposal is following:
+
+4.0. EPx_RST - Endpoint reset register
+
+(w/o) Writing anything to EPx_RST register causes immediate software reset of all endpoint logic.
+
+4.1. EPx_CTL - Endpoint control registers:
+
+Bit fields:
+	(r/w) EPCTL_ENABLE - enable TX/RX path (active 1, value '0' overrides fabric i/f signals tx_enable_i and rx_enable_i)
+	(r/w) EPCTL_PHYEN, EPx_SYNCEN, EPx_PRBSEN, EPx_LOOPEN - PHY control signals (GPIO)
+	(r/w) EPCTL_TX_CARRIER_EXT_EN - '1' enables carrier extension feature for transmitted frames
+
+	(r/w) EPCTL_RX_JUMBO_EN - enable reception of jumbo frames (e.g. > 1518-byte frame length will not cause an error)
+	(r/w) EPCTL_RX_RUNT_EN - enable reception of runt frames (e.g. < 64-byte frame length will not cause an error)
+	(r/w) EPCTL_RX_FIFO_PURGE - writing 1 immediately purges clock alignment FIFOs.
+
+	(w/o) EPCTL_LCR_SEND_EN - writing '1' causes EPx_TX_LCR register to be sent to remote endpoint using 802.x Send Config Register pattern. EPSTAT_LCR_SENT bit must be cleared. Upon transmission, EPSTAT_LCR_SENT bit is set to '1'.
+	
+	(w/o) EPCTL_LCR_RECV_EN - writing '1' enables reception of LCR register. EPSTAT_LCR_RCVD bit must be cleared. The received value is stored in EPx_RX_LCR register. After then, EPSTAT_LCR_RCVD bit is set to '1'.
+
+	(r/w) EPCTL_TX_TS_EN - writing '1' enables TX packet timestamping. Packets are timestamped only if OOB block is present at the beginning of TX 	frame.
+	(r/w) EPCTL_RX_TS_EN - writing '1' enables RX packet timestamping. When enabled, OOB block is appended to RXed frame.
+
+
+
+4.2. EPx_STAT - Endpoint status register
+
+Bit fields:
+	(r/o) EPSTAT_SYNCED - link is initialized and synchronized (active 1)
+	(r/o) EPSTAT_CARRIER - carrier is present (active 1)
+	(r/o) EPSTAT_SYNCMODE - clock sync detected (probably we have synchronous mode, active 1)
+	(r/w) EPSTAT_LCR_SENT - Link Control Register has been sent. Writing '1' clears this bit.
+	(r/w) EPSTAT_LCR_RCVD - Link Control Register has been received. Writing '1' clears this bit.
+
+4.3. EPx_IER - Endpoint interrupt enable register
+
+Bit fields:
+	(r/w) EPSTAT_IRQ_LINK - link status changed interrupt (active 1, write 1 to clear)
+	(r/w) EPSTAT_IRQ_TX_TS - TX timestamp gathered interrupt
+
+4.4. EPx_ISR - Endpoint interrupt status register
+
+Bit fields:
+	(r/w) EPSTAT_IRQ_LINK - link status changed interrupt stauts, active '1'. Writing '1' clears the flag and acknowledges the interrupt.
+	(r/w) EPSTAT_IRQ_TX_TS - TX timestamp gathered interrupt, active '1'. Writing '1' clears the flag and acknowledges the interrupt.
+
+4.5. EPx_ACT_CTL - Endpoint statistics accounting control register
+
+Bit fields:
+	EPCTL_ACT_RXERR_RST
+	EPCTL_ACT_TXERR_RST
+	EPCTL_ACT_FRAG_RST
+	EPCTL_ACT_HP_DROP_RST
+	EPCTL_ACT_HP_COLLIDE_RST   ^^^^^^^^^^^^^^^^^
+	EPCTL_ACT_FRAG_COUNT_RST - writing '1' to these bits causes reset of respective event counters
+
+4.6. EPx_ACT_CNTR_xxx - Endpoint statistics counter register family
+
+Registers:
+	EPx_ACT_RXERR_CNT - number of packets received with errors
+	EPx_ACT_TXERR_CNT - number of packets transmitted with errors (e.g. aborted, buffer underruns, etc)
+	EPx_ACT_FRAG_CNT - number of fragmentation events
+	EPx_ACT_HP_DROP_CNT - number of dropped HP frames
+	EPx_ACT_HP_COLLIDE_CNT - number of HP collisions detected
+	EPx_ACT_FRAG_COUNT_RST - max. number of fragments of single frame transmitted by endpoint.
+
+
+4.7. EPx_TX_TS_FIFO_STATUS - Endpoint TX timestamping block FIFO status register
+
+Bit fields:
+	(r/o) EPx_TX_TS_FIFO_COUNT[4:0] - amount of timestamps in FIFO.
+	(w/o) EPx_TX_TS_FIFO_ADVANCE - writing '1' causes advancing to next gathered timestamp in FIFO. It's data will be available in TAG and TSVAL registers.
+
+4.8. EPx_TX_TS_FIFO_TAG   - Endpoint TX timestamping unit frame tag register. Contains tag value from OOB block of timestamped frame.
+4.9. EPx_TX_TS_FIFO_TSVAL - Endpoint TX timestamping unit timestamp value register. Contains timestamp coutnter value of frame with tag stored in EPx_TX_TS_FIFO_TAG register.
+
+In order to read TX timestamps, CPU has to.
+- check EPx_TX_TS_FIFO_STATUS reg to determine if any frames have been timestamped.
+- read TAG and TSVAL registers.
+- write '1' to TS_FIFO_ADVANCE bit in order to proceed to next tag-timestamp pair.
+
+For detailed description, see the Timestamping Architecture document.
+
+
+4.10. EPx_TX_LCR - TX Link Control Register value register
+
+Bit fields:
+	(r/w) EPx_TX_LCR_VAL[15:0] - Contains value of LCR register to be sent during 802.x link negotiation procedure.
+
+
+4.11. EPx_RX_LCR - RX Link Control Register value register
+
+Bit fields:
+	(r/o) EPx_RX_LCR_VAL[15:0] - Contains value of LCR register received from remote endpoint during 802.x link negotiation procedure.
+
+

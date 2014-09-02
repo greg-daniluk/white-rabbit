@@ -1,0 +1,424 @@
+/*
+-------------------------------------------------------------------------------
+-- Title      : SWcore HDL documentation
+-- Project    : White Rabbit Switch
+-------------------------------------------------------------------------------
+-- File       : wrsw_hdl_spec.txt
+-- Authors    : Maciej Lipinski (maciej.lipinski@cern.ch)
+-- Company    : CERN BE-CO-HT
+-- Created    : 2011-11-28
+-- Last update: 2011-11-28
+-- Description: This file contain description of SWcore and its components for anyone
+--              who would like (fear !!!) to make any modifications to that module
+--              or even worse...for someone how (for some strange reason) would 
+--              like to understand how it works.
+-------------------------------------------------------------------------------
+
+*/
+
+
+The specification according to which the SWcore was created is in the following file 
+(swcore_spec.pdf). Please, read the specification first before reading this document. 
+In this document I assumes your prior knowledge of the spec(swcore_spec.pdf). 
+
+Refer to the swcore_architecture.pdf for a drawing of the architecture of the SWcore
+(I promise to redraw it in some graphical tool when I find time, sorry for the current
+poor quality).
+
+SWcore interfaces with Endpoints and RTU@HW (another HDL modules). As of the time of writing, 
+the interface between Endpoints and SWcore is the Fabric Interface but it will have to be 
+eventually changed to pipelined Wishbone.
+
+SWcore is generic in the following regards:
+- number of ports (c_swc_num_ports)
+- number of output priority queues (c_swc_output_prio_num) and 
+- output queues' size (c_swc_output_fifo_size)
+- some more internal stuff like page number
+All the parameters are defiend in the package file: swc_swcore_pkg.vhd
+
+1. swc_core.vhd
+This is the top entity which just contains and connects different componetns of the SWcore.
+It can be configured to instanciate a give number of ports.
+
+SWcore interfaces with Endpoint modules using two components:
+- swc_input_block.vhd
+- swc_output_block.vhd
+SWcore interfaces with RTU using swc_input_block.vhd
+
+2. INPUT_BLOCK (swc_input_block.vhd)
+This block controls input to SW Core. It consists of a three  Finite State Machines (FSMs):
+  1) Read FSM  - reads information from Fabric Interface and stores it in FIFO:
+    * it speaks with the outside world (Endpoint) through Fabric IF (later pipelined WB)
+    * it waits for the decision (port_mask) from RTU
+    * stores data into FIO
+  2) Write FSM - reads data from FIFO and writes it into write pump 
+    * it speaks with the multiport memory (swc_packet_mem.vhd)
+    * it writes to an allocated in advanced address
+  3) Page FSM - allocates pages in advance and sets usecnt of pages, i.e
+    * it allocates in advance one page to be used as the first page 
+      of the pck (pckstart)
+    * it allocates in advnace one page to be used within the pck (interpck)
+    * it sets usecnt of pckstart page if it's different then the one set 
+      durring allocation
+    * it sets usecnt of interpck page if it's different then the one set 
+      durring allocation
+
+Speaking with the outside world
+This block reads the incoming package (Ethernet frame) through Fabric IF from the Endpoint and 
+reads forwarding decision from RTU. It stores the package in the FIFO. 
+The Endpoint forwards the Destination MAC, Source MAC, VLAN and priority to RTU module directly. 
+The SWcore only waits for the forwarding decision (port_mask, drop, prio).
+
+Speaking with the SWcore guts:
+   1) Package Transfer Arbiter (swc_pck_transfer_arbiter.vhd) - input block forward to the Arbiter
+      the port_mask (once it is received from the RTU), the size of the package received and the
+      address of the first allocated page.
+   2) Mulitport Memory (swc_pcaket_mem.vhd) - the Write FSM writes the package from the FIFO
+      to the Multiport Memory at the allocated addresses (page by page)
+   3) MMEMORY_MANAGEMENT_UNIT  (swc_multiport_page_allocator.vhd)  - the input block (Page FSM) requests
+      from MMU a free memory page address (in advance: when waiting for new package or when 
+      writing page). This page address is used when writing pacakge to multiport memory.
+   4) PCK_PAGES_FREEEING_MODULE (swc_multiport_pck_pg_free_module.vhd) - if a pacakge is dropped 
+      during tranfser (so when we started writing to the Multiport Memory), we need to free 
+      the already allocated and written to pages. This is what the PCK_PAGES_FREEING_MODULE is used
+      interfaced for.
+      
+3. OUTPUT_BLOCK (swc_output_block.vhd)
+
+Speaking with the outside world:
+It outputs a pacakge via Fabric IF to an Endpoint
+
+Speaking with the SWcore guts:
+    1) TRANSER_ARBITER (swc_pck_transfer_arbiter.vhd) - output block receives from the Arbiter :
+       - the address of the first page of the packge, 
+       - the priority of the package
+       - the size of the packge
+    2) MUPTIPORT_MEMORY (swc_packet_mem.vhd) - output block starts reading the package to be sent 
+       from the Multiport Memory from the address transfed by the Transfer Arbiter.
+    3) PCK_PAGES_FREEEING_MODULE (swc_multiport_pck_pg_free_module.vhd) - once the package is 
+       sent, the output block it frees the allocated pages using PCK_PAGE_FREEING_MODULE.
+
+There is only one FSM which controls the OUTPUT_BLOCK, it simply
+- waits until there is something in an output queue (not_empty_array vector is non-zero)
+- request reading the page (read from the output queue) from the Multiport Memory
+- reads the package from the Mulitport Memory
+- frees the page address
+
+Internal components of the OUTPUT_BLOCK:
+3.1 RD_ENCODE (swc_prio_encoder.vhd)
+It decides which output queue should be read, what it does is:
+- it takes an input array (not_empty_array) of bits, each bits is equivalent to one priority. If 
+  a bit is '1', it means that the output queue of the given priority is not empty, MSB is lowest 
+  priority, LSB is the highest priority 0.
+- the encoder detects the first least significant '1' (the most to the right) and returns two values:
+  a vector with a single '1' at the position of the first least significant '1' and the numerical
+  value of its position, e.g.:
+  in_i     = 1110101011000 
+  out_o    = 3
+  onehot_o = 0000000001000
+  
+This is used in deciding which output queue to read first.
+
+3.2 SSRAM (generic_ssram_dualport_singleclock)- the output queues are implemented as a single
+SSRAM. The ram only stores pck_size and page_addres. The priority of the pacakge is encoded
+into the address of the SSRAM under which the information is stored.
+
+3.3 PRIO_QUEUE_CTRL (swc_ob_prio_queue.vhd)
+
+Each piece of SSRAM allocated for a given priority is like a round buffer. So for each of this 
+memory space there is instanciated a PRIO_QUEUE_CTRL which controls the read/write address of this 
+memory space (it tracks the head/tail).
+
+4. TRANSER_ARBITER (swc_pck_transfer_arbiter.vhd)
+
+This module does the forwarding trick !! 
+It takes the following inputs from an INPUT_BLOCK:
+- port mask
+- page address
+- priority
+- package size
+And forwards this information to OUTPUT_BLOCK specified by the port mask.
+
+Speaking with the SWcore guts:
+     1) INPUT_BLOCK (swc_input_block.vhd) - the arbiter takes the info (port mask, page addr, 
+	priority, size) about a correctly received package from the input block
+     2) OUTPUT_BLOCK (swc_output_block.vhd) - the arbiter forwards the info (port mask, page addr, 
+	priority, size) about a correctly received packge to the appropriate output blocks.
+
+How the stuff works:
+- INPUT_BLOCK writes info (port mask, page addr, priority, size) about a correctly received package 
+  to the TRANSER_ARBITER
+- the TRANSFER_INPUT block instanciated for the port from which the info came, makes the 
+  info avilable for the TRANSFER_OUTPUT blocks and waits for all the proper TRANSFER_OUTPUT blocks
+  to read the info (they clear appropriate bits in the mask (pto_read_mask)
+- once all the appropriate (defined by port_mask) TRANSFER_OUTPUT blocks 
+  (so all the appropriate  OUTPUT_BLOCKs, so all the appropriate ports) have read the info,
+  the TRANSFER_INPUT send ack to the INPUT_BLOCK
+
+Internal components of the TRANSER_ARBITER:
+4.1 TRANSFER_INPUT (swc_pck_transfer_input.vhd)
+Instanciated for each INPUT_BLOCK, it manages the transfer of the data. It takes the info 
+(port mask, page addr, priority, size) from the INPUT_BLOCK and make it available for 
+OUTPUT_BLOCKs (through TRANSFER_OUTPUT, below) as long as all the OUTPUT_BLOCKs read it.
+It ackes successful reception of the info to all the OUTPUT_BLOCKs
+
+4.2. TRANSFER_OUTPUT (swc_pck_transfer_output.vhd)
+Instanciated for each OUTPUT_BLOCK, it manages the transfer of the data. It takes the info  
+(page addr, priority, size) from the TRANSFER_INPUT and make it available to 
+the OUTPUT_BLOCK. It acknowledges to the TRANSFER_INPUT block that it read the data.
+
+5. MUPTIPORT_MEMORY (swc_packet_mem.vhd)
+
+Here we enable 'c_swc_num_ports' ports to write and read to/from
+shared memory. We assume we know the memory page (provided by page 
+allocator/deallocator, another component).
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -
+Packets from each port are written/read to/from memory pumps:
+- WRPUMP (swc_packet_mem_write_pump.vhd) - write pump
+- RDPUMP (swc_packet_mem_read_pump.vhd) - read pump
+
+Each port has its own write and read pump. The pumps are an intermediate step (buffer) 
+between port (INPUT_BLOCK) and shared memory (FUCKING_BIG_MEMORY). Each pump has its own 
+time slot to access FUCKING_BIG_MEMORY. The time slot is one cycle. The time slot is 
+granted every 'c_swc_packet_mem_multiply' cycles (regardless it's requested by the pump or not).
+ 
+** writing **
+'c_swc_packet_mem_multiply' number of words written to a pump are saved in 
+FUCKING_BIG_MEMORY (when the access is granted). Writting to a pump can be done 
+regardless of the time slots granted to the pumps (at any time). It can be done as long as
+the pump's buffer (register of c_swc_packet_mem_multiply words) is not full.
+
+The address of the word is determined by the provided to the pump pgaddr 
+(page address, which comes from page allocator) and internal page address:
+addres = pgaddr + inter_page_addr.
+A page starts at the pgaddr, a page has c_swc_page_size number of inter_page_addres (words)
+
+When the register which is currently being filled-in is going to be written to the
+last word of the page, the rd_pageend_o is high indicating that next page needs to be allocated.
+
+If the data which is written to a page by a port does not fill entire 
+input register (the number is not modulo c_swc_packet_mem_multiply), but
+the port wants to write next data to new page and save in the FUCKING_BIG_MEMORY
+the "not-full-input-reg", e.g. new package is to be saved, then wr_flush_i should be
+set HIGH, it forces the pump to save "not-entirely-full" input register
+in FUCKING_BIG_MEMORY during the next time slot for this port
+
+** reading **
+Similar to writing. there is a register of c_swc_packet_mem_multiply words
+(ctrl+data) which are read from FUCKING_BIG_MEMORY in the pump's time slot (one cycle).
+Each word of the register is made available consequtivelly, so first the 
+LSB word can be read by the port (availability of data is indicated by 
+rd_drdy_o being set to HIGH. Next word can be requested by setting rd_dreq_i
+HIGH (while the previous word is read).
+ 
+Speaking with the SWcore guts:
+    1) INPUT_BLOCKs (swc_input_block.vhd) - each block can write simultaneously to the 
+       MUPTIPORT_MEMORY (the appripriate WRPUMP)
+    2) OUTPUT_BLOCKs (swc_output_block.vhd) - each block can read simultaneously from the 
+       MUPTIPORT_MEMORY (the appripriate RDPUMP)
+    3) LINKED_LIST (swc_multiport_linked_list.vhd) - It stores the page addresses of packages 
+       in a linked list. So you only need to know the address of the first page where 
+       the package was stored. The addresses of the other pages are in a linked list:
+       the first address points to the second, the second to the third, etc... This linked 
+       list is filled in when the MUPTIPORT_MEMORY is written to, and read when it is read from.
+ 
+Internal components of the MUPTIPORT_MEMORY:
+5.1 FUCKING_BIG_MEMORY (generic_ssram_dualport_singleclock.vhd)
+This is a single SSRAM which is accessed by all the write/read pumps. It's very big, thus the name.
+
+5.2 WRPUMP (swc_packet_mem_write_pump.vhd)
+Collectes data (words of ctrl+data seq) from one port and 
+pumps (saves) sequence of such data to one word of SRAM memory with the 
+page address allocated by mutiport memory allocator. The access to 
+SSRAM is shared equally between many such pumps, each pump represents 
+one port.
+
+A pump works in the following way:
+  1) it collects data from a port, data can be written continuously.
+      - data consits of a word of ctrl + data seq
+      - one word can be written at one clock cycle, in such case drdy_i is
+      - constantly HIGH
+   2) if entire "vector" of data words is collected ('c_swc_packet_mem_multiply'
+      number of data words), such a vector is written to SSRAM to one word:
+      - the dats is written to SRAM memory address = page_addr + offset
+      - each "memory page" (indicated by page_addr) consists of a few
+        SRAM consecutive addresses 
+   3) when the vector to be written to the last address of the page is being
+      filled in, the 'pend_o' indicates that the end of the page
+ 
+Each pump has its 'time slot' (one cycle) to read/write from/to 
+*FUCKING BIG SRAM (FB SRAM)*.  The access is granted to each pump in sequence: 
+1,2,3...(c_swc_packet_mem_multiply - 1). The access is multiplexed
+between the pumps. 
+
+If we want to write to the FUCKING BIG SRAM vector not fully filled in with data, 
+we can use 'flush_i'. High stribe on flush input enforces the pump to 
+behave as if it was full and the write to FB SRAM was needed in the 
+next available 'time slot'.
+
+
+5.3 RDPUMP (swc_packet_mem_read_pump.vhd)
+
+This piece of code reads a bunch ('c_swc_packet_mem_multiply'
+of words = ctrl + data) from the FUCKING BIG SRAM and makes it available
+for read by port. There is one read_pump for each port. Each pump has its
+time slot to read from FB SRAM. 
+
+the thing works in the following way:
+   1) it takes the address (FB SRAM addr) of the page
+   2) it reads it in its time slot which is one cycle every 
+      c_swc_packet_mem_multiply cycles
+   3) it makes it available on its output (d_o) word by word (in number of
+      c_swc_packet_mem_multiply words, this is how many words is saved in 
+      on FB SRAM word)
+   4) it announces it with 'drdy_o' HIGH
+   5) the next word is available after setting dreq_i high
+   
+6. LINKED_LIST  (swc_multiport_linked_list.vhd) 
+
+As the name says: it is a linked list !!!
+The beginning of a list is the first page allocated to a given package (Ethernet Frame).
+All the lists are stored in a single SSRAM (PAGE_INDEX_LINKED_LIST).
+Since, each WR PUMP and RD PUMP needs to have access to the SSRAM with the linked list, the 
+access is govenred by a round robin arbiter (one for writing, on for reading).
+
+Speaking with the SWcore guts:
+   1) MUPTIPORT_MEMORY  (swc_packet_mem.vhd) - to be more precise, each WRPUMP and RDPUMP in 
+      the multiport memory has individual access to the linked list.
+   2) PCK_PAGES_FREEEING_MODULE (swc_multiport_pck_pg_free_module.vhd) - it reads the addresses
+      of a package which has been successfully sent to all designated ports and the 
+      memory (allocated pages) can be freed. You need to know the addresses of the pages to be 
+      freed, so you read them from the linked list...
+
+Internal components of the LINKED_LIST:      
+6.1 PAGE_INDEX_LINKED_LIST (generic_ssram_dualport_singleclock)
+
+The SSRAM with the linked list. So under an address X in the SSRAM we have (as a data)
+a page address Y. Under the address Y we have (as a data) the address Z, etc.
+If the data is 0xF...F, it means the end of the list (last page allocated to a give package).
+
+
+6.2 WRITE_ARB (swc_rr_arbiter.vhd)
+
+It is a Round Robbin arbiter which grands access to the Linked List SSRAM. 
+The write access is shared between all the RDPUMPs in the MUPTIPORT_MEMORY
+
+6.3 READ_ARB  (swc_rr_arbiter.vhd)
+
+It is a Round Robbin arbiter which grands access to the Linked List SSRAM.
+The read access is shared between :
+- all the RDPUMPS in the MUPTIPORT_MEMORY
+- PCK_PAGES_FREEEING_MODULE
+
+7. MEMORY_MANAGEMENT_UNIT (swc_multiport_page_allocator.vhd)
+
+This module provides multi-access from many modues (INPUT_BLOCKs and PCK_PAGE_FREEING_MODULE) 
+to a single ALLOC_CORE which does the real work.
+
+Speaking with the SWcore guts:
+   1) PCK_PAGES_FREEEING_MODULE  (swc_multiport_pck_pg_free_module.vhd) - this module is responsible
+      for freeing pages, it is a proxy between modules which have the need to free pages and the 
+      MEMORY_MANAGEMENT_UNIT
+   2) INPUT_BLOCK (swc_input_block.vhd) - each INPUT_BLOCK interfaces MEMORY_MANAGEMENT_UNIT
+      individually, 
+      
+Internal components of the LINKED_LIST:     
+7.1  ALLOC_CORE (swc_page_allocator.vhd)
+
+Module implements a fast (3 cycle) paged memory allocator.
+
+The address of allocated page is made up of two parts: 
+  * high: bits [x downto 5]
+  * low : bits [4 downto 0]
+ 
+The low part of the page address (the low bits) is mapped to 
+a bit of 32 bit word in L0_LUT SRAM. 
+The high part of the page address is the address of the word in 
+the L0_LUT_SRAM memory. The address of the word in SRAM is
+mapped into a bit of l1_bitmap register (high bits of the address).
+
+Address mapped into bit means that the position of the bit (from LSB)
+is equal to the address.
+
+ '1' means that a give address is free
+ '0' means that a give address is used
+ 
+Tha page allocator looks for the lowest free (unused) page address. It uses
+prio_encoder for this purpose. 
+
+prio_encoder's input is a bit vector, the output is the position of the
+least significant bit set to '1' (see description of prio_encoder).
+Additionally, prio_encoder returns the position encoded as one_hot and
+a mask.
+ 
+In the L0_UCNTMEM SRAM, the number of users assigned to a particular
+page address is stored. the address in L0_UCNTMEM SRAM corresponds
+directly to the page address. The default value to fill in the
+SRAM are all '1s'.
+ 
+The default value to fill in the l1_bitmap register is all '1s'.
+
+Page allocation:
+When page allocation is requested, the number of users (usecnt) needs
+to be provided. The allocation of the page is not complited until
+the provided number of users have read the page (attempted to free
+the page). During allocation, the lowest free page address is sought.
+As soon as the address is determined, the requested user count is 
+written to L0_UCNTMEM SRAM and allocation is finished.
+ 
+Page Deallocation:
+When free_page is attempted, the address of the page needs to be provided.
+The address is decoded into high and low parts. First, the count in 
+L0_UCNTMEM SRAM is checked, if it's greater than 1, it is decreased.
+If the usecount == 1, it means that this was the last page user, and thus
+the page is freed. this means that '1' is written to the bit corresponding
+to the page low part of the address in the word in L0_LUT SRAM. And '1' is
+written to the l1_bitmap register to the bit corresponding to the high part
+of the address. 
+ 
+7.2 ARB (swc_rr_arbiter.vhd)
+
+This module makes everyone happy... it is a Round Robbin arbiter.
+It arbits the access to ALLOC_CORE betwee:
+- INPUT_BLOCKs 
+   * page allocation
+   * forced page deallocation
+   * setting usecnt (based on the number of '1's in the port_mask vector
+- PCK_PAGE_FREEING_MODULE 
+
+
+8. PCK_PAGES_FREEEING_MODULE  (swc_multiport_pck_pg_free_module.vhd)
+
+This is just a wrapper to instanciate port_number of  LPDs (swc_pck_pg_free_module.vhd)
+
+Speaking with the SWcore guts:
+   1) INPUT_BLOCK (swc_input_block.vhd) - input block makes requests to:
+      * allocate new pages
+      * set usecnt (now many times a page needs to be readout -> how many output_blocks need 
+        to read a given page
+      * faoced freeing (if the package reception is dropped)
+   2) OUTPUT_BLOCK (swc_output_block.vhd) - it makes a request to free pages associated with 
+      a package, it translates into:
+      * going through all the pages allocated to a give package (using the linked-list )
+      * making request to the MEMORY_MANAGEMENT_UNIT to free the page which can result in:
+        -> decreasing usecnt if it is still greater then 0
+        -> deallocating the page if usecnt == 0
+   3) MEMORY_MANAGEMENT_UNIT (swc_multiport_page_allocator.vhd) - making requests to free pages
+   4) LINKED_LIST (swc_multiport_linked_list.vhd) - finding out addresses of the pages 
+      associated with a given package (Ethernet frame). The address of the first page of 
+      the package is provided by the OUTPUT_BLOCK, but the rest of the addresses need to be
+      read from the Linked list
+      
+8.1 LPD (swc_pck_pg_free_module.vhd) 
+
+The incoming requests (to free or force_free pages) are inputed into a FIFO.
+The main and only FSM reads the requests from the FIFO and executes them:
+       (1) requests MEMORY_MANAGEMENT_UNIT to free/force_free a page of a give address
+       (2) reads the addres of the next page from the Linked lists
+       (3) if the page is not the last page of the package (pgaddress != 0xF..F), go to (1) 
+           and free the next page, otherwise...
+       (4) all the pages of a give pacakge have been freed (uscnt decremented or deallocated),
+           so the new request from the FIFO can be readout
+           
+
+   
