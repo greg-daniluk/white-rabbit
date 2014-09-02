@@ -1,0 +1,71 @@
+
+top = peripheral {
+   name = "Wishbone GPIO";
+
+   hdl_entity = "gpio_wishbone_slave";
+   prefix = "gpio";
+
+   reg {
+      name = "Clear Output Register";
+      description = "";
+      prefix = "codr";
+      field {
+        name = "Clear GPIO outputs";
+        description = "Each bit corresponds to one GPIO line \
+                       write 1 to bit n: clear n-th line \
+                       write 0: no effect";
+        size = 32;
+        type = SLV;
+        access_bus = WRITE_ONLY;
+        access_dev = READ_ONLY;
+      }
+   };
+
+   reg {
+      name = "Set Output Register";
+      description = "";
+      prefix = "sodr";
+      field {
+        name = "Set GPIO outputs";
+        description = "Each bit corresponds to one GPIO line \
+                       write 1 to bit n: set n-th line to 1\
+                       write 0: no effect";
+        size = 32;
+        type = SLV;
+        access_bus = WRITE_ONLY;
+        access_dev = READ_ONLY;
+      }
+   };
+
+   reg {
+      name = "Data Direction Register";
+      description = "";
+      prefix = "ddr";
+      field {
+        name = "GPIO direction";
+        description = "Each bit corresponds to one GPIO line \
+                       1: n-th line is output \
+                       0: n-th line is input";
+        size = 32;
+        type = SLV;
+        access_bus = READ_WRITE;
+        access_dev = READ_ONLY;
+      }
+   };
+
+   reg {
+      name = "Pin State Register";
+      description = "";
+      prefix = "psr";
+      field {
+        name = "Read GPIO inputs";
+        description = "Each bit corresponds to one GPIO line \
+                       read: current status of n-th input";
+        size = 32;
+        type = SLV;
+        access_bus = READ_ONLY;
+        access_dev = WRITE_ONLY;
+      }
+   };
+
+}

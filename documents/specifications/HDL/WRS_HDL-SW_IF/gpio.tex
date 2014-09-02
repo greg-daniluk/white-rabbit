@@ -1,0 +1,24 @@
+\subsection{GPIO port}
+
+\noindent {\bf Description:}
+
+The module controls GPIO lines through Wishbone interface. The direction
+(input/output) is set separately for each line.
+
+Currently only one GPIO line driven from this module is used in WR Switch. It
+selects whether the debug UART (from Real-Time Subsystem) or UART from the main CPU
+will be available on a physical UART connector of the WR Switch.\\
+
+\begin{center}
+\begin{tabular}{|l|l|}
+  \hline
+  GPIO No. & description\\
+  \hline \hline
+  0 - 30 & not used\\
+      31 & uart select\\
+  \hline
+\end{tabular}
+\end{center}
+
+\vspace{12pt}
+\noindent{\bf Wishbone interface:} section \ref{subsec:wbgen:gpio}.

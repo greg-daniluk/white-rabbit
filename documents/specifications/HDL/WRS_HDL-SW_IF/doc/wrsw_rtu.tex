@@ -1,0 +1,1379 @@
+\subsection{Routing Table Unit (RTU)}
+\label{subsec:wbgen:rtu}
+
+\subsubsection{Memory map summary}
+\rowcolors{2}{gray!25}{white}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|l|l|l|l|}
+\rowcolor{RoyalPurple}
+\color{white} SW Offset & \color{white} Type & \color{white} Name &
+\color{white} HW prefix & \color{white} C prefix\\
+0x0& REG & RTU Global Control Register & rtu\_gcr & GCR\\
+0x4& REG & Port Select Register & rtu\_psr & PSR\\
+0x8& REG & Port Control Register & rtu\_pcr & PCR\\
+0xc& REG & VLAN Table Register 1 & rtu\_vtr1 & VTR1\\
+0x10& REG & VLAN Table Register 2 & rtu\_vtr2 & VTR2\\
+0x14& REG & Ext: Control Register & rtu\_rx\_ctr & RX\_CTR\\
+0x18& REG & Ext: Fast Forward MAC[31:0] & rtu\_rx\_ff\_mac\_r0 & RX\_FF\_MAC\_R0\\
+0x1c& REG & Ext: Fast Forward MAC and control & rtu\_rx\_ff\_mac\_r1 & RX\_FF\_MAC\_R1\\
+0x20& REG & Ext: CPU port mask & rtu\_cpu\_port & CPU\_PORT\\
+0x24& REG & Ext: Mirroring Ports Control Reg 0 & rtu\_rx\_mp\_r0 & RX\_MP\_R0\\
+0x28& REG & Ext: Mirroring Ports Control Reg 1 & rtu\_rx\_mp\_r1 & RX\_MP\_R1\\
+0x40& REG & Interrupt disable register & rtu\_eic\_idr & EIC\_IDR\\
+0x44& REG & Interrupt enable register & rtu\_eic\_ier & EIC\_IER\\
+0x48& REG & Interrupt mask register & rtu\_eic\_imr & EIC\_IMR\\
+0x4c& REG & Interrupt status register & rtu\_eic\_isr & EIC\_ISR\\
+0x50& FIFOREG & FIFO 'UFIFO' data output register 0 & rtu\_ufifo\_r0 & UFIFO\_R0\\
+0x54& FIFOREG & FIFO 'UFIFO' data output register 1 & rtu\_ufifo\_r1 & UFIFO\_R1\\
+0x58& FIFOREG & FIFO 'UFIFO' data output register 2 & rtu\_ufifo\_r2 & UFIFO\_R2\\
+0x5c& FIFOREG & FIFO 'UFIFO' data output register 3 & rtu\_ufifo\_r3 & UFIFO\_R3\\
+0x60& FIFOREG & FIFO 'UFIFO' data output register 4 & rtu\_ufifo\_r4 & UFIFO\_R4\\
+0x64& REG & FIFO 'UFIFO' control/status register & rtu\_ufifo\_csr & UFIFO\_CSR\\
+0x68& FIFOREG & FIFO 'MFIFO' data input register 0 & rtu\_mfifo\_r0 & MFIFO\_R0\\
+0x6c& FIFOREG & FIFO 'MFIFO' data input register 1 & rtu\_mfifo\_r1 & MFIFO\_R1\\
+0x70& REG & FIFO 'MFIFO' control/status register & rtu\_mfifo\_csr & MFIFO\_CSR\\
+0x400 - 0x7fc& MEM & Aging bitmap for main hashtable & rtu\_aram & ARAM\\
+\hline
+\end{tabular}
+}
+
+\subsubsection{Register description}
+\paragraph*{RTU Global Control Register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & rtu\_gcr\\
+{\bf HW address:}  & 0x0\\
+{\bf SW prefix:}  & GCR\\
+{\bf SW offset:}  & 0x0\\
+\end{tabular}
+
+\vspace{12pt}
+Control register containing global (port-independent) settings of the RTU.
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & \multicolumn{4}{|c|}{\cellcolor{RoyalPurple!25}RTU\_VERSION[3:0]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}POLY\_VAL[15:8]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}POLY\_VAL[7:0]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}MFIFOTRIG} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}G\_ENA}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+G\_ENA
+} [\emph{read/write}]: RTU Global Enable
+\\
+Global RTU enable bit. Overrides all port settings.\\                        0: RTU is disabled. All packets are dropped.\\                        1: RTU is enabled.
+\end{small}
+\item \begin{small}
+{\bf 
+MFIFOTRIG
+} [\emph{read/write}]: MFIFO Trigger
+\\
+write 1: triggers a flush of MFIFO into the hash table (blocks the RTU for a few cycles)\\         write 0: no effect\\         read 1: MFIFO is busy\\         read 0: MFIFO is idle
+\end{small}
+\item \begin{small}
+{\bf 
+POLY\_VAL
+} [\emph{read/write}]: Hash Poly
+\\
+Determines the polynomial used for hash computation. Currently available:  0x1021, 0x8005, 0x0589 
+\end{small}
+\item \begin{small}
+{\bf 
+RTU\_VERSION
+} [\emph{read-only}]: Version
+\\
+Information about the version of RTU gateware
+\end{small}
+\end{itemize}
+\paragraph*{Port Select Register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & rtu\_psr\\
+{\bf HW address:}  & 0x1\\
+{\bf SW prefix:}  & PSR\\
+{\bf SW offset:}  & 0x4\\
+\end{tabular}
+
+\vspace{12pt}
+Selects the RTU port to be controlled through the PCR register
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}N\_PORTS[7:0]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}PORT\_SEL[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+PORT\_SEL
+} [\emph{read/write}]: Port Select
+\\
+Selected Port for PCR register modifications
+\end{small}
+\item \begin{small}
+{\bf 
+N\_PORTS
+} [\emph{read-only}]: Number of ports
+\\
+Number of RTU ports compiled in.
+\end{small}
+\end{itemize}
+\paragraph*{Port Control Register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & rtu\_pcr\\
+{\bf HW address:}  & 0x2\\
+{\bf SW prefix:}  & PCR\\
+{\bf SW offset:}  & 0x8\\
+\end{tabular}
+
+\vspace{12pt}
+Register controlling the mode of the RTU port selected in PSR register.
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}B\_UNREC} & \multicolumn{3}{|c|}{\cellcolor{RoyalPurple!25}PRIO\_VAL[2:0]} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}FIX\_PRIO} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PASS\_BPDU} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PASS\_ALL} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}LEARN\_EN}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+LEARN\_EN
+} [\emph{read/write}]: Learning enable
+\\
+1: enables learning process on this port. Unrecognized requests will be put into UFIFO\\         0: disables learning. Unrecognized requests will be either broadcast or dropped.
+\end{small}
+\item \begin{small}
+{\bf 
+PASS\_ALL
+} [\emph{read/write}]: Pass all packets
+\\
+1: all packets are passed (depending on the rules in RT table). \\         0: all packets are dropped on this port.
+\end{small}
+\item \begin{small}
+{\bf 
+PASS\_BPDU
+} [\emph{read/write}]: Pass BPDUs
+\\
+1: BPDU packets (with dst MAC 01:80:c2:00:00:00) are passed according to RT rules. This setting is independed from PASS\_ALL state.\\         0: BPDU packets are passed according to RTU rules only if PASS\_ALL is set
+\end{small}
+\item \begin{small}
+{\bf 
+FIX\_PRIO
+} [\emph{read/write}]: Fix priority
+\\
+1: Port has fixed priority of value PRIO\_VAL. It overrides the priority coming from the endpoint\\         0: Use priority from the endpoint
+\end{small}
+\item \begin{small}
+{\bf 
+PRIO\_VAL
+} [\emph{read/write}]: Priority value
+\\
+Fixed priority value for the port. Used instead the endpoint-assigned priority when FIX\_PRIO = 1
+\end{small}
+\item \begin{small}
+{\bf 
+B\_UNREC
+} [\emph{read/write}]: Unrecognized request behaviour
+\\
+Sets the port behaviour for all unrecognized requests:\\         0: packet is dropped\\         1: packet is broadcast
+\end{small}
+\end{itemize}
+\paragraph*{VLAN Table Register 1}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & rtu\_vtr1\\
+{\bf HW address:}  & 0x3\\
+{\bf SW prefix:}  & VTR1\\
+{\bf SW offset:}  & 0xc\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}UPDATE} & \multicolumn{2}{|c|}{\cellcolor{RoyalPurple!25}PRIO[2:1]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PRIO[0:0]} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PRIO\_OVERRIDE} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}HAS\_PRIO} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}DROP} & \multicolumn{4}{|c|}{\cellcolor{RoyalPurple!25}FID[7:4]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{4}{|c|}{\cellcolor{RoyalPurple!25}FID[3:0]} & \multicolumn{4}{|c|}{\cellcolor{RoyalPurple!25}VID[11:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}VID[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+VID
+} [\emph{read/write}]: VLAN ID
+\end{small}
+\item \begin{small}
+{\bf 
+FID
+} [\emph{read/write}]: Filtering Database ID
+\\
+Assigns the VID to a particular filtering database
+\end{small}
+\item \begin{small}
+{\bf 
+DROP
+} [\emph{read/write}]: Drop
+\\
+1: drop all packets belonging to this VLAN
+\end{small}
+\item \begin{small}
+{\bf 
+HAS\_PRIO
+} [\emph{read/write}]: Has user-defined priority
+\\
+1: VLAN has user-defined priority
+\end{small}
+\item \begin{small}
+{\bf 
+PRIO\_OVERRIDE
+} [\emph{read/write}]: Override endpoint-assigned priority
+\\
+1: always take the priority from the PRIO field, regardless of the priority value assigned at the endpoint. 
+\end{small}
+\item \begin{small}
+{\bf 
+PRIO
+} [\emph{read/write}]: Priority value
+\end{small}
+\item \begin{small}
+{\bf 
+UPDATE
+} [\emph{write-only}]: Force VLAN table entry update
+\\
+write 1: flush VTR1 and VTR2 registers to VLAN table entry designated in VTR1.VID
+\end{small}
+\end{itemize}
+\paragraph*{VLAN Table Register 2}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & rtu\_vtr2\\
+{\bf HW address:}  & 0x4\\
+{\bf SW prefix:}  & VTR2\\
+{\bf SW offset:}  & 0x10\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}PORT\_MASK[31:24]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}PORT\_MASK[23:16]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}PORT\_MASK[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}PORT\_MASK[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+PORT\_MASK
+} [\emph{read/write}]: Port Mask
+\\
+Each bit corresponds to one RTU port, setting bit to 1 means that the port belongs to the VLAN
+\end{small}
+\end{itemize}
+\paragraph*{Ext: Control Register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & rtu\_rx\_ctr\\
+{\bf HW address:}  & 0x5\\
+{\bf SW prefix:}  & RX\_CTR\\
+{\bf SW offset:}  & 0x14\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}LEARN\_DST\_ENA} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}UREC\_FW\_CPU\_ENA} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}HP\_FW\_CPU\_ENA}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}PRIO\_MASK[7:0]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c}{-} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}AT\_FMATCH\_TOO\_SLOW} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}MR\_ENA} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}FF\_MAC\_PTP} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}FF\_MAC\_LL} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}FF\_MAC\_SINGLE} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}FF\_MAC\_RANGE} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}FF\_MAC\_BR}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+FF\_MAC\_BR
+} [\emph{read/write}]: Fast Forward for Broadcast
+\\
+The feature is:\\                 0: Disabled,\\                 1: Enabled.
+\end{small}
+\item \begin{small}
+{\bf 
+FF\_MAC\_RANGE
+} [\emph{read/write}]: Fast Forward for MAC Range
+\\
+The feature is:\\                 0: Disabled,\\                 1: Enabled.
+\end{small}
+\item \begin{small}
+{\bf 
+FF\_MAC\_SINGLE
+} [\emph{read/write}]: Fast Forward for MAC Single Entries
+\\
+The feature is:\\                 0: Disabled,\\                 1: Enabled.
+\end{small}
+\item \begin{small}
+{\bf 
+FF\_MAC\_LL
+} [\emph{read/write}]: Fast Forward for Link-Limited (Reserved) MACs
+\\
+The feature is:\\                 0: Disabled,\\                 1: Enabled.
+\end{small}
+\item \begin{small}
+{\bf 
+FF\_MAC\_PTP
+} [\emph{read/write}]: Fast Forward for PTP frames (PTP over IEEE 802.3 /Ethernet)
+\\
+The feature is:\\                 0: Disabled,\\                 1: Enabled.
+\end{small}
+\item \begin{small}
+{\bf 
+MR\_ENA
+} [\emph{read/write}]: Port Mirror Enable
+\\
+Enable port mirroring as defined by proper configurition\\                 0: Disable,\\                 1: Enable.
+\end{small}
+\item \begin{small}
+{\bf 
+AT\_FMATCH\_TOO\_SLOW
+} [\emph{read/write}]: Drop/Forward on FullMatch Full
+\\
+In case that a new Frame arrives on Ingress when the previous is still handed (FullMatch process, or SWcore):\\                 0: Drop currently processed frame (default),\\                 1: Broadcast currently processed frame.
+\end{small}
+\item \begin{small}
+{\bf 
+PRIO\_MASK
+} [\emph{read/write}]: HP Priorities Mask
+\\
+Mask which defines which priorities of the Fast Forward traffic are considered High Priority (used also by SWcore)
+\end{small}
+\item \begin{small}
+{\bf 
+HP\_FW\_CPU\_ENA
+} [\emph{read/write}]: HP forward to CPU
+\\
+Enables/disables forwarding of recognized HP frames to CPU (Network InterFace) - disabling forwarding can prevent flooding of switch CPU with unnecessary traffic, allowing forwarding can be enabled to snoop on network traffic). It uses HW-set (generic) mask which indicates port number of CPU - can be verified by reading\\                 0: Disabled [default] - does not forward HP frames to CPU,\\                 1: Enabled  - forwards HP frames to CPU.
+\end{small}
+\item \begin{small}
+{\bf 
+UREC\_FW\_CPU\_ENA
+} [\emph{read/write}]: Urecognized forward to CPU
+\\
+Allows to enable/disable forwarding of unrecognized frames (with unrecognized dstMAC) which are broadcast (when b\_unrec enabled) CPU (Network InterFace) - disabled to prevent flooding of switch CPU with unnecessary traffic.It uses Link-Limited Frames Fast Forward Mask to know to which port CPU is connected.\\                 0: Disabled [default] - does not forward unrecognized braodcast (b\_unrec) frames to CPU,\\                 1: Enabled  - forwards unrecognized braodcast (b\_unrec) frames to CPU.
+\end{small}
+\item \begin{small}
+{\bf 
+LEARN\_DST\_ENA
+} [\emph{read/write}]: Learn Destination MAC enable
+\\
+Allows to enable/disable learning based on Destination MAC address (works only if learning is enabled on a port, i.e. LEARN\_EN=1) .\\                 0: Disabled [default] - frames with unrecognizd destinatin MAC do not trigger writes to UFIFO, i.e. ureq in software (unrecognized request),\\                 1: Enabled  - frames with unrecognizd destinatin MAC trigger writes to UFIFO, i.e. ureq in software.
+\end{small}
+\end{itemize}
+\paragraph*{Ext: Fast Forward MAC[31:0]}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & rtu\_rx\_ff\_mac\_r0\\
+{\bf HW address:}  & 0x6\\
+{\bf SW prefix:}  & RX\_FF\_MAC\_R0\\
+{\bf SW offset:}  & 0x18\\
+\end{tabular}
+
+\vspace{12pt}
+Validated on write to RX\_FF\_MAC\_R1
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}LO[31:24]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}LO[23:16]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}LO[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}LO[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+LO
+} [\emph{read/write}]: Fast Forward MAC
+\end{small}
+\end{itemize}
+\paragraph*{Ext: Fast Forward MAC and control}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & rtu\_rx\_ff\_mac\_r1\\
+{\bf HW address:}  & 0x7\\
+{\bf SW prefix:}  & RX\_FF\_MAC\_R1\\
+{\bf SW offset:}  & 0x1c\\
+\end{tabular}
+
+\vspace{12pt}
+Double purpose on \\                 write: low bigs: MAC bits [47:32]; high bits: MAC ID, single/range, valid,\\                 read: low bits: max number of single entries (MAX ID), high bits: max number of range entries (MAX ID).
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}VALID} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}TYPE}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}ID[7:0]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}HI\_ID[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}HI\_ID[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+HI\_ID
+} [\emph{read/write}]: Fast Forward MAC
+\end{small}
+\item \begin{small}
+{\bf 
+ID
+} [\emph{read/write}]: Fast Forward entry index (single/range)
+\\
+Depending on the Single/Range bit: \\                 0: Index of the Fast Forward MAC for single Fast Forward MAC\\                 1: Index of the Fast Forward MAC for the Fast Forward MAC range (low bit 0 indicates lower range, low bit 1 indicates upper range, inclusive) 
+\end{small}
+\item \begin{small}
+{\bf 
+TYPE
+} [\emph{read/write}]: Fast Forward MAC single/range entry
+\\
+Indicates what kind of entry is written \\                 0: Single Fast Forward MAC,\\                 1: Range Fast Forward MAC (low bit of MAC ID equal to 0 indicates lower range, low bit of MAX ID equal to 1 indicates upper range, inclusive) 
+\end{small}
+\item \begin{small}
+{\bf 
+VALID
+} [\emph{read/write}]: Fast Forward MAC valid
+\\
+The value of the bit (only validated entries are used):\\                 0: Invalidates the entry,\\                 1: Validates the entry.
+\end{small}
+\end{itemize}
+\paragraph*{Ext: CPU port mask}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & rtu\_cpu\_port\\
+{\bf HW address:}  & 0x8\\
+{\bf SW prefix:}  & CPU\_PORT\\
+{\bf SW offset:}  & 0x20\\
+\end{tabular}
+
+\vspace{12pt}
+Link-Limited Frames Fast Forward Mask
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}MASK[31:24]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}MASK[23:16]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}MASK[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}MASK[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+MASK
+} [\emph{read-only}]:  CPU/LL Mask
+\\
+ It is only for debugging purposes. The ID of the CPU port is set in HW using generic which produces the CPU/LL Mask.\\             It is used for\\             * forwarding of the Link-Limited traffic to CPU (if enabled by config) \\             * enabling/disabling forwarding of HP traffic to CPU (HP\_FW\_CPU\_ENA)\\             * enabling/disabling forwarding of unrecognized broadcast to CPU (UREC\_FW\_CPU\_ENA).
+\end{small}
+\end{itemize}
+\paragraph*{Ext: Mirroring Ports Control Reg 0}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & rtu\_rx\_mp\_r0\\
+{\bf HW address:}  & 0x9\\
+{\bf SW prefix:}  & RX\_MP\_R0\\
+{\bf SW offset:}  & 0x24\\
+\end{tabular}
+
+\vspace{12pt}
+select for the mask written using RX\_MP\_R1
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}MASK\_ID[15:8]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}MASK\_ID[7:0]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}RX\_TX} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}DST\_SRC}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+DST\_SRC
+} [\emph{read/write}]: DST/SRC Mirror port
+\\
+Defines whether destination or source mask is written to RX\_MP\_R1:\\                 0: Mirror port(s) - destination of the mirrored traffic,\\                 1: Mirrored port(s) - source of the mirrored traffic
+\end{small}
+\item \begin{small}
+{\bf 
+RX\_TX
+} [\emph{read/write}]: RX/TX mirror port source
+\\
+Defines whether transmission or reception source mask is written to RX\_MP\_R1 (used only when DST\_SRC bit is 1):\\                 0: Reception traffic mirror source,\\                 1: Transmission traffic mirror source.
+\end{small}
+\item \begin{small}
+{\bf 
+MASK\_ID
+} [\emph{read/write}]: Mirrored Port MASK Index
+\\
+Index of the mirrored configuration (to be considered for implementation in future, curreantly only single config available)
+\end{small}
+\end{itemize}
+\paragraph*{Ext: Mirroring Ports Control Reg 1}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & rtu\_rx\_mp\_r1\\
+{\bf HW address:}  & 0xa\\
+{\bf SW prefix:}  & RX\_MP\_R1\\
+{\bf SW offset:}  & 0x28\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}MASK[31:24]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}MASK[23:16]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}MASK[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}MASK[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+MASK
+} [\emph{read/write}]: Mirror Port MASK
+\\
+MASK to define mirroring, depending on two lowest bits of select reg:\\         00: port(s) which output mirrored traffic from the mirrored port(s)- destination of the mirrored traffic (egress only, disabled for ingress traffic and traffic other then from mirrored, source, port(s))\\         10: port(s) whose ingress traffic is mirrored (reception source) - all the traffic received on this port(s) is forwarded to the mirror port(s)\\         11: port(s) whose egress traffic is mirrored (transmision source) - all the traffic forwareded to this port(s) is also forwarded to the mirror port(s).
+\end{small}
+\end{itemize}
+\paragraph*{Interrupt disable register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & rtu\_eic\_idr\\
+{\bf HW address:}  & 0x10\\
+{\bf SW prefix:}  & EIC\_IDR\\
+{\bf SW offset:}  & 0x40\\
+\end{tabular}
+
+\vspace{12pt}
+Writing 1 disables handling of the interrupt associated with corresponding bit. Writin 0 has no effect.
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}NEMPTY}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+NEMPTY
+} [\emph{write-only}]: UFIFO Not Empty IRQ
+\\
+write 1: disable interrupt 'UFIFO Not Empty IRQ'\\write 0: no effect
+\end{small}
+\end{itemize}
+\paragraph*{Interrupt enable register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & rtu\_eic\_ier\\
+{\bf HW address:}  & 0x11\\
+{\bf SW prefix:}  & EIC\_IER\\
+{\bf SW offset:}  & 0x44\\
+\end{tabular}
+
+\vspace{12pt}
+Writing 1 enables handling of the interrupt associated with corresponding bit. Writin 0 has no effect.
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}NEMPTY}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+NEMPTY
+} [\emph{write-only}]: UFIFO Not Empty IRQ
+\\
+write 1: enable interrupt 'UFIFO Not Empty IRQ'\\write 0: no effect
+\end{small}
+\end{itemize}
+\paragraph*{Interrupt mask register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & rtu\_eic\_imr\\
+{\bf HW address:}  & 0x12\\
+{\bf SW prefix:}  & EIC\_IMR\\
+{\bf SW offset:}  & 0x48\\
+\end{tabular}
+
+\vspace{12pt}
+Shows which interrupts are enabled. 1 means that the interrupt associated with the bitfield is enabled
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}NEMPTY}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+NEMPTY
+} [\emph{read-only}]: UFIFO Not Empty IRQ
+\\
+read 1: interrupt 'UFIFO Not Empty IRQ' is enabled\\read 0: interrupt 'UFIFO Not Empty IRQ' is disabled
+\end{small}
+\end{itemize}
+\paragraph*{Interrupt status register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & rtu\_eic\_isr\\
+{\bf HW address:}  & 0x13\\
+{\bf SW prefix:}  & EIC\_ISR\\
+{\bf SW offset:}  & 0x4c\\
+\end{tabular}
+
+\vspace{12pt}
+Each bit represents the state of corresponding interrupt. 1 means the interrupt is pending. Writing 1 to a bit clears the corresponding interrupt. Writing 0 has no effect.
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}NEMPTY}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+NEMPTY
+} [\emph{read/write}]: UFIFO Not Empty IRQ
+\\
+read 1: interrupt 'UFIFO Not Empty IRQ' is pending\\read 0: interrupt not pending\\write 1: clear interrupt 'UFIFO Not Empty IRQ'\\write 0: no effect
+\end{small}
+\end{itemize}
+\paragraph*{FIFO 'UFIFO' data output register 0}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & rtu\_ufifo\_r0\\
+{\bf HW address:}  & 0x14\\
+{\bf SW prefix:}  & UFIFO\_R0\\
+{\bf SW offset:}  & 0x50\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}DMAC\_LO[31:24]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}DMAC\_LO[23:16]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}DMAC\_LO[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}DMAC\_LO[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+DMAC\_LO
+} [\emph{read-only}]: Destination MAC address least-significant part
+\\
+Bits [31:0] of packet destination MAC address
+\end{small}
+\end{itemize}
+\paragraph*{FIFO 'UFIFO' data output register 1}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & rtu\_ufifo\_r1\\
+{\bf HW address:}  & 0x15\\
+{\bf SW prefix:}  & UFIFO\_R1\\
+{\bf SW offset:}  & 0x54\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}DMAC\_HI[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}DMAC\_HI[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+DMAC\_HI
+} [\emph{read-only}]: Destination MAC address most-significant part
+\\
+Bits [47:32] of packet destination MAC address
+\end{small}
+\end{itemize}
+\paragraph*{FIFO 'UFIFO' data output register 2}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & rtu\_ufifo\_r2\\
+{\bf HW address:}  & 0x16\\
+{\bf SW prefix:}  & UFIFO\_R2\\
+{\bf SW offset:}  & 0x58\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}SMAC\_LO[31:24]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}SMAC\_LO[23:16]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}SMAC\_LO[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}SMAC\_LO[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+SMAC\_LO
+} [\emph{read-only}]: Source MAC address least-significant part
+\\
+Bits [31:0] of packet source MAC address
+\end{small}
+\end{itemize}
+\paragraph*{FIFO 'UFIFO' data output register 3}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & rtu\_ufifo\_r3\\
+{\bf HW address:}  & 0x17\\
+{\bf SW prefix:}  & UFIFO\_R3\\
+{\bf SW offset:}  & 0x5c\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}SMAC\_HI[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}SMAC\_HI[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+SMAC\_HI
+} [\emph{read-only}]: Source MAC address most-significant part
+\\
+Bits [47:32] of packet source MAC address
+\end{small}
+\end{itemize}
+\paragraph*{FIFO 'UFIFO' data output register 4}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & rtu\_ufifo\_r4\\
+{\bf HW address:}  & 0x18\\
+{\bf SW prefix:}  & UFIFO\_R4\\
+{\bf SW offset:}  & 0x60\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}HAS\_PRIO} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}HAS\_VID}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}PID[7:0]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & \multicolumn{3}{|c|}{\cellcolor{RoyalPurple!25}PRIO[2:0]} & \multicolumn{4}{|c|}{\cellcolor{RoyalPurple!25}VID[11:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}VID[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+VID
+} [\emph{read-only}]: VLAN Identifier
+\\
+VLAN ID of the packet (from the endpoint)
+\end{small}
+\item \begin{small}
+{\bf 
+PRIO
+} [\emph{read-only}]: Priority
+\\
+Priority value (from the endpoint)
+\end{small}
+\item \begin{small}
+{\bf 
+PID
+} [\emph{read-only}]: Port ID
+\\
+Identifier of RTU port to which came the request.
+\end{small}
+\item \begin{small}
+{\bf 
+HAS\_VID
+} [\emph{read-only}]: VID valid
+\\
+1: VID value is valid\\                       0: packet had no VLAN ID
+\end{small}
+\item \begin{small}
+{\bf 
+HAS\_PRIO
+} [\emph{read-only}]: PRIO valid
+\\
+1: PRIO value is valid\\                       0: packet had no priority assigned
+\end{small}
+\end{itemize}
+\paragraph*{FIFO 'UFIFO' control/status register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & rtu\_ufifo\_csr\\
+{\bf HW address:}  & 0x19\\
+{\bf SW prefix:}  & UFIFO\_CSR\\
+{\bf SW offset:}  & 0x64\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}EMPTY} & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c}{-} & \multicolumn{7}{|c|}{\cellcolor{RoyalPurple!25}USEDW[6:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+EMPTY
+} [\emph{read-only}]: FIFO empty flag
+\\
+1: FIFO 'UFIFO' is empty\\0: FIFO is not empty
+\end{small}
+\item \begin{small}
+{\bf 
+USEDW
+} [\emph{read-only}]: FIFO counter
+\\
+Number of data records currently being stored in FIFO 'UFIFO'
+\end{small}
+\end{itemize}
+\paragraph*{FIFO 'MFIFO' data input register 0}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & rtu\_mfifo\_r0\\
+{\bf HW address:}  & 0x1a\\
+{\bf SW prefix:}  & MFIFO\_R0\\
+{\bf SW offset:}  & 0x68\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}AD\_SEL}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+AD\_SEL
+} [\emph{write-only}]: Address/data select
+\\
+1: AD\_VAL contains new memory address\\				               0: AD\_VAL contains data word to be written at current memory address. Then, the address is incremented
+\end{small}
+\end{itemize}
+\paragraph*{FIFO 'MFIFO' data input register 1}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & rtu\_mfifo\_r1\\
+{\bf HW address:}  & 0x1b\\
+{\bf SW prefix:}  & MFIFO\_R1\\
+{\bf SW offset:}  & 0x6c\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}AD\_VAL[31:24]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}AD\_VAL[23:16]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}AD\_VAL[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}AD\_VAL[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+AD\_VAL
+} [\emph{write-only}]: Address/data value
+\\
+Value of new memory address (when AD\_SEL = 1) or data word to be written (when AD\_SEL = 0)
+\end{small}
+\end{itemize}
+\paragraph*{FIFO 'MFIFO' control/status register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & rtu\_mfifo\_csr\\
+{\bf HW address:}  & 0x1c\\
+{\bf SW prefix:}  & MFIFO\_CSR\\
+{\bf SW offset:}  & 0x70\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}EMPTY} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}FULL}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c}{-} & - & \multicolumn{6}{|c|}{\cellcolor{RoyalPurple!25}USEDW[5:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+FULL
+} [\emph{read-only}]: FIFO full flag
+\\
+1: FIFO 'MFIFO' is full\\0: FIFO is not full
+\end{small}
+\item \begin{small}
+{\bf 
+EMPTY
+} [\emph{read-only}]: FIFO empty flag
+\\
+1: FIFO 'MFIFO' is empty\\0: FIFO is not empty
+\end{small}
+\item \begin{small}
+{\bf 
+USEDW
+} [\emph{read-only}]: FIFO counter
+\\
+Number of data records currently being stored in FIFO 'MFIFO'
+\end{small}
+\end{itemize}
+
+\paragraph*{Aging bitmap for main hashtable}\vspace{12pt}
+
+\begin{small}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & rtu\_aram\\
+{\bf HW address:}  & 0x100\\
+{\bf C prefix:}  & ARAM\\
+{\bf C offset:}  & 0x400\\
+{\bf Size:}  & 256 32-bit words\\
+{\bf Data width:}  & 32\\
+{\bf Access (bus):}  & read/write\\
+{\bf Access (device):}  & read/write\\
+{\bf Mirrored:}  & no\\
+{\bf Byte-addressable:}  & no\\
+{\bf Peripheral port:}  & bus-synchronous\\
+\end{tabular}
+
+\end{small}
+Each bit in this memory reflects the state of corresponding entry in main hashtable:\\                    0: entry wasn't matched\\                    1: entry was matched at least once.\\                    CPU reads this bitmap and subsequently clears it every few seconds to update the aging counters.
+
+\subsubsection{Interrupts}
+\paragraph*{UFIFO Not Empty IRQ}\vspace{12pt}
+\begin{small}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & rtu\_nempty\\
+{\bf C prefix:}  & NEMPTY\\
+{\bf Trigger:}  & low level\\
+\end{tabular}
+
+\end{small}
+\vspace{12pt}
+Interrupt active when there are some requests in UFIFO.
+

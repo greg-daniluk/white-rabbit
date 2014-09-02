@@ -1,0 +1,16 @@
+\subsection{Tx Timestamping Unit (Tx TSU)}
+
+\noindent {\bf Description:}
+
+The module collects Tx timestamps for Ethernet frames sent through all 18
+Endpoints available in WR Switch. Those timestamps are stored inside the FIFO
+queue and can be fetched by the software running on the main CPU together with
+the Frame ID (FID) and Port ID (PID). This additional information is used by
+the CPU to associate the timestamp with appropriate frame that was sent through
+\emph{NIC} and one (or multiple) of the Endpoints.
+
+The module can also generate an interrupt (fed to VIC described in section
+\ref{sec:vic}). It indicates that TxTSU stores at least one timestamp in its
+FIFO.\\
+
+\noindent{\bf Wishbone interface:} section \ref{subsec:wbgen:txtsu}.

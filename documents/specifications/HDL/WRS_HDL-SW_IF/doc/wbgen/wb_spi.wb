@@ -1,0 +1,166 @@
+top = peripheral {
+  name = "Wishbone SPI";
+
+  hdl_entity = "spi_wishbone_slave";
+  prefix = "spi";
+
+  reg {
+    name = "TX/RX 0";
+    description = "";
+    prefix = "tx_rx_0";
+    field {
+      name = "Tx/Rx word 0";
+      size = 32;
+      type = SLV;
+      load = LOAD_EXT;
+      access_bus = READ_WRITE;
+      access_dev = READ_WRITE;
+    }
+  };
+
+  reg {
+    name = "TX/RX 1";
+    description = "";
+    prefix = "tx_rx_1";
+    field {
+      name = "Tx/Rx word 1";
+      size = 32;
+      type = SLV;
+      load = LOAD_EXT;
+      access_bus = READ_WRITE;
+      access_dev = READ_WRITE;
+    }
+  };
+
+  reg {
+    name = "TX/RX 2";
+    description = "";
+    prefix = "tx_rx_2";
+    field {
+      name = "Tx/Rx word 2";
+      size = 32;
+      type = SLV;
+      load = LOAD_EXT;
+      access_bus = READ_WRITE;
+      access_dev = READ_WRITE;
+    }
+  };
+  
+  reg {
+    name = "TX/RX 3";
+    description = "";
+    prefix = "tx_rx_3";
+    field {
+      name = "Tx/Rx word 3";
+      size = 32;
+      type = SLV;
+      load = LOAD_EXT;
+      access_bus = READ_WRITE;
+      access_dev = READ_WRITE;
+    }
+  };
+
+
+  reg {
+    name = "Control register";
+    prefix = "ctrl";
+    field {
+      name = "Length of SPI transfer";
+      prefix = "len";
+      size = 7;
+      type = SLV;
+      access_bus = READ_WRITE;
+      access_dev = READ_ONLY;
+    };
+    field {
+      name = "Start SPI transfer";
+      prefix = "go";
+      size = 1;
+      align = 8;
+      type = MONOSTABLE;
+      access_bus = WRITE_ONLY;
+      access_dev = READ_ONLY;
+    };
+    field {
+      name = "RX negedge";
+      description = "write 1: data from Slave received on falling SCLK edge \
+                     write 0: data from Slave received on rising SCLK edge";
+      prefix = "rx_negedge";
+      size = 1;
+      align = 9;
+      type = BIT;
+      access_bus = READ_WRITE;
+      access_dev = READ_ONLY;
+    };
+    field {
+      name = "TX negedge";
+      description = "write 1: data transmitted on falling SCLK edge \
+                     write 0: data transmitted on rising SCLK edge";
+      prefix = "tx_negedge";
+      size = 1;
+      align = 10;
+      type = BIT;
+      access_bus = READ_WRITE;
+      access_dev = READ_ONLY;
+    };
+    field {
+      name = "LSB first";
+      description = "write 1: LSB first on the line \
+                     write 0: MSB first on the line";
+      prefix = "lsb";
+      size = 1;
+      align = 11;
+      type = BIT;
+      access_bus = READ_WRITE;
+      access_dev = READ_ONLY;
+    };
+    field {
+      name = "Interrupt enable";
+      description = "write 1: IRQ enabled \
+                     write 0: IRQ disabled";
+      prefix = "irq";
+      size = 1;
+      align = 12;
+      type = BIT;
+      access_bus = READ_WRITE;
+      access_dev = READ_ONLY;
+    };
+    field {
+      name = "Automatic Slave select";
+      prefix = "ass";
+      size = 1;
+      align = 13;
+      type = BIT;
+      access_bus = READ_WRITE;
+      access_dev = READ_ONLY;
+    }
+  };
+
+  reg {
+    name = "Divider";
+    description = "";
+    prefix = "divider";
+    field {
+      name = "Divide factor";
+      size = 16;
+      type = SLV;
+      access_bus = READ_WRITE;
+      access_dev = READ_ONLY;
+    }
+  };
+
+  reg {
+    name = "Select SPI slave";
+    description = "";
+    prefix = "ss";
+    field {
+      name = "Select slave";
+      size = 1;
+      type = SLV;
+      load = LOAD_EXT;
+      access_bus = READ_WRITE;
+      access_dev = READ_WRITE;
+    } 
+  };
+
+};

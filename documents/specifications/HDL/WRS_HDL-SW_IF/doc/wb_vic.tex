@@ -1,0 +1,411 @@
+\subsection{Vectored Interrupt Controller (VIC)}
+\label{subsec:wbgen:VIC}
+Module implementing a 2 to 32-input prioritized interrupt controller with internal interrupt vector storage support.
+\subsubsection{Memory map summary}
+\rowcolors{2}{gray!25}{white}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|l|l|l|l|}
+\rowcolor{RoyalPurple}
+\color{white} SW Offset & \color{white} Type & \color{white} Name &
+\color{white} HW prefix & \color{white} C prefix\\
+0x0& REG & VIC Control Register & vic\_ctl & CTL\\
+0x4& REG & Raw Interrupt Status Register & vic\_risr & RISR\\
+0x8& REG & Interrupt Enable Register & vic\_ier & IER\\
+0xc& REG & Interrupt Disable Register & vic\_idr & IDR\\
+0x10& REG & Interrupt Mask Register & vic\_imr & IMR\\
+0x14& REG & Vector Address Register & vic\_var & VAR\\
+0x18& REG & Software Interrupt Register & vic\_swir & SWIR\\
+0x1c& REG & End Of Interrupt Acknowledge Register & vic\_eoir & EOIR\\
+0x80 - 0xfc& MEM & Interrupt Vector Table & vic\_ivt\_ram & IVT\_RAM\\
+\hline
+\end{tabular}
+}
+
+\subsubsection{Register description}
+\paragraph*{VIC Control Register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & vic\_ctl\\
+{\bf HW address:}  & 0x0\\
+{\bf SW prefix:}  & CTL\\
+{\bf SW offset:}  & 0x0\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & \multicolumn{3}{|c|}{\cellcolor{RoyalPurple!25}EMU\_LEN[15:13]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}EMU\_LEN[12:5]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{5}{|c|}{\cellcolor{RoyalPurple!25}EMU\_LEN[4:0]} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}EMU\_EDGE} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}POL} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}ENABLE}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+ENABLE
+} [\emph{read/write}]: VIC Enable
+\\
+write 1: enable VIC operation \\                        write 0: disable VIC operation \\                        read 1: VIC enabled \\                        read 0: VIC disabled
+\end{small}
+\item \begin{small}
+{\bf 
+POL
+} [\emph{read/write}]: VIC output polarity
+\\
+1: IRQ output is active high \\                        0: IRQ output is active low
+\end{small}
+\item \begin{small}
+{\bf 
+EMU\_EDGE
+} [\emph{read/write}]: Emulate Edge sensitive output
+\\
+1: Forces a low pulse of \texttt{EMU\_LEN} clock cycles at each write to \texttt{EOIR}. Useful for edge-only IRQ controllers such as Gennum. \\                        0: Normal IRQ master line behavior
+\end{small}
+\item \begin{small}
+{\bf 
+EMU\_LEN
+} [\emph{read/write}]: Emulated Edge pulse timer
+\\
+Length of the delay (in \texttt{clk\_sys\_i} cycles) between write to \texttt{EOIR} and re-assertion of \texttt{irq\_master\_o}.
+\end{small}
+\end{itemize}
+\paragraph*{Raw Interrupt Status Register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & vic\_risr\\
+{\bf HW address:}  & 0x1\\
+{\bf SW prefix:}  & RISR\\
+{\bf SW offset:}  & 0x4\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}RISR[31:24]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}RISR[23:16]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}RISR[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}RISR[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+RISR
+} [\emph{read-only}]: Raw interrupt status
+\\
+Each bit reflects the current state of corresponding IRQ input line. \\                        read 1: interrupt line is currently active \\                        read 0: interrupt line is inactive
+\end{small}
+\end{itemize}
+\paragraph*{Interrupt Enable Register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & vic\_ier\\
+{\bf HW address:}  & 0x2\\
+{\bf SW prefix:}  & IER\\
+{\bf SW offset:}  & 0x8\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}IER[31:24]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}IER[23:16]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}IER[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}IER[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+IER
+} [\emph{write-only}]: Enable IRQ
+\\
+write 1: enables interrupt associated with written bit \\                        write 0: no effect
+\end{small}
+\end{itemize}
+\paragraph*{Interrupt Disable Register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & vic\_idr\\
+{\bf HW address:}  & 0x3\\
+{\bf SW prefix:}  & IDR\\
+{\bf SW offset:}  & 0xc\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}IDR[31:24]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}IDR[23:16]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}IDR[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}IDR[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+IDR
+} [\emph{write-only}]: Disable IRQ
+\\
+write 1: enables interrupt associated with written bit \\                        write 0: no effect
+\end{small}
+\end{itemize}
+\paragraph*{Interrupt Mask Register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & vic\_imr\\
+{\bf HW address:}  & 0x4\\
+{\bf SW prefix:}  & IMR\\
+{\bf SW offset:}  & 0x10\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}IMR[31:24]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}IMR[23:16]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}IMR[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}IMR[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+IMR
+} [\emph{read-only}]: IRQ disabled/enabled
+\\
+read 1: interrupt associated with read bit is enabled \\                        read 0: interrupt is disabled
+\end{small}
+\end{itemize}
+\paragraph*{Vector Address Register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & vic\_var\\
+{\bf HW address:}  & 0x5\\
+{\bf SW prefix:}  & VAR\\
+{\bf SW offset:}  & 0x14\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}VAR[31:24]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}VAR[23:16]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}VAR[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}VAR[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+VAR
+} [\emph{read-only}]: Vector Address
+\\
+Address of pending interrupt vector, read from Interrupt Vector Table
+\end{small}
+\end{itemize}
+\paragraph*{Software Interrupt Register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & vic\_swir\\
+{\bf HW address:}  & 0x6\\
+{\bf SW prefix:}  & SWIR\\
+{\bf SW offset:}  & 0x18\\
+\end{tabular}
+
+\vspace{12pt}
+Writing 1 to one of bits of this register causes a software emulation of the respective interrupt.
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}SWIR[31:24]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}SWIR[23:16]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}SWIR[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}SWIR[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+SWIR
+} [\emph{write-only}]: SWI interrupt mask
+\end{small}
+\end{itemize}
+\paragraph*{End Of Interrupt Acknowledge Register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & vic\_eoir\\
+{\bf HW address:}  & 0x7\\
+{\bf SW prefix:}  & EOIR\\
+{\bf SW offset:}  & 0x1c\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}EOIR[31:24]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}EOIR[23:16]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}EOIR[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}EOIR[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+EOIR
+} [\emph{write-only}]: End of Interrupt
+\\
+Any write operation acknowledges the pending interrupt. Then, VIC advances to another pending interrupt(s) or releases the master interrupt output.
+\end{small}
+\end{itemize}
+
+\paragraph*{Interrupt Vector Table}\vspace{12pt}
+
+\begin{small}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & vic\_ivt\_ram\\
+{\bf HW address:}  & 0x20\\
+{\bf C prefix:}  & IVT\_RAM\\
+{\bf C offset:}  & 0x80\\
+{\bf Size:}  & 32 32-bit words\\
+{\bf Data width:}  & 32\\
+{\bf Access (bus):}  & read/write\\
+{\bf Access (device):}  & read-only\\
+{\bf Mirrored:}  & no\\
+{\bf Byte-addressable:}  & no\\
+{\bf Peripheral port:}  & bus-synchronous\\
+\end{tabular}
+
+\end{small}
+Vector Address Table. Word at offset N stores the vector address of IRQ N. When interrupt is requested, VIC reads it's vector address from this memory and stores it in VAR register.
+
+

@@ -1,0 +1,57 @@
+\subsection{Hardware Info Unit (HWIU)}
+\label{sec:hwiu}
+\noindent {\bf Description:}
+
+The module provides various information about the gateware build and can be also
+used for debugging.
+
+\begin{center}
+  \begin{tabular}{|p{1.5cm}|p{9cm}|}
+    \hline
+    Reg No. & description\\
+    \hline \hline
+    0 & HWIU info structure\\
+    1 & gateware build date (e.g. \emph{0C020E01})\\
+    2 & commit hash of \emph{wr-switch-hdl} repository\\
+    3 & commit hash of \emph{general-cores} repository\\
+    4 & commit hash of \emph{wr-cores} repository\\
+  ... & debug registers exporting values from various hdl modules, check hdl
+    code for their meaning\\
+    \hline
+  \end{tabular}
+\end{center}
+
+HWIU info structure provides information about gateware details exported in HWIU
+registers:
+
+\begin{center}
+  \begin{tabular}{|p{1.5cm}|p{9cm}|}
+    \hline
+    bit range & description\\
+    \hline \hline
+    31 - 24 & info structure version (currently \emph{1})\\
+    23 - 16 & how many subsequent registers contain info about the gateware
+    (currently \emph{4})\\
+    15 -  8 & gateware major version (\emph{4})\\
+     7 -  0 & gateware minor version (\emph{0})\\
+    \hline
+  \end{tabular}
+\end{center}
+
+Gateware build date is a 32-bit value which is a concatenation of day, month,
+year and build number (if there are more then one build per day):
+
+\begin{center}
+  \begin{tabular}{|p{1.5cm}|p{9cm}|}
+    \hline
+    bit range & description\\
+    \hline \hline
+    31 - 24 & day of the build\\
+    23 - 16 & month of the build\\
+    15 -  8 & two digits of year of the build (e.g. for 2014 register stores \emph{14})\\
+     7 -  0 & build number\\
+    \hline
+  \end{tabular}
+\end{center}
+
+\noindent{\bf Wishbone interface:} section \ref{subsec:wbgen:pstats}.

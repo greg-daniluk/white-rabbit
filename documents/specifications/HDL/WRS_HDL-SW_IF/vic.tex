@@ -1,0 +1,26 @@
+\subsection{Vectored Interrupt Controller (VIC)}
+\label{sec:vic}
+
+\noindent {\bf Description:}
+
+The module combines multiple interrupt lines from different modules inside the
+WR Switch Gateware and outputs a single IRQ fed to the main CPU. It inputs up to 32
+prioritized internal interrupts. The priorities of the interrupts are fixed: IRQ0 has
+the highest priority while IRQ31 has the lowest priority. Currently 4 internal
+interrupts are connected to \emph{VIC}:
+\begin{center}
+\begin{tabular}{|l|l|}
+  \hline
+  IRQ No. & source module\\
+  \hline \hline
+  0 & Network Interface Controller (\emph{NIC})\\
+  1 & Tx Timestamping Unit (\emph{TS TSU})\\
+  2 & Routing Table Unit (\emph{RTU})\\
+  3 & Per-port Statistics (\emph{Pstats})\\
+  4 - 31 & currently not used\\
+  \hline
+\end{tabular}
+\end{center}
+
+\vspace{12pt}
+\noindent{\bf Wishbone interface:} section \ref{subsec:wbgen:VIC}.

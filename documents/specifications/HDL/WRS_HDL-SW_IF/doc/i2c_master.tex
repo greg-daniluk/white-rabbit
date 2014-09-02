@@ -1,0 +1,301 @@
+\subsection{Wishbone I2C Master}
+\label{subsec:wbgen:i2c}
+
+\subsubsection{Memory map summary}
+\rowcolors{2}{gray!25}{white}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|l|l|l|l|}
+\rowcolor{RoyalPurple}
+\color{white} SW Offset & \color{white} Type & \color{white} Name &
+\color{white} HW prefix & \color{white} C prefix\\
+0x0& REG & Clock prescale register LSB & i2c\_prer\_lsb & PRER\_LSB\\
+0x4& REG & Clock prescale register MSB & i2c\_prer\_msb & PRER\_MSB\\
+0x8& REG & Control register & i2c\_ctr & CTR\\
+0xc& REG & Transmit/Receive register & i2c\_txrx & TXRX\\
+0x10& REG & Command/Status register & i2c\_crsr & CRSR\\
+0x14& REG & Interface select register & i2c\_ifs & IFS\\
+\hline
+\end{tabular}
+}
+
+\subsubsection{Register description}
+\paragraph*{Clock prescale register LSB}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & i2c\_prer\_lsb\\
+{\bf HW address:}  & 0x0\\
+{\bf SW prefix:}  & PRER\_LSB\\
+{\bf SW offset:}  & 0x0\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}PRER\_LSB[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+PRER\_LSB
+} [\emph{read/write}]: Clock prescale LSB
+\\
+Bits 7:0 of 16-bit PRER register
+\end{small}
+\end{itemize}
+\paragraph*{Clock prescale register MSB}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & i2c\_prer\_msb\\
+{\bf HW address:}  & 0x1\\
+{\bf SW prefix:}  & PRER\_MSB\\
+{\bf SW offset:}  & 0x4\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}PRER\_MSB[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+PRER\_MSB
+} [\emph{read/write}]: Clock prescale MSB
+\\
+Bits 15:8 of 16-bit PRER register. Register stores the prescale value for SCL clock \\                      scl\_clk = clk\_sys / (5* PRER) \\                      a new value can be stored only when the module is disabled (CTR register)
+\end{small}
+\end{itemize}
+\paragraph*{Control register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & i2c\_ctr\\
+{\bf HW address:}  & 0x2\\
+{\bf SW prefix:}  & CTR\\
+{\bf SW offset:}  & 0x8\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}EN} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}IEN} & \multicolumn{6}{|c|}{\cellcolor{RoyalPurple!25}RSV[5:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+RSV
+} [\emph{read/write}]: reserved
+\end{small}
+\item \begin{small}
+{\bf 
+IEN
+} [\emph{read/write}]: Interrupt enable
+\\
+Enable interrupt generation \\                       1: interrupt enabled \\                       0: interrupt disabled
+\end{small}
+\item \begin{small}
+{\bf 
+EN
+} [\emph{read/write}]: Enable module
+\\
+1: module enabled \\                       0: module disabled
+\end{small}
+\end{itemize}
+\paragraph*{Transmit/Receive register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & i2c\_txrx\\
+{\bf HW address:}  & 0x3\\
+{\bf SW prefix:}  & TXRX\\
+{\bf SW offset:}  & 0xc\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}TXRX[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+TXRX
+} [\emph{read/write}]: value
+\\
+write: byte to be transmitted to i2c bus \\                read: byte received from i2c bus
+\end{small}
+\end{itemize}
+\paragraph*{Command/Status register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & i2c\_crsr\\
+{\bf HW address:}  & 0x4\\
+{\bf SW prefix:}  & CRSR\\
+{\bf SW offset:}  & 0x10\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}CRSR[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+CRSR
+} [\emph{read/write}]: value
+\\
+ write: \\                        bit 7: generate (repeat) start condition \\                        bit 6: generate stop consitoin \\                        bit 5: read from slave \\                        bit 4: write to slave \\                        bit 3: if 0, send ACK; if 1, send NACK \\                        bit 0: acknowledge interrupt \\                      read: \\                        bit 7: if 0, received ACK; if 1, no ACK received \\                        bit 6: i2c bus busy \\                        bit 5: i2c bus arbitration lost \\                        bit 1: transfer in progress \\                        bit 0: interrupt pending
+\end{small}
+\end{itemize}
+\paragraph*{Interface select register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & i2c\_ifs\\
+{\bf HW address:}  & 0x5\\
+{\bf SW prefix:}  & IFS\\
+{\bf SW offset:}  & 0x14\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}BUSY} & - & - & - & \multicolumn{4}{|c|}{\cellcolor{RoyalPurple!25}IF\_NUM[3:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+IF\_NUM
+} [\emph{read/write}]: I2C i/f number
+\\
+select I2C interface: \\                       0: MiniBackplane 0 \\                       1: MiniBackplane 1 \\                       2: Sensors I2C
+\end{small}
+\item \begin{small}
+{\bf 
+BUSY
+} [\emph{read/write}]: I2C Master busy
+\\
+write 1: I2C Master is busy and if\_num cannot be changed \\                       write 0: I2C Master free to use, if\_num can be set to desired i/f
+\end{small}
+\end{itemize}
+
+
+

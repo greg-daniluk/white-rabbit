@@ -1,0 +1,69 @@
+\subsection{Time Aware Traffic Shaper}
+\label{subsec:wbgen:tatsu}
+
+\subsubsection{Memory map summary}
+\rowcolors{2}{gray!25}{white}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|l|l|l|l|}
+\rowcolor{RoyalPurple}
+\color{white} SW Offset & \color{white} Type & \color{white} Name &
+\color{white} HW prefix & \color{white} C prefix\\
+0x0& REG & TATSU Control Register/Status & tatsu\_tcr & TCR\\
+\hline
+\end{tabular}
+}
+
+\subsubsection{Register description}
+\paragraph*{TATSU Control Register/Status}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & tatsu\_tcr\\
+{\bf HW address:}  & 0x0\\
+{\bf SW prefix:}  & TCR\\
+{\bf SW offset:}  & 0x0\\
+\end{tabular}
+
+\vspace{12pt}
+General TATSU control and status register
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}DISABLE} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}RESERVED}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+RESERVED
+} [\emph{write-only}]: 
+\end{small}
+\item \begin{small}
+{\bf 
+DISABLE
+} [\emph{write-only}]: Stop TATSU
+\\
+write 1: disable Time Aware Traffic Shapper\\						write 0: no effect
+\end{small}
+\end{itemize}
+
+
+

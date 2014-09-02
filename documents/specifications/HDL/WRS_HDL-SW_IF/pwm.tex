@@ -1,0 +1,21 @@
+\subsection{PWM Controller}
+
+\noindent {\bf Description:}
+
+Pulse Width Modulation controller is used by the WR Switch software to adjust the
+speed of two fans installed at the back of a WR Switch box. The module can drive
+up to 8 PWM channels, but only two are currently used:
+
+\begin{center}
+  \begin{tabular}{|l|l|}
+    \hline
+    Channel No. & description\\
+    \hline \hline
+    0 & controlling the speed of the left fan\\
+    1 & controlling the speed of the right fan\\
+    \hline
+  \end{tabular}
+\end{center}
+
+\vspace{12pt}
+\noindent{\bf Wishbone interface:} section \ref{subsec:wbgen:spwm}.

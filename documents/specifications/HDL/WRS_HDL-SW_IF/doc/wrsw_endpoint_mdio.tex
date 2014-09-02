@@ -1,0 +1,778 @@
+\subsection{WR Endpoint 1000base-X TBI PCS register block}
+\label{subsec:wbgen:MDIO}
+
+\subsubsection{Memory map summary}
+\rowcolors{2}{gray!25}{white}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|l|l|l|l|}
+\rowcolor{RoyalPurple}
+\color{white} SW Offset & \color{white} Type & \color{white} Name &
+\color{white} HW prefix & \color{white} C prefix\\
+0x0& REG & MDIO Control Register & mdio\_mcr & MCR\\
+0x4& REG & MDIO Status Register & mdio\_msr & MSR\\
+0x8& REG & MDIO PHY Identification Register 1 & mdio\_physid1 & PHYSID1\\
+0xc& REG & MDIO PHY Identification Register 2 & mdio\_physid2 & PHYSID2\\
+0x10& REG & MDIO Auto-Neg Advert Register & mdio\_advertise & ADVERTISE\\
+0x14& REG & MDIO Auto-Neg Link Partner Ability Register & mdio\_lpa & LPA\\
+0x18& REG & MDIO Auto-Negotiation Expansion Register & mdio\_expansion & EXPANSION\\
+0x3c& REG & MDIO Extended Status Register & mdio\_estatus & ESTATUS\\
+0x40& REG & WhiteRabbit-specific Configuration Register & mdio\_wr\_spec & WR\_SPEC\\
+\hline
+\end{tabular}
+}
+
+\subsubsection{Register description}
+\paragraph*{MDIO Control Register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & mdio\_mcr\\
+{\bf HW address:}  & 0x0\\
+{\bf SW prefix:}  & MCR\\
+{\bf SW offset:}  & 0x0\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}RESET} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}LOOPBACK} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}SPEED100} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}ANENABLE} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PDOWN} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}ISOLATE} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}ANRESTART} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}FULLDPLX}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}CTST} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}SPEED1000} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}UNI\_EN} & \multicolumn{5}{|c|}{\cellcolor{RoyalPurple!25}RESV[4:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+RESV
+} [\emph{read-only}]: Reserved
+\\
+read: always return 0s \\                        write: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+UNI\_EN
+} [\emph{read/write}]: Unidirectional Enable
+\\
+1 = Enable transmit regardless of whether a valid link has been established\\				                0 = Normal operation
+\end{small}
+\item \begin{small}
+{\bf 
+SPEED1000
+} [\emph{read-only}]: Speed Selection (MSB)
+\\
+Always 1, indicating (together with bit 13) a fixed speed of 1000 Mbps
+\end{small}
+\item \begin{small}
+{\bf 
+CTST
+} [\emph{read-only}]: Collision Test
+\\
+Always equal to 0, since collision detection is not supported
+\end{small}
+\item \begin{small}
+{\bf 
+FULLDPLX
+} [\emph{read-only}]: Duplex Mode
+\\
+Always equal to 1 to indicate Full-Duplex operation
+\end{small}
+\item \begin{small}
+{\bf 
+ANRESTART
+} [\emph{write-only}]: Restart Auto-Negotiation
+\\
+write 1: restart Auto-Negotiation process\\				                write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+ISOLATE
+} [\emph{read-only}]: Isolate
+\\
+GMII Electrical isolation enable. Ignored since the PCS doesn't use GMII
+\end{small}
+\item \begin{small}
+{\bf 
+PDOWN
+} [\emph{read/write}]: Power Down
+\\
+1: Power down \\				                0: Normal operation \\				                This bit controls directly the PHY Enable pin
+\end{small}
+\item \begin{small}
+{\bf 
+ANENABLE
+} [\emph{read/write}]: Auto-Negotiation Enable
+\\
+1: Enable Auto-Negotiation process \\				                0: Disable Auto-Negotiation process
+\end{small}
+\item \begin{small}
+{\bf 
+SPEED100
+} [\emph{read-only}]: Speed Selection (LSB)
+\\
+Always 0, indicating (together with bit 6) a fixed speed of 1000 Mbps
+\end{small}
+\item \begin{small}
+{\bf 
+LOOPBACK
+} [\emph{read/write}]: Loopback
+\\
+1: enable loopback mode \\				                0: disable loopback mode \\				 With the TBI version, loopback bit is connected to PHY loopback enable pin. When set to 1, indicates to the external PHY to enter loopback mode
+\end{small}
+\item \begin{small}
+{\bf 
+RESET
+} [\emph{write-only}]: Reset
+\\
+write 1: triggers reset of the PCS core\\				                write 0: no effect
+\end{small}
+\end{itemize}
+\paragraph*{MDIO Status Register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & mdio\_msr\\
+{\bf HW address:}  & 0x1\\
+{\bf SW prefix:}  & MSR\\
+{\bf SW offset:}  & 0x4\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}100BASE4} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}100FULL} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}100HALF} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}10FULL} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}10HALF} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}100FULL2} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}100HALF2} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}ESTATEN}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}UNIDIRABLE} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}MFSUPPRESS} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}ANEGCOMPLETE} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}RFAULT} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}ANEGCAPABLE} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}LSTATUS} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}JCD} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}ERCAP}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+ERCAP
+} [\emph{read-only}]: Extended Capability
+\\
+Always 0, since extended register set is not supported
+\end{small}
+\item \begin{small}
+{\bf 
+JCD
+} [\emph{read-only}]: Jabber Detect
+\\
+Always 0, since Jabber Detect is not supported
+\end{small}
+\item \begin{small}
+{\bf 
+LSTATUS
+} [\emph{read-only}]: Link Status
+\\
+read 1: Link is up\\				                read 0: Link is down (or has been down)\\				 Latches '0' if Link Status goes down. Clears to current Link Status on read.
+\end{small}
+\item \begin{small}
+{\bf 
+ANEGCAPABLE
+} [\emph{read-only}]: Auto-Negotiation Ability
+\\
+Always 1, to indicate the support for Auto-Negotiation.
+\end{small}
+\item \begin{small}
+{\bf 
+RFAULT
+} [\emph{read-only}]: Remote Fault
+\\
+read 1: Remote fault condition detected\\				                read 0: No remote fault condition detected\\				 The bit clears itself after being read by the host.
+\end{small}
+\item \begin{small}
+{\bf 
+ANEGCOMPLETE
+} [\emph{read-only}]: Auto-Negotiation Complete
+\\
+read 1: Auto-Negotiation process completed\\				                read 0: Auto-Negotiation process not completed
+\end{small}
+\item \begin{small}
+{\bf 
+MFSUPPRESS
+} [\emph{read-only}]: MF Preamble Suppression
+\\
+Always 0, feature not supported. 
+\end{small}
+\item \begin{small}
+{\bf 
+UNIDIRABLE
+} [\emph{read-only}]: Unidirectional Ability
+\\
+Always 1, as the Unidirectional mode is supported. 
+\end{small}
+\item \begin{small}
+{\bf 
+ESTATEN
+} [\emph{read-only}]: Extended Status Capable
+\\
+Always 1, indicating the presence of the Extended Status Register
+\end{small}
+\item \begin{small}
+{\bf 
+100HALF2
+} [\emph{read-only}]: 100BASE-T2 Half Duplex
+\\
+Always 0 (unsupported medium)
+\end{small}
+\item \begin{small}
+{\bf 
+100FULL2
+} [\emph{read-only}]: 100BASE-T2 Full Duplex
+\\
+Always 0 (unsupported medium)
+\end{small}
+\item \begin{small}
+{\bf 
+10HALF
+} [\emph{read-only}]: 10 Mbps Half Duplex
+\\
+Always 0 (unsupported medium)
+\end{small}
+\item \begin{small}
+{\bf 
+10FULL
+} [\emph{read-only}]: 10 Mbps Full Duplex
+\\
+Always 0 (unsupported medium)
+\end{small}
+\item \begin{small}
+{\bf 
+100HALF
+} [\emph{read-only}]: 100BASE-X Half Duplex
+\\
+Always 0 (unsupported medium)
+\end{small}
+\item \begin{small}
+{\bf 
+100FULL
+} [\emph{read-only}]: 100BASE-X Full Duplex
+\\
+Always 0 (unsupported medium)
+\end{small}
+\item \begin{small}
+{\bf 
+100BASE4
+} [\emph{read-only}]: 100BASE-T4
+\\
+Always 0 (unsupported medium)
+\end{small}
+\end{itemize}
+\paragraph*{MDIO PHY Identification Register 1}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & mdio\_physid1\\
+{\bf HW address:}  & 0x2\\
+{\bf SW prefix:}  & PHYSID1\\
+{\bf SW offset:}  & 0x8\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}OUI[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}OUI[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+OUI
+} [\emph{read-only}]:  Organizationally Unique Identifier (bits 7-21)
+\\
+Always 0.
+\end{small}
+\end{itemize}
+\paragraph*{MDIO PHY Identification Register 2}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & mdio\_physid2\\
+{\bf HW address:}  & 0x3\\
+{\bf SW prefix:}  & PHYSID2\\
+{\bf SW offset:}  & 0xc\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{6}{|c|}{\cellcolor{RoyalPurple!25}OUI[5:0]} & \multicolumn{2}{|c|}{\cellcolor{RoyalPurple!25}MMNUM[5:4]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{4}{|c|}{\cellcolor{RoyalPurple!25}MMNUM[3:0]} & \multicolumn{4}{|c|}{\cellcolor{RoyalPurple!25}REV\_NUM[3:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+REV\_NUM
+} [\emph{read-only}]: Revision Number
+\\
+Always 0.
+\end{small}
+\item \begin{small}
+{\bf 
+MMNUM
+} [\emph{read-only}]: Manufacturer Model Number
+\\
+Always 0.
+\end{small}
+\item \begin{small}
+{\bf 
+OUI
+} [\emph{read-only}]: Organizationally Unique Identifier (bits 0-5)
+\\
+Always 0.
+\end{small}
+\end{itemize}
+\paragraph*{MDIO Auto-Neg Advert Register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & mdio\_advertise\\
+{\bf HW address:}  & 0x4\\
+{\bf SW prefix:}  & ADVERTISE\\
+{\bf SW offset:}  & 0x10\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}NPAGE} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}RSVD1} & \multicolumn{2}{|c|}{\cellcolor{RoyalPurple!25}RFAULT[1:0]} & \multicolumn{3}{|c|}{\cellcolor{RoyalPurple!25}RSVD2[2:0]} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PAUSE[1:1]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PAUSE[0:0]} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}HALF} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}FULL} & \multicolumn{5}{|c|}{\cellcolor{RoyalPurple!25}RSVD3[4:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+RSVD3
+} [\emph{read-only}]: Reserved
+\\
+Always 0.
+\end{small}
+\item \begin{small}
+{\bf 
+FULL
+} [\emph{read-only}]: Full Duplex
+\\
+Always 1, since Full Duplex Mode is the only supported mode.
+\end{small}
+\item \begin{small}
+{\bf 
+HALF
+} [\emph{read-only}]: Half Duplex
+\\
+Always 0, since Half Duplex Mode is not supported.
+\end{small}
+\item \begin{small}
+{\bf 
+PAUSE
+} [\emph{read/write}]: Pause
+\\
+00: No PAUSE\\				                01: Symmetric PAUSE \\				                10: Asymmetric PAUSE towards link partner\\				                11: Both Symmetric PAUSE and Asymmetric PAUSE towards link partner
+\end{small}
+\item \begin{small}
+{\bf 
+RSVD2
+} [\emph{read-only}]: Reserved
+\\
+Always 0.
+\end{small}
+\item \begin{small}
+{\bf 
+RFAULT
+} [\emph{read/write}]: Remote Fault
+\\
+00: No Error \\				                01: Offline \\				                10: Link Failure \\				                11: Auto-Negotiation Error
+\end{small}
+\item \begin{small}
+{\bf 
+RSVD1
+} [\emph{read-only}]: Reserved
+\\
+Always 0.
+\end{small}
+\item \begin{small}
+{\bf 
+NPAGE
+} [\emph{read-only}]: Next Page
+\\
+Always 0, since Next Page feature is not supported
+\end{small}
+\end{itemize}
+\paragraph*{MDIO Auto-Neg Link Partner Ability Register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & mdio\_lpa\\
+{\bf HW address:}  & 0x5\\
+{\bf SW prefix:}  & LPA\\
+{\bf SW offset:}  & 0x14\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}NPAGE} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}LPACK} & \multicolumn{2}{|c|}{\cellcolor{RoyalPurple!25}RFAULT[1:0]} & \multicolumn{3}{|c|}{\cellcolor{RoyalPurple!25}RSVD2[2:0]} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PAUSE[1:1]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PAUSE[0:0]} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}HALF} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}FULL} & \multicolumn{5}{|c|}{\cellcolor{RoyalPurple!25}RSVD3[4:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+RSVD3
+} [\emph{read-only}]: Reserved
+\\
+Always 0.
+\end{small}
+\item \begin{small}
+{\bf 
+FULL
+} [\emph{read-only}]: Full Duplex
+\\
+read 1: Remote partner supports Full Duplex operation\\				                read 0: It doesn't
+\end{small}
+\item \begin{small}
+{\bf 
+HALF
+} [\emph{read-only}]: Half Duplex
+\\
+read 1: Remote partner supports Half Duplex operation\\				                read 0: Remote partner doesn't support Half Duplex
+\end{small}
+\item \begin{small}
+{\bf 
+PAUSE
+} [\emph{read-only}]: Pause
+\\
+read 00: No PAUSE\\				                read 01: Symmetric PAUSE \\				                read 10: Asymmetric PAUSE towards link partner\\				                read 11: Both Symmetric PAUSE and Asymmetric PAUSE towards link partner
+\end{small}
+\item \begin{small}
+{\bf 
+RSVD2
+} [\emph{read-only}]: Reserved
+\\
+Always 0.
+\end{small}
+\item \begin{small}
+{\bf 
+RFAULT
+} [\emph{read-only}]: Remote Fault
+\\
+read 00: No Error \\				                read 01: Offline \\				                read 10: Link Failure \\				                read 11: Auto-Negotiation Error
+\end{small}
+\item \begin{small}
+{\bf 
+LPACK
+} [\emph{read-only}]: Acknowledge
+\\
+Used by Auto-Negotiation function to indicate reception of a link partner's base or next page.
+\end{small}
+\item \begin{small}
+{\bf 
+NPAGE
+} [\emph{read-only}]: Next Page
+\\
+read 1: Next Page functionality is supported\\				                read 0: It isn't
+\end{small}
+\end{itemize}
+\paragraph*{MDIO Auto-Negotiation Expansion Register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & mdio\_expansion\\
+{\bf HW address:}  & 0x6\\
+{\bf SW prefix:}  & EXPANSION\\
+{\bf SW offset:}  & 0x18\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}RSVD2[12:5]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{5}{|c|}{\cellcolor{RoyalPurple!25}RSVD2[4:0]} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}ENABLENPAGE} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}LWCP} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}RSVD1}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+RSVD1
+} [\emph{read-only}]: Reserved
+\\
+Always 0.
+\end{small}
+\item \begin{small}
+{\bf 
+LWCP
+} [\emph{read-only}]: Page Received
+\\
+Always 0, since we don't support the Next Page function
+\end{small}
+\item \begin{small}
+{\bf 
+ENABLENPAGE
+} [\emph{read-only}]: Next Page Able
+\\
+Always 0, since we don't support the Next Page function
+\end{small}
+\item \begin{small}
+{\bf 
+RSVD2
+} [\emph{read-only}]: Reserved
+\\
+Always 0.
+\end{small}
+\end{itemize}
+\paragraph*{MDIO Extended Status Register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & mdio\_estatus\\
+{\bf HW address:}  & 0xf\\
+{\bf SW prefix:}  & ESTATUS\\
+{\bf SW offset:}  & 0x3c\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}1000\_XFULL} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}1000\_XHALF} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}1000\_TFULL} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}1000\_THALF} & \multicolumn{4}{|c|}{\cellcolor{RoyalPurple!25}RSVD1[11:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}RSVD1[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+RSVD1
+} [\emph{read-only}]: Reserved
+\\
+Always 0.
+\end{small}
+\item \begin{small}
+{\bf 
+1000\_THALF
+} [\emph{read-only}]: 1000Base-T Half Duplex
+\\
+Always 0, since this mode is not supported.
+\end{small}
+\item \begin{small}
+{\bf 
+1000\_TFULL
+} [\emph{read-only}]: 1000Base-T Full Duplex
+\\
+Always 0, since this mode is not supported.
+\end{small}
+\item \begin{small}
+{\bf 
+1000\_XHALF
+} [\emph{read-only}]: 1000Base-X Half Duplex
+\\
+Always 0, since this mode is not supported.
+\end{small}
+\item \begin{small}
+{\bf 
+1000\_XFULL
+} [\emph{read-only}]: 1000Base-X Full Duplex
+\\
+Always 1, indicating the support for 1000Base-X Full Duplex mode.
+\end{small}
+\end{itemize}
+\paragraph*{WhiteRabbit-specific Configuration Register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & mdio\_wr\_spec\\
+{\bf HW address:}  & 0x10\\
+{\bf SW prefix:}  & WR\_SPEC\\
+{\bf SW offset:}  & 0x40\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}BSLIDE[4:4]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{4}{|c|}{\cellcolor{RoyalPurple!25}BSLIDE[3:0]} & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}CAL\_CRST} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}RX\_CAL\_STAT} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}TX\_CAL}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+TX\_CAL
+} [\emph{read/write}]: TX Calibration Pattern
+\\
+Controls the transmission of WR PHY calibration pattern. \\				                1: PCS is sending calibration pattern\\				                0: Normal PCS operation
+\end{small}
+\item \begin{small}
+{\bf 
+RX\_CAL\_STAT
+} [\emph{read-only}]: Calibration Pattern RX Status
+\\
+1: Valid calibration pattern is being received\\				                0: no calibration pattern detected by the receiver
+\end{small}
+\item \begin{small}
+{\bf 
+CAL\_CRST
+} [\emph{write-only}]: Reset calibration counter
+\\
+write 1: resets the calibration pattern valid counter. \\			                write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+BSLIDE
+} [\emph{read-only}]: GTP RX Bitslide
+\\
+Current receive path bit slide (valid only for Xilinx GTP/GTX versions)
+\end{small}
+\end{itemize}
+
+
+

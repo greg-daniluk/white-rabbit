@@ -1,0 +1,416 @@
+\subsection{Shared TX Timestamping Unit (TXTSU)}
+\label{subsec:wbgen:txtsu}
+
+\subsubsection{Memory map summary}
+\rowcolors{2}{gray!25}{white}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|l|l|l|l|}
+\rowcolor{RoyalPurple}
+\color{white} SW Offset & \color{white} Type & \color{white} Name &
+\color{white} HW prefix & \color{white} C prefix\\
+0x0& REG & Interrupt disable register & txtsu\_eic\_idr & EIC\_IDR\\
+0x4& REG & Interrupt enable register & txtsu\_eic\_ier & EIC\_IER\\
+0x8& REG & Interrupt mask register & txtsu\_eic\_imr & EIC\_IMR\\
+0xc& REG & Interrupt status register & txtsu\_eic\_isr & EIC\_ISR\\
+0x10& FIFOREG & FIFO 'Timestamp FIFO' data output register 0 & txtsu\_tsf\_r0 & TSF\_R0\\
+0x14& FIFOREG & FIFO 'Timestamp FIFO' data output register 1 & txtsu\_tsf\_r1 & TSF\_R1\\
+0x18& FIFOREG & FIFO 'Timestamp FIFO' data output register 2 & txtsu\_tsf\_r2 & TSF\_R2\\
+0x1c& REG & FIFO 'Timestamp FIFO' control/status register & txtsu\_tsf\_csr & TSF\_CSR\\
+\hline
+\end{tabular}
+}
+
+\subsubsection{Register description}
+\paragraph*{Interrupt disable register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & txtsu\_eic\_idr\\
+{\bf HW address:}  & 0x0\\
+{\bf SW prefix:}  & EIC\_IDR\\
+{\bf SW offset:}  & 0x0\\
+\end{tabular}
+
+\vspace{12pt}
+Writing 1 disables handling of the interrupt associated with corresponding bit. Writin 0 has no effect.
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}NEMPTY}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+NEMPTY
+} [\emph{write-only}]: TXTSU fifo not-empty
+\\
+write 1: disable interrupt 'TXTSU fifo not-empty'\\write 0: no effect
+\end{small}
+\end{itemize}
+\paragraph*{Interrupt enable register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & txtsu\_eic\_ier\\
+{\bf HW address:}  & 0x1\\
+{\bf SW prefix:}  & EIC\_IER\\
+{\bf SW offset:}  & 0x4\\
+\end{tabular}
+
+\vspace{12pt}
+Writing 1 enables handling of the interrupt associated with corresponding bit. Writin 0 has no effect.
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}NEMPTY}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+NEMPTY
+} [\emph{write-only}]: TXTSU fifo not-empty
+\\
+write 1: enable interrupt 'TXTSU fifo not-empty'\\write 0: no effect
+\end{small}
+\end{itemize}
+\paragraph*{Interrupt mask register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & txtsu\_eic\_imr\\
+{\bf HW address:}  & 0x2\\
+{\bf SW prefix:}  & EIC\_IMR\\
+{\bf SW offset:}  & 0x8\\
+\end{tabular}
+
+\vspace{12pt}
+Shows which interrupts are enabled. 1 means that the interrupt associated with the bitfield is enabled
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}NEMPTY}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+NEMPTY
+} [\emph{read-only}]: TXTSU fifo not-empty
+\\
+read 1: interrupt 'TXTSU fifo not-empty' is enabled\\read 0: interrupt 'TXTSU fifo not-empty' is disabled
+\end{small}
+\end{itemize}
+\paragraph*{Interrupt status register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & txtsu\_eic\_isr\\
+{\bf HW address:}  & 0x3\\
+{\bf SW prefix:}  & EIC\_ISR\\
+{\bf SW offset:}  & 0xc\\
+\end{tabular}
+
+\vspace{12pt}
+Each bit represents the state of corresponding interrupt. 1 means the interrupt is pending. Writing 1 to a bit clears the corresponding interrupt. Writing 0 has no effect.
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}NEMPTY}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+NEMPTY
+} [\emph{read/write}]: TXTSU fifo not-empty
+\\
+read 1: interrupt 'TXTSU fifo not-empty' is pending\\read 0: interrupt not pending\\write 1: clear interrupt 'TXTSU fifo not-empty'\\write 0: no effect
+\end{small}
+\end{itemize}
+\paragraph*{FIFO 'Timestamp FIFO' data output register 0}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & txtsu\_tsf\_r0\\
+{\bf HW address:}  & 0x4\\
+{\bf SW prefix:}  & TSF\_R0\\
+{\bf SW offset:}  & 0x10\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{4}{|c|}{\cellcolor{RoyalPurple!25}VAL\_F[3:0]} & \multicolumn{4}{|c|}{\cellcolor{RoyalPurple!25}VAL\_R[27:24]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}VAL\_R[23:16]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}VAL\_R[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}VAL\_R[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+VAL\_R
+} [\emph{read-only}]: Rising edge timestamp
+\end{small}
+\item \begin{small}
+{\bf 
+VAL\_F
+} [\emph{read-only}]: Falling edge timestamp
+\\
+Timestamp value taken on falling clock edge (few LSBs)
+\end{small}
+\end{itemize}
+\paragraph*{FIFO 'Timestamp FIFO' data output register 1}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & txtsu\_tsf\_r1\\
+{\bf HW address:}  & 0x5\\
+{\bf SW prefix:}  & TSF\_R1\\
+{\bf SW offset:}  & 0x14\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}FID[15:8]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}FID[7:0]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & \multicolumn{5}{|c|}{\cellcolor{RoyalPurple!25}PID[4:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+PID
+} [\emph{read-only}]: Physical port ID
+\\
+Identifier of the TXTSU port to which came the timestamp. There may be multiple timestamps sharing the same FID value for broadcast/multicast packets.
+\end{small}
+\item \begin{small}
+{\bf 
+FID
+} [\emph{read-only}]: Frame ID
+\\
+OOB Frame Identifier. Used to associate the timestamp value with transmitted packet.
+\end{small}
+\end{itemize}
+\paragraph*{FIFO 'Timestamp FIFO' data output register 2}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & txtsu\_tsf\_r2\\
+{\bf HW address:}  & 0x6\\
+{\bf SW prefix:}  & TSF\_R2\\
+{\bf SW offset:}  & 0x18\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}INCORRECT}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+INCORRECT
+} [\emph{read-only}]: Timestamp (possibly) incorrect
+\\
+1: This timestamp may be incorrect (generated during PPS adjustment)\\         0: Timestamp is correct.
+\end{small}
+\end{itemize}
+\paragraph*{FIFO 'Timestamp FIFO' control/status register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & txtsu\_tsf\_csr\\
+{\bf HW address:}  & 0x7\\
+{\bf SW prefix:}  & TSF\_CSR\\
+{\bf SW offset:}  & 0x1c\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}EMPTY} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}FULL}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}USEDW[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+FULL
+} [\emph{read-only}]: FIFO full flag
+\\
+1: FIFO 'Timestamp FIFO' is full\\0: FIFO is not full
+\end{small}
+\item \begin{small}
+{\bf 
+EMPTY
+} [\emph{read-only}]: FIFO empty flag
+\\
+1: FIFO 'Timestamp FIFO' is empty\\0: FIFO is not empty
+\end{small}
+\item \begin{small}
+{\bf 
+USEDW
+} [\emph{read-only}]: FIFO counter
+\\
+Number of data records currently being stored in FIFO 'Timestamp FIFO'
+\end{small}
+\end{itemize}
+
+
+\subsubsection{Interrupts}
+\paragraph*{TXTSU fifo not-empty}\vspace{12pt}
+\begin{small}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & txtsu\_nempty\\
+{\bf C prefix:}  & NEMPTY\\
+{\bf Trigger:}  & high level\\
+\end{tabular}
+
+\end{small}
+\vspace{12pt}
+Interrupt active when TXTSU shared FIFO contains any timestamps.
+

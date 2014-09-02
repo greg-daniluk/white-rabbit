@@ -1,0 +1,145 @@
+top = peripheral {
+   name = "Wishbone I2C Master";
+
+   hdl_entity = "i2c_wishbone_slave";
+   prefix = "i2c";
+
+   reg {
+      name = "Clock prescale register LSB";
+      prefix = "prer_lsb";
+      field {
+        name = "Clock prescale LSB";
+        description = "Bits 7:0 of 16-bit PRER register";
+        size = 8;
+        type = SLV;
+        access_bus = READ_WRITE;
+        access_dev = READ_WRITE;
+        load = LOAD_EXT;
+      }
+   };
+
+   reg {
+      name = "Clock prescale register MSB";
+      prefix = "prer_msb";
+      field {
+        name = "Clock prescale MSB";
+        description = "Bits 15:8 of 16-bit PRER register. Register stores the prescale value for SCL clock \
+                      scl_clk = clk_sys / (5* PRER) \
+                      a new value can be stored only when the module is disabled (CTR register)";
+        size = 8;
+        type = SLV;
+        access_bus = READ_WRITE;
+        access_dev = READ_WRITE;
+        load = LOAD_EXT;
+      }
+   };
+
+   reg {
+      name = "Control register";
+      prefix = "ctr";
+      field {
+        name = "reserved";
+        prefix = "rsv";
+        size = 6;
+        type = SLV;
+        access_bus = READ_WRITE;
+        access_dev = READ_WRITE;
+        load = LOAD_EXT;
+      };
+      field {
+        name = "Interrupt enable";
+        prefix = "ien";
+        description = "Enable interrupt generation \
+                       1: interrupt enabled \
+                       0: interrupt disabled";
+        size = 1;
+        align = 6;
+        type = BIT;
+        access_bus = READ_WRITE;
+        access_dev = READ_WRITE;
+        load = LOAD_EXT;
+      };
+      field {
+        name = "Enable module";
+        prefix = "en";
+        description = "1: module enabled \
+                       0: module disabled";
+        size = 1;
+        align = 7;
+        type = BIT;
+        access_bus = READ_WRITE;
+        access_dev = READ_WRITE;
+        load = LOAD_EXT;
+      }
+   };
+
+   reg {
+      name = "Transmit/Receive register";
+      prefix = "txrx";
+      field {
+        name = "value";
+        description = "write: byte to be transmitted to i2c bus \
+                read: byte received from i2c bus";
+        size = 8;
+        type = SLV;
+        access_bus = READ_WRITE;
+        access_dev = READ_WRITE;
+        load = LOAD_EXT;
+      };
+   };
+
+   reg {
+      name = "Command/Status register";
+      prefix = "crsr";
+      field {
+        name = "value";
+        description = " write: \
+                        bit 7: generate (repeat) start condition \
+                        bit 6: generate stop consitoin \
+                        bit 5: read from slave \
+                        bit 4: write to slave \
+                        bit 3: if 0, send ACK; if 1, send NACK \
+                        bit 0: acknowledge interrupt \
+                      read: \
+                        bit 7: if 0, received ACK; if 1, no ACK received \
+                        bit 6: i2c bus busy \
+                        bit 5: i2c bus arbitration lost \
+                        bit 1: transfer in progress \
+                        bit 0: interrupt pending";
+        size = 8;
+        type = SLV;
+        access_bus = READ_WRITE;
+        access_dev = READ_WRITE;
+        load = LOAD_EXT;
+      };
+   };
+
+  reg {
+      name = "Interface select register";
+      prefix = "ifs";
+      field {
+        name = "I2C i/f number";
+        prefix = "if_num";
+        description = "select I2C interface: \
+                       0: MiniBackplane 0 \
+                       1: MiniBackplane 1 \
+                       2: Sensors I2C";
+        size = 4;
+        type = SLV;
+        access_bus = READ_WRITE;
+        access_dev = READ_ONLY;
+      };
+      field {
+        name = "I2C Master busy";
+        prefix = "busy";
+        description = "write 1: I2C Master is busy and if_num cannot be changed \
+                       write 0: I2C Master free to use, if_num can be set to desired i/f";
+        size = 1;
+        align = 7;
+        type = BIT;
+        access_bus = READ_WRITE;
+        access_dev = READ_ONLY;
+      }
+  };
+
+};

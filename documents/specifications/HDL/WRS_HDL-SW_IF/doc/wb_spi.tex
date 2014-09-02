@@ -1,0 +1,360 @@
+\subsection{Wishbone SPI}
+\label{subsec:wbgen:spi}
+
+\subsubsection{Memory map summary}
+\rowcolors{2}{gray!25}{white}
+\begin{tabular}{|l|l|l|l|l|}
+\rowcolor{RoyalPurple}
+\color{white} SW Offset & \color{white} Type & \color{white} Name &
+\color{white} HW prefix & \color{white} C prefix\\
+0x0& REG & TX/RX 0 & spi\_tx\_rx\_0 & TX\_RX\_0\\
+0x4& REG & TX/RX 1 & spi\_tx\_rx\_1 & TX\_RX\_1\\
+0x8& REG & TX/RX 2 & spi\_tx\_rx\_2 & TX\_RX\_2\\
+0xc& REG & TX/RX 3 & spi\_tx\_rx\_3 & TX\_RX\_3\\
+0x10& REG & Control register & spi\_ctrl & CTRL\\
+0x14& REG & Divider & spi\_divider & DIVIDER\\
+0x18& REG & Select SPI slave & spi\_ss & SS\\
+\hline
+\end{tabular}
+
+\subsubsection{Register description}
+\paragraph*{TX/RX 0}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & spi\_tx\_rx\_0\\
+{\bf HW address:}  & 0x0\\
+{\bf SW prefix:}  & TX\_RX\_0\\
+{\bf SW offset:}  & 0x0\\
+\end{tabular}
+
+\vspace{12pt}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}TX\_RX\_0[31:24]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}TX\_RX\_0[23:16]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}TX\_RX\_0[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}TX\_RX\_0[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+TX\_RX\_0
+} [\emph{read/write}]: Tx/Rx word 0
+\end{small}
+\end{itemize}
+\paragraph*{TX/RX 1}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & spi\_tx\_rx\_1\\
+{\bf HW address:}  & 0x1\\
+{\bf SW prefix:}  & TX\_RX\_1\\
+{\bf SW offset:}  & 0x4\\
+\end{tabular}
+
+\vspace{12pt}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}TX\_RX\_1[31:24]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}TX\_RX\_1[23:16]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}TX\_RX\_1[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}TX\_RX\_1[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+TX\_RX\_1
+} [\emph{read/write}]: Tx/Rx word 1
+\end{small}
+\end{itemize}
+\paragraph*{TX/RX 2}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & spi\_tx\_rx\_2\\
+{\bf HW address:}  & 0x2\\
+{\bf SW prefix:}  & TX\_RX\_2\\
+{\bf SW offset:}  & 0x8\\
+\end{tabular}
+
+\vspace{12pt}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}TX\_RX\_2[31:24]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}TX\_RX\_2[23:16]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}TX\_RX\_2[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}TX\_RX\_2[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+TX\_RX\_2
+} [\emph{read/write}]: Tx/Rx word 2
+\end{small}
+\end{itemize}
+\paragraph*{TX/RX 3}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & spi\_tx\_rx\_3\\
+{\bf HW address:}  & 0x3\\
+{\bf SW prefix:}  & TX\_RX\_3\\
+{\bf SW offset:}  & 0xc\\
+\end{tabular}
+
+\vspace{12pt}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}TX\_RX\_3[31:24]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}TX\_RX\_3[23:16]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}TX\_RX\_3[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}TX\_RX\_3[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+TX\_RX\_3
+} [\emph{read/write}]: Tx/Rx word 3
+\end{small}
+\end{itemize}
+\paragraph*{Control register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & spi\_ctrl\\
+{\bf HW address:}  & 0x4\\
+{\bf SW prefix:}  & CTRL\\
+{\bf SW offset:}  & 0x10\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}ASS} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}IRQ} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}LSB} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}TX\_NEGEDGE} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}RX\_NEGEDGE} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}GO}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c}{-} & \multicolumn{7}{|c|}{\cellcolor{RoyalPurple!25}LEN[6:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+LEN
+} [\emph{read/write}]: Length of SPI transfer
+\end{small}
+\item \begin{small}
+{\bf 
+GO
+} [\emph{write-only}]: Start SPI transfer
+\end{small}
+\item \begin{small}
+{\bf 
+RX\_NEGEDGE
+} [\emph{read/write}]: RX negedge
+\\
+write 1: data from Slave received on falling SCLK edge \\                     write 0: data from Slave received on rising SCLK edge
+\end{small}
+\item \begin{small}
+{\bf 
+TX\_NEGEDGE
+} [\emph{read/write}]: TX negedge
+\\
+write 1: data transmitted on falling SCLK edge \\                     write 0: data transmitted on rising SCLK edge
+\end{small}
+\item \begin{small}
+{\bf 
+LSB
+} [\emph{read/write}]: LSB first
+\\
+write 1: LSB first on the line \\                     write 0: MSB first on the line
+\end{small}
+\item \begin{small}
+{\bf 
+IRQ
+} [\emph{read/write}]: Interrupt enable
+\\
+write 1: IRQ enabled \\                     write 0: IRQ disabled
+\end{small}
+\item \begin{small}
+{\bf 
+ASS
+} [\emph{read/write}]: Automatic Slave select
+\end{small}
+\end{itemize}
+\paragraph*{Divider}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & spi\_divider\\
+{\bf HW address:}  & 0x5\\
+{\bf SW prefix:}  & DIVIDER\\
+{\bf SW offset:}  & 0x14\\
+\end{tabular}
+
+\vspace{12pt}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}DIVIDER[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}DIVIDER[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+DIVIDER
+} [\emph{read/write}]: Divide factor
+\end{small}
+\end{itemize}
+\paragraph*{Select SPI slave}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & spi\_ss\\
+{\bf HW address:}  & 0x6\\
+{\bf SW prefix:}  & SS\\
+{\bf SW offset:}  & 0x18\\
+\end{tabular}
+
+\vspace{12pt}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}SS}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+SS
+} [\emph{read/write}]: Select slave
+\end{small}
+\end{itemize}
+
+
+

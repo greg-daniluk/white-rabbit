@@ -1,0 +1,412 @@
+\subsection{WR Switch PPS generator and RTC}
+\label{subsec:wbgen:ppsg}
+Unit generating PPS signals and acting as a UTC real-time clock
+\subsubsection{Memory map summary}
+\rowcolors{2}{gray!25}{white}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|l|l|l|l|}
+\rowcolor{RoyalPurple}
+\color{white} SW Offset & \color{white} Type & \color{white} Name &
+\color{white} HW prefix & \color{white} C prefix\\
+0x0& REG & Control Register & ppsg\_cr & CR\\
+0x4& REG & Nanosecond counter register & ppsg\_cntr\_nsec & CNTR\_NSEC\\
+0x8& REG & UTC Counter register (least-significant part) & ppsg\_cntr\_utclo & CNTR\_UTCLO\\
+0xc& REG & UTC Counter register (most-significant part) & ppsg\_cntr\_utchi & CNTR\_UTCHI\\
+0x10& REG & Nanosecond adjustment register & ppsg\_adj\_nsec & ADJ\_NSEC\\
+0x14& REG & UTC Adjustment register (least-significant part) & ppsg\_adj\_utclo & ADJ\_UTCLO\\
+0x18& REG & UTC Adjustment register (most-significant part) & ppsg\_adj\_utchi & ADJ\_UTCHI\\
+0x1c& REG & External sync control register & ppsg\_escr & ESCR\\
+\hline
+\end{tabular}
+}
+
+\subsubsection{Register description}
+\paragraph*{Control Register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & ppsg\_cr\\
+{\bf HW address:}  & 0x0\\
+{\bf SW prefix:}  & CR\\
+{\bf SW offset:}  & 0x0\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}PWIDTH[27:20]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}PWIDTH[19:12]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}PWIDTH[11:4]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{4}{|c|}{\cellcolor{RoyalPurple!25}PWIDTH[3:0]} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}CNT\_SET} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}CNT\_ADJ} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}CNT\_EN} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}CNT\_RST}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+CNT\_RST
+} [\emph{write-only}]: Reset counter
+\\
+write 1: resets the counter\\                				write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+CNT\_EN
+} [\emph{read/write}]: Enable counter
+\\
+1: PPS counter is enabled
+\end{small}
+\item \begin{small}
+{\bf 
+CNT\_ADJ
+} [\emph{read/write}]: Adjust offset
+\\
+write 1: Starts adjusting PPS/UTC offsets by adding the values taken from ADJ\_NSEC, ADJ\_UTCLO, ADJ\_UTCHI registers to the current PPS counter value. These registers need to be programmed prior to update.\\				                write 0: no effect\\				 read 0: adjustment operation is done\\				 read 1: adjustment operation is in progress
+\end{small}
+\item \begin{small}
+{\bf 
+CNT\_SET
+} [\emph{write-only}]: Set time
+\\
+write 1: Sets the UTC/PPS counter to values taken from ADJ\_NSEC, ADJ\_UTCLO, ADJ\_UTCHI registers
+\end{small}
+\item \begin{small}
+{\bf 
+PWIDTH
+} [\emph{read/write}]: PPS Pulse width
+\\
+Width of generated PPS pulses in 62.5 MHz refernce clock cycles
+\end{small}
+\end{itemize}
+\paragraph*{Nanosecond counter register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & ppsg\_cntr\_nsec\\
+{\bf HW address:}  & 0x1\\
+{\bf SW prefix:}  & CNTR\_NSEC\\
+{\bf SW offset:}  & 0x4\\
+\end{tabular}
+
+\vspace{12pt}
+Nanosecond part of current time, expressed as number of 62.5 MHz reference clock cycles
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & \multicolumn{4}{|c|}{\cellcolor{RoyalPurple!25}CNTR\_NSEC[27:24]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}CNTR\_NSEC[23:16]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}CNTR\_NSEC[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}CNTR\_NSEC[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+CNTR\_NSEC
+} [\emph{read-only}]: Nanosecond counter
+\end{small}
+\end{itemize}
+\paragraph*{UTC Counter register (least-significant part)}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & ppsg\_cntr\_utclo\\
+{\bf HW address:}  & 0x2\\
+{\bf SW prefix:}  & CNTR\_UTCLO\\
+{\bf SW offset:}  & 0x8\\
+\end{tabular}
+
+\vspace{12pt}
+Lower 32 bits of current UTC time
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}CNTR\_UTCLO[31:24]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}CNTR\_UTCLO[23:16]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}CNTR\_UTCLO[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}CNTR\_UTCLO[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+CNTR\_UTCLO
+} [\emph{read-only}]: UTC Counter
+\end{small}
+\end{itemize}
+\paragraph*{UTC Counter register (most-significant part)}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & ppsg\_cntr\_utchi\\
+{\bf HW address:}  & 0x3\\
+{\bf SW prefix:}  & CNTR\_UTCHI\\
+{\bf SW offset:}  & 0xc\\
+\end{tabular}
+
+\vspace{12pt}
+Highest 8 bits of current UTC time
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}CNTR\_UTCHI[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+CNTR\_UTCHI
+} [\emph{read-only}]: UTC Counter
+\end{small}
+\end{itemize}
+\paragraph*{Nanosecond adjustment register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & ppsg\_adj\_nsec\\
+{\bf HW address:}  & 0x4\\
+{\bf SW prefix:}  & ADJ\_NSEC\\
+{\bf SW offset:}  & 0x10\\
+\end{tabular}
+
+\vspace{12pt}
+Adjustment value for nanosecond counter
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & \multicolumn{4}{|c|}{\cellcolor{RoyalPurple!25}ADJ\_NSEC[27:24]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}ADJ\_NSEC[23:16]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}ADJ\_NSEC[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}ADJ\_NSEC[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+ADJ\_NSEC
+} [\emph{write-only}]: Nanosecond adjustment
+\end{small}
+\end{itemize}
+\paragraph*{UTC Adjustment register (least-significant part)}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & ppsg\_adj\_utclo\\
+{\bf HW address:}  & 0x5\\
+{\bf SW prefix:}  & ADJ\_UTCLO\\
+{\bf SW offset:}  & 0x14\\
+\end{tabular}
+
+\vspace{12pt}
+Lower 32 bits of adjustment value for UTC
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}ADJ\_UTCLO[31:24]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}ADJ\_UTCLO[23:16]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}ADJ\_UTCLO[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}ADJ\_UTCLO[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+ADJ\_UTCLO
+} [\emph{write-only}]: UTC Counter adjustment
+\end{small}
+\end{itemize}
+\paragraph*{UTC Adjustment register (most-significant part)}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & ppsg\_adj\_utchi\\
+{\bf HW address:}  & 0x6\\
+{\bf SW prefix:}  & ADJ\_UTCHI\\
+{\bf SW offset:}  & 0x18\\
+\end{tabular}
+
+\vspace{12pt}
+Highest 8 bits of adjustment value for UTC
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}ADJ\_UTCHI[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+ADJ\_UTCHI
+} [\emph{write-only}]: UTC Counter adjustment
+\end{small}
+\end{itemize}
+\paragraph*{External sync control register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & ppsg\_escr\\
+{\bf HW address:}  & 0x7\\
+{\bf SW prefix:}  & ESCR\\
+{\bf SW offset:}  & 0x1c\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}TM\_VALID} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PPS\_VALID} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}SYNC}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+SYNC
+} [\emph{read/write}]: Sync to external PPS input
+\\
+write 1: Waits until a pulse on external PPS input arrives and re-synchronizes the PPS counter to it\\				 write 0: no effect\\				 read 1: external synchronization done\\				 read 0: external synchronization in progress
+\end{small}
+\item \begin{small}
+{\bf 
+PPS\_VALID
+} [\emph{read/write}]: PPS output valid
+\\
+write 1: PPS output provides reliable 1-PPS signal\\                        write 0: PPS output is invalid
+\end{small}
+\item \begin{small}
+{\bf 
+TM\_VALID
+} [\emph{read/write}]: Timecode output(UTC+cycles) valid
+\\
+write 1: Timecode output provides valid time\\                        write 0: Timecode output does not provide valid time
+\end{small}
+\end{itemize}
+
+
+

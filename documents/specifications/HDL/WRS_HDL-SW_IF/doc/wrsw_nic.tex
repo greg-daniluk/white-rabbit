@@ -1,0 +1,465 @@
+\subsection{White Rabbit Switch NIC's spec}
+\label{subsec:wbgen:nic}
+This NIC is in between the endpoints and the on-board Linux CPU of the White Rabbit Switch.
+\subsubsection{Memory map summary}
+\rowcolors{2}{gray!25}{white}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|l|l|l|l|}
+\rowcolor{RoyalPurple}
+\color{white} SW Offset & \color{white} Type & \color{white} Name &
+\color{white} HW prefix & \color{white} C prefix\\
+0x0& REG & NIC Control Register & nic\_cr & CR\\
+0x4& REG & NIC Status Register & nic\_sr & SR\\
+0x20& REG & Interrupt disable register & nic\_eic\_idr & EIC\_IDR\\
+0x24& REG & Interrupt enable register & nic\_eic\_ier & EIC\_IER\\
+0x28& REG & Interrupt mask register & nic\_eic\_imr & EIC\_IMR\\
+0x2c& REG & Interrupt status register & nic\_eic\_isr & EIC\_ISR\\
+0x80 - 0xfc& MEM & TX descriptors mem & nic\_dtx & DTX\\
+0x100 - 0x17c& MEM & RX descriptors mem & nic\_drx & DRX\\
+\hline
+\end{tabular}
+}
+
+\subsubsection{Register description}
+\paragraph*{NIC Control Register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & nic\_cr\\
+{\bf HW address:}  & 0x0\\
+{\bf SW prefix:}  & CR\\
+{\bf SW offset:}  & 0x0\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}SW\_RST} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}TX\_EN} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}RX\_EN}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+RX\_EN
+} [\emph{read/write}]: Receive enable
+\\
+write 1: enables receiving path \\                        write 0: disables receiving path \\                        read 1: receiving path enabled \\                        read 0: receiving path disabled
+\end{small}
+\item \begin{small}
+{\bf 
+TX\_EN
+} [\emph{read/write}]: Transmit enable
+\\
+Enables the NIC to transmit data. When reset, the internal transmit pointer points to the first entry in the TX descriptor pool \\                        write 1: enables transmitting path \\                        write 0: disables transmitting path \\                        read 1: transmitting path enabled \\                        read 0: transmitting path disabled
+\end{small}
+\item \begin{small}
+{\bf 
+SW\_RST
+} [\emph{write-only}]: Software Reset
+\\
+write 1: reset the NIC, zero all registers and reset the state of the module \\                       write 0: no effect
+\end{small}
+\end{itemize}
+\paragraph*{NIC Status Register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & nic\_sr\\
+{\bf HW address:}  & 0x1\\
+{\bf SW prefix:}  & SR\\
+{\bf SW offset:}  & 0x4\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & \multicolumn{3}{|c|}{\cellcolor{RoyalPurple!25}CUR\_RX\_DESC[2:0]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & \multicolumn{3}{|c|}{\cellcolor{RoyalPurple!25}CUR\_TX\_DESC[2:0]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}TX\_ERROR} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}TX\_DONE} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}REC} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}BNA}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+BNA
+} [\emph{read-only}]: Buffer Not Available
+\\
+read 1: no buffers were available when receiving a packet.
+\end{small}
+\item \begin{small}
+{\bf 
+REC
+} [\emph{read/write}]: Frame Received
+\\
+read 1: one or more frames have been received. \\                        read 0: there is no new frame received \\				                write 1: clear the flag \\                        write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+TX\_DONE
+} [\emph{read/write}]: Transmission done
+\\
+read 1: All non-empty TX descriptors have been transmitted\\				                read 0: Transmission in progress\\				 write 1: Clears the flag\\				 write 0: No effect
+\end{small}
+\item \begin{small}
+{\bf 
+TX\_ERROR
+} [\emph{read/write}]: Transmission error
+\\
+read 1: A TX error occured and the transmission was stopped. CUR\_TX\_DESC is pointing the TX descriptor for which the error occured\\				                read 0: No TX error\\				 write 1: Clears the flag\\				 write 0: No effect
+\end{small}
+\item \begin{small}
+{\bf 
+CUR\_TX\_DESC
+} [\emph{read-only}]: Current TX descriptor
+\\
+Index of the currently handled TX descriptor
+\end{small}
+\item \begin{small}
+{\bf 
+CUR\_RX\_DESC
+} [\emph{read-only}]: Current RX descriptor
+\\
+Index of the currently handled RX descriptor
+\end{small}
+\end{itemize}
+\paragraph*{Interrupt disable register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & nic\_eic\_idr\\
+{\bf HW address:}  & 0x8\\
+{\bf SW prefix:}  & EIC\_IDR\\
+{\bf SW offset:}  & 0x20\\
+\end{tabular}
+
+\vspace{12pt}
+Writing 1 disables handling of the interrupt associated with corresponding bit. Writin 0 has no effect.
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}TXERR} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}TCOMP} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}RCOMP}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+RCOMP
+} [\emph{write-only}]: Receive Complete
+\\
+write 1: disable interrupt 'Receive Complete'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+TCOMP
+} [\emph{write-only}]: Transmit Complete
+\\
+write 1: disable interrupt 'Transmit Complete'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+TXERR
+} [\emph{write-only}]: Transmit Error
+\\
+write 1: disable interrupt 'Transmit Error'\\write 0: no effect
+\end{small}
+\end{itemize}
+\paragraph*{Interrupt enable register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & nic\_eic\_ier\\
+{\bf HW address:}  & 0x9\\
+{\bf SW prefix:}  & EIC\_IER\\
+{\bf SW offset:}  & 0x24\\
+\end{tabular}
+
+\vspace{12pt}
+Writing 1 enables handling of the interrupt associated with corresponding bit. Writin 0 has no effect.
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}TXERR} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}TCOMP} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}RCOMP}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+RCOMP
+} [\emph{write-only}]: Receive Complete
+\\
+write 1: enable interrupt 'Receive Complete'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+TCOMP
+} [\emph{write-only}]: Transmit Complete
+\\
+write 1: enable interrupt 'Transmit Complete'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+TXERR
+} [\emph{write-only}]: Transmit Error
+\\
+write 1: enable interrupt 'Transmit Error'\\write 0: no effect
+\end{small}
+\end{itemize}
+\paragraph*{Interrupt mask register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & nic\_eic\_imr\\
+{\bf HW address:}  & 0xa\\
+{\bf SW prefix:}  & EIC\_IMR\\
+{\bf SW offset:}  & 0x28\\
+\end{tabular}
+
+\vspace{12pt}
+Shows which interrupts are enabled. 1 means that the interrupt associated with the bitfield is enabled
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}TXERR} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}TCOMP} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}RCOMP}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+RCOMP
+} [\emph{read-only}]: Receive Complete
+\\
+read 1: interrupt 'Receive Complete' is enabled\\read 0: interrupt 'Receive Complete' is disabled
+\end{small}
+\item \begin{small}
+{\bf 
+TCOMP
+} [\emph{read-only}]: Transmit Complete
+\\
+read 1: interrupt 'Transmit Complete' is enabled\\read 0: interrupt 'Transmit Complete' is disabled
+\end{small}
+\item \begin{small}
+{\bf 
+TXERR
+} [\emph{read-only}]: Transmit Error
+\\
+read 1: interrupt 'Transmit Error' is enabled\\read 0: interrupt 'Transmit Error' is disabled
+\end{small}
+\end{itemize}
+\paragraph*{Interrupt status register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & nic\_eic\_isr\\
+{\bf HW address:}  & 0xb\\
+{\bf SW prefix:}  & EIC\_ISR\\
+{\bf SW offset:}  & 0x2c\\
+\end{tabular}
+
+\vspace{12pt}
+Each bit represents the state of corresponding interrupt. 1 means the interrupt is pending. Writing 1 to a bit clears the corresponding interrupt. Writing 0 has no effect.
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}TXERR} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}TCOMP} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}RCOMP}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+RCOMP
+} [\emph{read/write}]: Receive Complete
+\\
+read 1: interrupt 'Receive Complete' is pending\\read 0: interrupt not pending\\write 1: clear interrupt 'Receive Complete'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+TCOMP
+} [\emph{read/write}]: Transmit Complete
+\\
+read 1: interrupt 'Transmit Complete' is pending\\read 0: interrupt not pending\\write 1: clear interrupt 'Transmit Complete'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+TXERR
+} [\emph{read/write}]: Transmit Error
+\\
+read 1: interrupt 'Transmit Error' is pending\\read 0: interrupt not pending\\write 1: clear interrupt 'Transmit Error'\\write 0: no effect
+\end{small}
+\end{itemize}
+
+\paragraph*{TX descriptors mem}\vspace{12pt}
+
+\begin{small}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & nic\_dtx\\
+{\bf HW address:}  & 0x20\\
+{\bf C prefix:}  & DTX\\
+{\bf C offset:}  & 0x80\\
+{\bf Size:}  & 32 32-bit words\\
+{\bf Data width:}  & 32\\
+{\bf Access (bus):}  & read/write\\
+{\bf Access (device):}  & read/write\\
+{\bf Mirrored:}  & no\\
+{\bf Byte-addressable:}  & no\\
+{\bf Peripheral port:}  & bus-synchronous\\
+\end{tabular}
+
+\end{small}
+\paragraph*{RX descriptors mem}\vspace{12pt}
+
+\begin{small}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & nic\_drx\\
+{\bf HW address:}  & 0x40\\
+{\bf C prefix:}  & DRX\\
+{\bf C offset:}  & 0x100\\
+{\bf Size:}  & 32 32-bit words\\
+{\bf Data width:}  & 32\\
+{\bf Access (bus):}  & read/write\\
+{\bf Access (device):}  & read/write\\
+{\bf Mirrored:}  & no\\
+{\bf Byte-addressable:}  & no\\
+{\bf Peripheral port:}  & bus-synchronous\\
+\end{tabular}
+
+\end{small}
+
+\subsubsection{Interrupts}
+\paragraph*{Receive Complete}\vspace{12pt}
+\begin{small}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & nic\_rcomp\\
+{\bf C prefix:}  & RCOMP\\
+{\bf Trigger:}  & high level\\
+\end{tabular}
+
+\end{small}
+\vspace{12pt}
+A frame has been stored in memory.
+\paragraph*{Transmit Complete}\vspace{12pt}
+\begin{small}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & nic\_tcomp\\
+{\bf C prefix:}  & TCOMP\\
+{\bf Trigger:}  & high level\\
+\end{tabular}
+
+\end{small}
+\vspace{12pt}
+Frame successfully transmitted
+\paragraph*{Transmit Error}\vspace{12pt}
+\begin{small}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & nic\_txerr\\
+{\bf C prefix:}  & TXERR\\
+{\bf Trigger:}  & high level\\
+\end{tabular}
+
+\end{small}
+

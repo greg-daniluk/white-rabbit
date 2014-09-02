@@ -1,0 +1,13 @@
+\subsection{Time-Aware Traffic Shaper Unit (TATSU)}
+
+\noindent {\bf Description:}
+
+The module implements simple Time-Aware Traffic Shaper. It creates a time window
+at a given (configured) moment (TAI + cycles) in a data stream transmitted
+through WR Switch. In this window only selected output queues are allowed (the
+others are blocked).
+
+The module is still under testing and development so it
+shouldn't be supported by the next official release of WR Switch Software.\\
+
+\noindent{\bf Wishbone interface:} section \ref{subsec:wbgen:tatsu}.

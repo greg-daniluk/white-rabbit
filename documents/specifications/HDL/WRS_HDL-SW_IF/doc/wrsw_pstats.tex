@@ -1,0 +1,1095 @@
+\subsection{WR Switch Per-Port Statistic Counters}
+\label{subsec:wbgen:pstats}
+The set of counters for counting traffic statistics on each Ethernet port of WR Switch
+\subsubsection{Memory map summary}
+\rowcolors{2}{gray!25}{white}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|l|l|l|l|}
+\rowcolor{RoyalPurple}
+\color{white} SW Offset & \color{white} Type & \color{white} Name &
+\color{white} HW prefix & \color{white} C prefix\\
+0x0& REG & Control Register & pstats\_cr & CR\\
+0x4& REG & L1 Counter Value/1st word of IRQ state & pstats\_l1\_cnt\_val & L1\_CNT\_VAL\\
+0x8& REG & L2 Counter Value/2nd word of IRQ state & pstats\_l2\_cnt\_val & L2\_CNT\_VAL\\
+0xc& REG & Debug register & pstats\_dbg & DBG\\
+0x20& REG & Interrupt disable register & pstats\_eic\_idr & EIC\_IDR\\
+0x24& REG & Interrupt enable register & pstats\_eic\_ier & EIC\_IER\\
+0x28& REG & Interrupt mask register & pstats\_eic\_imr & EIC\_IMR\\
+0x2c& REG & Interrupt status register & pstats\_eic\_isr & EIC\_ISR\\
+\hline
+\end{tabular}
+}
+
+\subsubsection{Register description}
+\paragraph*{Control Register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & pstats\_cr\\
+{\bf HW address:}  & 0x0\\
+{\bf SW prefix:}  & CR\\
+{\bf SW offset:}  & 0x0\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & \multicolumn{5}{|c|}{\cellcolor{RoyalPurple!25}ADDR[4:0]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & \multicolumn{5}{|c|}{\cellcolor{RoyalPurple!25}PORT[4:0]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}RD\_IRQ} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}RD\_EN}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+RD\_EN
+} [\emph{read/write}]: Enable transfer of the selected counter's content
+\\
+write 1: start reading content \\                      write 0: no effect \\                      read  1: reading in progress \\                      read  0: reading done, counter value available
+\end{small}
+\item \begin{small}
+{\bf 
+RD\_IRQ
+} [\emph{read/write}]: Enable transfer of per-counter IRQ state for selected counters
+\\
+write 1: start reading content \\                      write 0: no effect \\                      read  1: reading in progress \\                      read  0: reading done, counter value available
+\end{small}
+\item \begin{small}
+{\bf 
+PORT
+} [\emph{read/write}]: Port number
+\\
+Number of port (0-17) from which couter's value (or per-counter IRQ state) is read
+\end{small}
+\item \begin{small}
+{\bf 
+ADDR
+} [\emph{read/write}]: Memory address
+\\
+Address of the 32-bit word in selected port's memory that contains the counter to be read
+\end{small}
+\end{itemize}
+\paragraph*{L1 Counter Value/1st word of IRQ state}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & pstats\_l1\_cnt\_val\\
+{\bf HW address:}  & 0x1\\
+{\bf SW prefix:}  & L1\_CNT\_VAL\\
+{\bf SW offset:}  & 0x4\\
+\end{tabular}
+
+\vspace{12pt}
+32-bit word read from given memory address of selected Ethernet port containing the value of 4 counters \\                   or lower half of per-counter IRQ state for port given in CR register
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}L1\_CNT\_VAL[31:24]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}L1\_CNT\_VAL[23:16]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}L1\_CNT\_VAL[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}L1\_CNT\_VAL[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+L1\_CNT\_VAL
+} [\emph{read-only}]: 4 counters' values
+\end{small}
+\end{itemize}
+\paragraph*{L2 Counter Value/2nd word of IRQ state}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & pstats\_l2\_cnt\_val\\
+{\bf HW address:}  & 0x2\\
+{\bf SW prefix:}  & L2\_CNT\_VAL\\
+{\bf SW offset:}  & 0x8\\
+\end{tabular}
+
+\vspace{12pt}
+32-bit word read from given memory address of selected Ethernet port containing the value of 4 counters \\                   or higher half of per-counter IRQ state for port given in CR register (if more than 32 counters per-port instanciated)
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}L2\_CNT\_VAL[31:24]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}L2\_CNT\_VAL[23:16]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}L2\_CNT\_VAL[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}L2\_CNT\_VAL[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+L2\_CNT\_VAL
+} [\emph{read-only}]: 4 counters' values
+\end{small}
+\end{itemize}
+\paragraph*{Debug register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & pstats\_dbg\\
+{\bf HW address:}  & 0x3\\
+{\bf SW prefix:}  & DBG\\
+{\bf SW offset:}  & 0xc\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}CLR} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}L2\_CLR} & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}L2\_EVT\_OV} & \multicolumn{2}{|c|}{\cellcolor{RoyalPurple!25}EVT\_OV[17:16]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}EVT\_OV[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}EVT\_OV[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+EVT\_OV
+} [\emph{read-only}]: Layer-1 events overflow
+\\
+Some Layer-1 event on the port was missed because there were too many of them \\                     each bit corresponds to one port (bit set to 1 means event overflow)
+\end{small}
+\item \begin{small}
+{\bf 
+L2\_EVT\_OV
+} [\emph{read-only}]: Layer-2 events overflow
+\\
+read 1: some Layer-2 event (i.e. L-1 overflow) was missed, because there were too many of them \\                     read 0: no events overflow on Layer-2
+\end{small}
+\item \begin{small}
+{\bf 
+L2\_CLR
+} [\emph{write-only}]: Layer-2 clear flag
+\\
+write 1: clear Layer-2 events overflow flag \\                     write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+CLR
+} [\emph{write-only}]: Layer-1 clear flags
+\\
+write 1: clear Layer-1 events overflow flags \\                     write 0: no effect
+\end{small}
+\end{itemize}
+\paragraph*{Interrupt disable register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & pstats\_eic\_idr\\
+{\bf HW address:}  & 0x8\\
+{\bf SW prefix:}  & EIC\_IDR\\
+{\bf SW offset:}  & 0x20\\
+\end{tabular}
+
+\vspace{12pt}
+Writing 1 disables handling of the interrupt associated with corresponding bit. Writin 0 has no effect.
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT17} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT16}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT15} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT14} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT13} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT12} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT11} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT10} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT9} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT8}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT7} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT6} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT5} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT4} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT3} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT2} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT1} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT0}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+PORT0
+} [\emph{write-only}]: Port0 IRQ
+\\
+write 1: disable interrupt 'Port0 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT1
+} [\emph{write-only}]: Port1 IRQ
+\\
+write 1: disable interrupt 'Port1 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT2
+} [\emph{write-only}]: Port2 IRQ
+\\
+write 1: disable interrupt 'Port2 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT3
+} [\emph{write-only}]: Port3 IRQ
+\\
+write 1: disable interrupt 'Port3 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT4
+} [\emph{write-only}]: Port4 IRQ
+\\
+write 1: disable interrupt 'Port4 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT5
+} [\emph{write-only}]: Port5 IRQ
+\\
+write 1: disable interrupt 'Port5 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT6
+} [\emph{write-only}]: Port6 IRQ
+\\
+write 1: disable interrupt 'Port6 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT7
+} [\emph{write-only}]: Port7 IRQ
+\\
+write 1: disable interrupt 'Port7 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT8
+} [\emph{write-only}]: Port8 IRQ
+\\
+write 1: disable interrupt 'Port8 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT9
+} [\emph{write-only}]: Port9 IRQ
+\\
+write 1: disable interrupt 'Port9 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT10
+} [\emph{write-only}]: Port10 IRQ
+\\
+write 1: disable interrupt 'Port10 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT11
+} [\emph{write-only}]: Port11 IRQ
+\\
+write 1: disable interrupt 'Port11 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT12
+} [\emph{write-only}]: Port12 IRQ
+\\
+write 1: disable interrupt 'Port12 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT13
+} [\emph{write-only}]: Port13 IRQ
+\\
+write 1: disable interrupt 'Port13 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT14
+} [\emph{write-only}]: Port14 IRQ
+\\
+write 1: disable interrupt 'Port14 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT15
+} [\emph{write-only}]: Port15 IRQ
+\\
+write 1: disable interrupt 'Port15 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT16
+} [\emph{write-only}]: Port16 IRQ
+\\
+write 1: disable interrupt 'Port16 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT17
+} [\emph{write-only}]: Port17 IRQ
+\\
+write 1: disable interrupt 'Port17 IRQ'\\write 0: no effect
+\end{small}
+\end{itemize}
+\paragraph*{Interrupt enable register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & pstats\_eic\_ier\\
+{\bf HW address:}  & 0x9\\
+{\bf SW prefix:}  & EIC\_IER\\
+{\bf SW offset:}  & 0x24\\
+\end{tabular}
+
+\vspace{12pt}
+Writing 1 enables handling of the interrupt associated with corresponding bit. Writin 0 has no effect.
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT17} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT16}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT15} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT14} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT13} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT12} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT11} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT10} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT9} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT8}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT7} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT6} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT5} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT4} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT3} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT2} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT1} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT0}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+PORT0
+} [\emph{write-only}]: Port0 IRQ
+\\
+write 1: enable interrupt 'Port0 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT1
+} [\emph{write-only}]: Port1 IRQ
+\\
+write 1: enable interrupt 'Port1 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT2
+} [\emph{write-only}]: Port2 IRQ
+\\
+write 1: enable interrupt 'Port2 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT3
+} [\emph{write-only}]: Port3 IRQ
+\\
+write 1: enable interrupt 'Port3 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT4
+} [\emph{write-only}]: Port4 IRQ
+\\
+write 1: enable interrupt 'Port4 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT5
+} [\emph{write-only}]: Port5 IRQ
+\\
+write 1: enable interrupt 'Port5 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT6
+} [\emph{write-only}]: Port6 IRQ
+\\
+write 1: enable interrupt 'Port6 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT7
+} [\emph{write-only}]: Port7 IRQ
+\\
+write 1: enable interrupt 'Port7 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT8
+} [\emph{write-only}]: Port8 IRQ
+\\
+write 1: enable interrupt 'Port8 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT9
+} [\emph{write-only}]: Port9 IRQ
+\\
+write 1: enable interrupt 'Port9 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT10
+} [\emph{write-only}]: Port10 IRQ
+\\
+write 1: enable interrupt 'Port10 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT11
+} [\emph{write-only}]: Port11 IRQ
+\\
+write 1: enable interrupt 'Port11 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT12
+} [\emph{write-only}]: Port12 IRQ
+\\
+write 1: enable interrupt 'Port12 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT13
+} [\emph{write-only}]: Port13 IRQ
+\\
+write 1: enable interrupt 'Port13 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT14
+} [\emph{write-only}]: Port14 IRQ
+\\
+write 1: enable interrupt 'Port14 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT15
+} [\emph{write-only}]: Port15 IRQ
+\\
+write 1: enable interrupt 'Port15 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT16
+} [\emph{write-only}]: Port16 IRQ
+\\
+write 1: enable interrupt 'Port16 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT17
+} [\emph{write-only}]: Port17 IRQ
+\\
+write 1: enable interrupt 'Port17 IRQ'\\write 0: no effect
+\end{small}
+\end{itemize}
+\paragraph*{Interrupt mask register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & pstats\_eic\_imr\\
+{\bf HW address:}  & 0xa\\
+{\bf SW prefix:}  & EIC\_IMR\\
+{\bf SW offset:}  & 0x28\\
+\end{tabular}
+
+\vspace{12pt}
+Shows which interrupts are enabled. 1 means that the interrupt associated with the bitfield is enabled
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT17} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT16}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT15} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT14} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT13} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT12} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT11} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT10} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT9} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT8}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT7} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT6} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT5} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT4} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT3} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT2} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT1} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT0}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+PORT0
+} [\emph{read-only}]: Port0 IRQ
+\\
+read 1: interrupt 'Port0 IRQ' is enabled\\read 0: interrupt 'Port0 IRQ' is disabled
+\end{small}
+\item \begin{small}
+{\bf 
+PORT1
+} [\emph{read-only}]: Port1 IRQ
+\\
+read 1: interrupt 'Port1 IRQ' is enabled\\read 0: interrupt 'Port1 IRQ' is disabled
+\end{small}
+\item \begin{small}
+{\bf 
+PORT2
+} [\emph{read-only}]: Port2 IRQ
+\\
+read 1: interrupt 'Port2 IRQ' is enabled\\read 0: interrupt 'Port2 IRQ' is disabled
+\end{small}
+\item \begin{small}
+{\bf 
+PORT3
+} [\emph{read-only}]: Port3 IRQ
+\\
+read 1: interrupt 'Port3 IRQ' is enabled\\read 0: interrupt 'Port3 IRQ' is disabled
+\end{small}
+\item \begin{small}
+{\bf 
+PORT4
+} [\emph{read-only}]: Port4 IRQ
+\\
+read 1: interrupt 'Port4 IRQ' is enabled\\read 0: interrupt 'Port4 IRQ' is disabled
+\end{small}
+\item \begin{small}
+{\bf 
+PORT5
+} [\emph{read-only}]: Port5 IRQ
+\\
+read 1: interrupt 'Port5 IRQ' is enabled\\read 0: interrupt 'Port5 IRQ' is disabled
+\end{small}
+\item \begin{small}
+{\bf 
+PORT6
+} [\emph{read-only}]: Port6 IRQ
+\\
+read 1: interrupt 'Port6 IRQ' is enabled\\read 0: interrupt 'Port6 IRQ' is disabled
+\end{small}
+\item \begin{small}
+{\bf 
+PORT7
+} [\emph{read-only}]: Port7 IRQ
+\\
+read 1: interrupt 'Port7 IRQ' is enabled\\read 0: interrupt 'Port7 IRQ' is disabled
+\end{small}
+\item \begin{small}
+{\bf 
+PORT8
+} [\emph{read-only}]: Port8 IRQ
+\\
+read 1: interrupt 'Port8 IRQ' is enabled\\read 0: interrupt 'Port8 IRQ' is disabled
+\end{small}
+\item \begin{small}
+{\bf 
+PORT9
+} [\emph{read-only}]: Port9 IRQ
+\\
+read 1: interrupt 'Port9 IRQ' is enabled\\read 0: interrupt 'Port9 IRQ' is disabled
+\end{small}
+\item \begin{small}
+{\bf 
+PORT10
+} [\emph{read-only}]: Port10 IRQ
+\\
+read 1: interrupt 'Port10 IRQ' is enabled\\read 0: interrupt 'Port10 IRQ' is disabled
+\end{small}
+\item \begin{small}
+{\bf 
+PORT11
+} [\emph{read-only}]: Port11 IRQ
+\\
+read 1: interrupt 'Port11 IRQ' is enabled\\read 0: interrupt 'Port11 IRQ' is disabled
+\end{small}
+\item \begin{small}
+{\bf 
+PORT12
+} [\emph{read-only}]: Port12 IRQ
+\\
+read 1: interrupt 'Port12 IRQ' is enabled\\read 0: interrupt 'Port12 IRQ' is disabled
+\end{small}
+\item \begin{small}
+{\bf 
+PORT13
+} [\emph{read-only}]: Port13 IRQ
+\\
+read 1: interrupt 'Port13 IRQ' is enabled\\read 0: interrupt 'Port13 IRQ' is disabled
+\end{small}
+\item \begin{small}
+{\bf 
+PORT14
+} [\emph{read-only}]: Port14 IRQ
+\\
+read 1: interrupt 'Port14 IRQ' is enabled\\read 0: interrupt 'Port14 IRQ' is disabled
+\end{small}
+\item \begin{small}
+{\bf 
+PORT15
+} [\emph{read-only}]: Port15 IRQ
+\\
+read 1: interrupt 'Port15 IRQ' is enabled\\read 0: interrupt 'Port15 IRQ' is disabled
+\end{small}
+\item \begin{small}
+{\bf 
+PORT16
+} [\emph{read-only}]: Port16 IRQ
+\\
+read 1: interrupt 'Port16 IRQ' is enabled\\read 0: interrupt 'Port16 IRQ' is disabled
+\end{small}
+\item \begin{small}
+{\bf 
+PORT17
+} [\emph{read-only}]: Port17 IRQ
+\\
+read 1: interrupt 'Port17 IRQ' is enabled\\read 0: interrupt 'Port17 IRQ' is disabled
+\end{small}
+\end{itemize}
+\paragraph*{Interrupt status register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & pstats\_eic\_isr\\
+{\bf HW address:}  & 0xb\\
+{\bf SW prefix:}  & EIC\_ISR\\
+{\bf SW offset:}  & 0x2c\\
+\end{tabular}
+
+\vspace{12pt}
+Each bit represents the state of corresponding interrupt. 1 means the interrupt is pending. Writing 1 to a bit clears the corresponding interrupt. Writing 0 has no effect.
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT17} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT16}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT15} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT14} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT13} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT12} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT11} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT10} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT9} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT8}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT7} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT6} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT5} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT4} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT3} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT2} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT1} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}PORT0}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+PORT0
+} [\emph{read/write}]: Port0 IRQ
+\\
+read 1: interrupt 'Port0 IRQ' is pending\\read 0: interrupt not pending\\write 1: clear interrupt 'Port0 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT1
+} [\emph{read/write}]: Port1 IRQ
+\\
+read 1: interrupt 'Port1 IRQ' is pending\\read 0: interrupt not pending\\write 1: clear interrupt 'Port1 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT2
+} [\emph{read/write}]: Port2 IRQ
+\\
+read 1: interrupt 'Port2 IRQ' is pending\\read 0: interrupt not pending\\write 1: clear interrupt 'Port2 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT3
+} [\emph{read/write}]: Port3 IRQ
+\\
+read 1: interrupt 'Port3 IRQ' is pending\\read 0: interrupt not pending\\write 1: clear interrupt 'Port3 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT4
+} [\emph{read/write}]: Port4 IRQ
+\\
+read 1: interrupt 'Port4 IRQ' is pending\\read 0: interrupt not pending\\write 1: clear interrupt 'Port4 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT5
+} [\emph{read/write}]: Port5 IRQ
+\\
+read 1: interrupt 'Port5 IRQ' is pending\\read 0: interrupt not pending\\write 1: clear interrupt 'Port5 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT6
+} [\emph{read/write}]: Port6 IRQ
+\\
+read 1: interrupt 'Port6 IRQ' is pending\\read 0: interrupt not pending\\write 1: clear interrupt 'Port6 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT7
+} [\emph{read/write}]: Port7 IRQ
+\\
+read 1: interrupt 'Port7 IRQ' is pending\\read 0: interrupt not pending\\write 1: clear interrupt 'Port7 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT8
+} [\emph{read/write}]: Port8 IRQ
+\\
+read 1: interrupt 'Port8 IRQ' is pending\\read 0: interrupt not pending\\write 1: clear interrupt 'Port8 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT9
+} [\emph{read/write}]: Port9 IRQ
+\\
+read 1: interrupt 'Port9 IRQ' is pending\\read 0: interrupt not pending\\write 1: clear interrupt 'Port9 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT10
+} [\emph{read/write}]: Port10 IRQ
+\\
+read 1: interrupt 'Port10 IRQ' is pending\\read 0: interrupt not pending\\write 1: clear interrupt 'Port10 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT11
+} [\emph{read/write}]: Port11 IRQ
+\\
+read 1: interrupt 'Port11 IRQ' is pending\\read 0: interrupt not pending\\write 1: clear interrupt 'Port11 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT12
+} [\emph{read/write}]: Port12 IRQ
+\\
+read 1: interrupt 'Port12 IRQ' is pending\\read 0: interrupt not pending\\write 1: clear interrupt 'Port12 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT13
+} [\emph{read/write}]: Port13 IRQ
+\\
+read 1: interrupt 'Port13 IRQ' is pending\\read 0: interrupt not pending\\write 1: clear interrupt 'Port13 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT14
+} [\emph{read/write}]: Port14 IRQ
+\\
+read 1: interrupt 'Port14 IRQ' is pending\\read 0: interrupt not pending\\write 1: clear interrupt 'Port14 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT15
+} [\emph{read/write}]: Port15 IRQ
+\\
+read 1: interrupt 'Port15 IRQ' is pending\\read 0: interrupt not pending\\write 1: clear interrupt 'Port15 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT16
+} [\emph{read/write}]: Port16 IRQ
+\\
+read 1: interrupt 'Port16 IRQ' is pending\\read 0: interrupt not pending\\write 1: clear interrupt 'Port16 IRQ'\\write 0: no effect
+\end{small}
+\item \begin{small}
+{\bf 
+PORT17
+} [\emph{read/write}]: Port17 IRQ
+\\
+read 1: interrupt 'Port17 IRQ' is pending\\read 0: interrupt not pending\\write 1: clear interrupt 'Port17 IRQ'\\write 0: no effect
+\end{small}
+\end{itemize}
+
+
+\subsubsection{Interrupts}
+\paragraph*{Port0 IRQ}\vspace{12pt}
+\begin{small}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & pstats\_port0\\
+{\bf C prefix:}  & PORT0\\
+{\bf Trigger:}  & high level\\
+\end{tabular}
+
+\end{small}
+\vspace{12pt}
+At least one of the counters on Port0 has overflown
+\paragraph*{Port1 IRQ}\vspace{12pt}
+\begin{small}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & pstats\_port1\\
+{\bf C prefix:}  & PORT1\\
+{\bf Trigger:}  & high level\\
+\end{tabular}
+
+\end{small}
+\vspace{12pt}
+At least one of the counters on Port1 has overflown
+\paragraph*{Port2 IRQ}\vspace{12pt}
+\begin{small}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & pstats\_port2\\
+{\bf C prefix:}  & PORT2\\
+{\bf Trigger:}  & high level\\
+\end{tabular}
+
+\end{small}
+\vspace{12pt}
+At least one of the counters on Port2 has overflown
+\paragraph*{Port3 IRQ}\vspace{12pt}
+\begin{small}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & pstats\_port3\\
+{\bf C prefix:}  & PORT3\\
+{\bf Trigger:}  & high level\\
+\end{tabular}
+
+\end{small}
+\vspace{12pt}
+At least one of the counters on Port3 has overflown
+\paragraph*{Port4 IRQ}\vspace{12pt}
+\begin{small}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & pstats\_port4\\
+{\bf C prefix:}  & PORT4\\
+{\bf Trigger:}  & high level\\
+\end{tabular}
+
+\end{small}
+\vspace{12pt}
+At least one of the counters on Port4 has overflown
+\paragraph*{Port5 IRQ}\vspace{12pt}
+\begin{small}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & pstats\_port5\\
+{\bf C prefix:}  & PORT5\\
+{\bf Trigger:}  & high level\\
+\end{tabular}
+
+\end{small}
+\vspace{12pt}
+At least one of the counters on Port5 has overflown
+\paragraph*{Port6 IRQ}\vspace{12pt}
+\begin{small}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & pstats\_port6\\
+{\bf C prefix:}  & PORT6\\
+{\bf Trigger:}  & high level\\
+\end{tabular}
+
+\end{small}
+\vspace{12pt}
+At least one of the counters on Port6 has overflown
+\paragraph*{Port7 IRQ}\vspace{12pt}
+\begin{small}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & pstats\_port7\\
+{\bf C prefix:}  & PORT7\\
+{\bf Trigger:}  & high level\\
+\end{tabular}
+
+\end{small}
+\vspace{12pt}
+At least one of the counters on Port7 has overflown
+\paragraph*{Port8 IRQ}\vspace{12pt}
+\begin{small}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & pstats\_port8\\
+{\bf C prefix:}  & PORT8\\
+{\bf Trigger:}  & high level\\
+\end{tabular}
+
+\end{small}
+\vspace{12pt}
+At least one of the counters on Port8 has overflown
+\paragraph*{Port9 IRQ}\vspace{12pt}
+\begin{small}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & pstats\_port9\\
+{\bf C prefix:}  & PORT9\\
+{\bf Trigger:}  & high level\\
+\end{tabular}
+
+\end{small}
+\vspace{12pt}
+At least one of the counters on Port9 has overflown
+\paragraph*{Port10 IRQ}\vspace{12pt}
+\begin{small}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & pstats\_port10\\
+{\bf C prefix:}  & PORT10\\
+{\bf Trigger:}  & high level\\
+\end{tabular}
+
+\end{small}
+\vspace{12pt}
+At least one of the counters on Port10 has overflown
+\paragraph*{Port11 IRQ}\vspace{12pt}
+\begin{small}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & pstats\_port11\\
+{\bf C prefix:}  & PORT11\\
+{\bf Trigger:}  & high level\\
+\end{tabular}
+
+\end{small}
+\vspace{12pt}
+At least one of the counters on Port11 has overflown
+\paragraph*{Port12 IRQ}\vspace{12pt}
+\begin{small}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & pstats\_port12\\
+{\bf C prefix:}  & PORT12\\
+{\bf Trigger:}  & high level\\
+\end{tabular}
+
+\end{small}
+\vspace{12pt}
+At least one of the counters on Port12 has overflown
+\paragraph*{Port13 IRQ}\vspace{12pt}
+\begin{small}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & pstats\_port13\\
+{\bf C prefix:}  & PORT13\\
+{\bf Trigger:}  & high level\\
+\end{tabular}
+
+\end{small}
+\vspace{12pt}
+At least one of the counters on Port13 has overflown
+\paragraph*{Port14 IRQ}\vspace{12pt}
+\begin{small}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & pstats\_port14\\
+{\bf C prefix:}  & PORT14\\
+{\bf Trigger:}  & high level\\
+\end{tabular}
+
+\end{small}
+\vspace{12pt}
+At least one of the counters on Port14 has overflown
+\paragraph*{Port15 IRQ}\vspace{12pt}
+\begin{small}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & pstats\_port15\\
+{\bf C prefix:}  & PORT15\\
+{\bf Trigger:}  & high level\\
+\end{tabular}
+
+\end{small}
+\vspace{12pt}
+At least one of the counters on Port15 has overflown
+\paragraph*{Port16 IRQ}\vspace{12pt}
+\begin{small}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & pstats\_port16\\
+{\bf C prefix:}  & PORT16\\
+{\bf Trigger:}  & high level\\
+\end{tabular}
+
+\end{small}
+\vspace{12pt}
+At least one of the counters on Port16 has overflown
+\paragraph*{Port17 IRQ}\vspace{12pt}
+\begin{small}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & pstats\_port17\\
+{\bf C prefix:}  & PORT17\\
+{\bf Trigger:}  & high level\\
+\end{tabular}
+
+\end{small}
+\vspace{12pt}
+At least one of the counters on Port17 has overflown
+

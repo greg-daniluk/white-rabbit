@@ -1,0 +1,22 @@
+\subsection{$I^2C$ master}
+
+There are three identical $I^2C$ masters:
+\begin{itemize}
+  \item \emph{I2C0}: drives $I^2C$ GPIO expansion chip for ports 16-17
+    \footnote{Check the schematics of WR Switch miniBackplane for details what
+    is driven by those GPIOs.}
+  \item \emph{I2C1}: drives $I^2C$ GPIO expansion chip for ports 0-15
+  \item \emph{Sensors I2C}: connected to the set of \emph{TMP100} digital
+    thermometers
+\end{itemize}
+
+\noindent {\bf Description:}
+
+$I^2C$ master as its name says, implements the master of $I^2C$ bus. Before any
+byte transfer is performed it must have the prescale value, used to
+generate SCL clock, set.
+
+The module is capable of generating interrupt, but it is not used in the WR Switch
+design.\\
+
+\noindent{\bf Wishbone interface:} section \ref{subsec:wbgen:i2c}.

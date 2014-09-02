@@ -1,0 +1,162 @@
+\subsection{WR Switch Hardware Info Unit}
+\label{subsec:wbgen:hwiu}
+The module provides basic info about the gateware version. It can be also used for reading registers inside WR Switch Gateware after connecting them to optional dbg input.
+\subsubsection{Memory map summary}
+\rowcolors{2}{gray!25}{white}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|l|l|l|l|l|}
+\rowcolor{RoyalPurple}
+\color{white} SW Offset & \color{white} Type & \color{white} Name &
+\color{white} HW prefix & \color{white} C prefix\\
+0x0& REG & Control Register & hwiu\_cr & CR\\
+0x4& REG & Value of the requested register & hwiu\_reg\_val & REG\_VAL\\
+0x8& REG & Choose Chipscope input & hwiu\_chps\_id & CHPS\_ID\\
+\hline
+\end{tabular}
+}
+
+\subsubsection{Register description}
+\paragraph*{Control Register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & hwiu\_cr\\
+{\bf HW address:}  & 0x0\\
+{\bf SW prefix:}  & CR\\
+{\bf SW offset:}  & 0x0\\
+\end{tabular}
+
+
+\vspace{12pt}
+\noindent
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}RD\_EN} & \multicolumn{1}{|c|}{\cellcolor{RoyalPurple!25}RD\_ERR} & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}ADR[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}ADR[7:0]}\\
+\hline
+\end{tabular}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+ADR
+} [\emph{read/write}]: Address of the register
+\\
+Which register (among those connected to HWDU) will be read
+\end{small}
+\item \begin{small}
+{\bf 
+RD\_ERR
+} [\emph{read-only}]: Read error
+\\
+read 1: read error, provided address is out of range \\                       read 0: read done successfully
+\end{small}
+\item \begin{small}
+{\bf 
+RD\_EN
+} [\emph{read/write}]: Read register value
+\\
+write 1: read the content \\                      write 0: no effect \\                      read  1: reading in progress \\                      read  0: reading done, register value available
+\end{small}
+\end{itemize}
+\paragraph*{Value of the requested register}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & hwiu\_reg\_val\\
+{\bf HW address:}  & 0x1\\
+{\bf SW prefix:}  & REG\_VAL\\
+{\bf SW offset:}  & 0x4\\
+\end{tabular}
+
+\vspace{12pt}
+The value of the register under ADR from the Control Register
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}REG\_VAL[31:24]}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}REG\_VAL[23:16]}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}REG\_VAL[15:8]}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}REG\_VAL[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+REG\_VAL
+} [\emph{read-only}]: register value
+\end{small}
+\end{itemize}
+\paragraph*{Choose Chipscope input}\vspace{12pt}
+
+\rowcolors{1}{white}{white}
+\begin{tabular}{l l }
+{\bf HW prefix:}  & hwiu\_chps\_id\\
+{\bf HW address:}  & 0x2\\
+{\bf SW prefix:}  & CHPS\_ID\\
+{\bf SW offset:}  & 0x8\\
+\end{tabular}
+
+\vspace{12pt}
+Single chipscope module is connected to a MUX, this register is used to contol the MUX
+
+\vspace{12pt}
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}p{1.5cm} }
+31 & 30 & 29 & 28 & 27 & 26 & 25 & 24\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+23 & 22 & 21 & 20 & 19 & 18 & 17 & 16\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+15 & 14 & 13 & 12 & 11 & 10 & 9 & 8\\
+\hline
+\multicolumn{1}{|c}{-} & - & - & - & - & - & - & \multicolumn{1}{c|}{-}\\
+\hline
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0\\
+\hline
+\multicolumn{8}{|c|}{\cellcolor{RoyalPurple!25}CHPS\_ID[7:0]}\\
+\hline
+\end{tabular}
+}
+
+\begin{itemize}
+\item \begin{small}
+{\bf 
+CHPS\_ID
+} [\emph{read/write}]: MUX ID
+\end{small}
+\end{itemize}
+
+
+

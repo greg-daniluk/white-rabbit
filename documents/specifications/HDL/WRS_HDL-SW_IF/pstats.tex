@@ -1,0 +1,70 @@
+\subsection{Per-port Statistics (Pstats)}
+\label{sec:pstats}
+\noindent {\bf Description:}
+
+The module provides per-port statistics of the events presented in the table:\\
+
+\noindent
+\resizebox{\textwidth}{!}{
+\begin{tabular}{|p{1cm}|c|c|p{9cm}|}
+  \hline
+  Event no. & name & source & description\\
+  \hline \hline
+  0 & \texttt{tx\_underrun} & \emph{Endpoint} & TX FIFO in PCS underrun\\
+  1 & \texttt{rx\_overrun} & \emph{Endpoint} & RX FIFO in PCS overrun\\
+  2 & \texttt{rx\_invalid\_code} & \emph{Endpoint} & received invalid 8B10B code\\
+  3 & \texttt{rx\_sync\_lost} & \emph{Endpoint} & link synchronization lost\\
+  4 & \texttt{rx\_pause} & \emph{Endpoint} & received pause frame\\
+  5 & \texttt{rx\_pfilter\_drop} & \emph{Endpoint} & received frame dropped by Packet Filter\\
+  6 & \texttt{rx\_pcs\_err} & \emph{Endpoint} & some error has occurred during frame reception (e.g.
+  invalid code, fifo overrun, wrong frame termination, etc.)\\
+  7 & \texttt{rx\_giant} & \emph{Endpoint} & received \emph{giant} frame (bigger than Maximum Receive
+  Unit\\
+  8 & \texttt{rx\_runt} & \emph{Endpoint} & received \emph{runt} frame (smaller than 64 bytes)\\
+  9 & \texttt{rx\_crc\_err} & \emph{Endpoint} & CRC of the received frame does not match\\
+ 10 & \texttt{rx\_pclass(0)} & \emph{Endpoint} & RX frame got assigned to class 0 by Packet Filter\\
+... & \texttt{...} & ... & ...\\
+ 17 & \texttt{rx\_pclass(7)} & \emph{Endpoint} & RX frame got assigned to class 7 by Packet Filter\\
+ 18 & \texttt{tx\_frame} & \emph{Endpoint} & frame was transmitted\\
+ 19 & \texttt{rx\_frame} & \emph{Endpoint} & frame was received\\
+ 20 & \texttt{req\_valid} & \emph{RTU} & got valid RTU request\\
+ 21 & \texttt{rsp\_valid} & \emph{RTU} & outputting valid RTU response\\
+ 22 & \texttt{rsp\_drop} & \emph{RTU} & frame dropped\\
+ 23 & \texttt{fm\_hp\_frame} & \emph{RTU} & got high priority frame\\
+ 24 & \texttt{fm\_fast\_fwd} & \emph{RTU} & fast forward frame (depending on RTU
+  configuration, this can be broadcast frames, PTP frames, etc.)\\
+ 25 & \texttt{fm\_non\_fwd} & \emph{RTU} & don't forward frame (recognized
+  link-limited frame, e.g. BPDU)\\
+ 26 & \emph{reserved} & \emph{RTU} & \\
+ 27 & \emph{reserved} & \emph{RTU} & \\
+ \hline
+\end{tabular}
+}\\
+
+Each event on each port has a separate 16-bit counter associated. It stores the
+number of occurrence of the event. To be able to handle the bust of events from
+a Gigabit Ethernet link, each counter is divided into two 8-bit halves creating
+two layers of counting (L1, L2). Counters are aligned in those layers such a way
+that each 32-bit word in memory stores the values of 4 counters:\\
+
+\begin{tabular}{p{0.5cm}|p{2.5cm}|p{2.5cm}|p{2.5cm}|p{2.5cm}|}
+  & {\scriptsize 31} \hfill {\scriptsize 24} & {\scriptsize 23} \hfill {\scriptsize 16} & 
+  {\scriptsize 15} \hfill {\scriptsize 8} & {\scriptsize 7} \hfill {\scriptsize 0}\\
+  \cline{2-5}
+  L1 & \cellcolor{gray!25}CNTR3[7:0] & \cellcolor{gray!25}CNTR2[7:0] & 
+  \cellcolor{gray!25}CNTR1[7:0] & \cellcolor{gray!25}CNTR0[7:0]\\
+  \cline{2-5}
+  L2 & \cellcolor{gray!25}CNTR3[15:8] & \cellcolor{gray!25}CNTR2[15:8] & 
+  \cellcolor{gray!25}CNTR1[15:8] & \cellcolor{gray!25}CNTR0[15:8]\\
+  \cline{2-5}
+\end{tabular}\\
+
+Therefore, one read operation from \emph{Pstats} module returns two 32-bit words
+(L1, L2) from which user can extract the state of four subsequent counters.
+
+The module generates an interrupt when any of the 16-bit counters on any of the
+ports has overflown. After that \emph{EIC\_ISR} register indicates per-port IRQ,
+and based on its content user can read per-port IRQ state using \emph{CR}
+Wishbone register.\\
+
+\noindent{\bf Wishbone interface:} section \ref{subsec:wbgen:pstats}.
