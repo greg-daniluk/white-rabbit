@@ -1,0 +1,77 @@
+\section{Definition of reliability in a WRN}
+
+A WRN, consisting of White Rabbit Switches (switches) connected by fiber 
+or copper, is meant to transport information among White Rabbit Nodes (nodes). We distinguish 
+two types of information distributed over the WRN: 
+%(1) {\bf Timing} (frequency and International Atomic Time) and 
+(1) {\it Timing} (frequency and Coordinated Universal Time) and 
+(2) {\it Data} (the Ethernet traffic).
+This translates into two types of services provided by the WRN which have their own requirements and
+can be handled separately. The requirements are defined by GSI and CERN as the prospective 
+users of WR to control their accelerators.
+
+
+\subsection{Timing Distribution}
+
+Timing is distributed in the WRN from a switch/node called Timing Master (TM) 
+to all the other nodes/switches in the network. 
+% The TM is usually connected 
+% to the external source, such as Global Positioning System (GPS) receiver. 
+All the devices in the 
+WRN lock their frequency (syntonize) and adjust their local clocks (synchronize) to that of the TM. 
+The deviation between the clock of the TM and that of any other node/switch is called {\bf accuracy}. 
+A stable and continuous synchronization of all the nodes with an appropriate accuracy is the key 
+requirement of the Timing Distribution in the WRN.
+
+\subsection{Data Distribution}
+
+The critical data distributed over the WRN is the one carrying sets of commands (events) which are 
+organized into Control Messages (CM). The CMs are sent by a privileged node (Data Master, DM) in the 
+payload of the Ethernet frame(s). Therefore, the Data Distribution in the WRN is broken into 
+(1) {\it Control Data (CD)}  -- the Ethernet frames carrying CMs, critical, and 
+(2) {\it Standard Data (SD)} -- the Ethernet frames which do not carry CMs, non-critical.
+The reliability of the WRN depends on the successful delivery of the CD to all 
+the designated nodes. The CMs are always broadcast within a VLAN
+% \cite{bilbio:vlan}
+, which can span 
+the entire network. The worst-case upper bound of their delivery latency from the DM to any node in 
+the network, regardless of it's location ({\bf maximum distance from the DM}), is required to be 
+guaranteed by the network -- this is {\bf a determinism} requirement. 
+
+\subsection{Reliability of the WRN}
+
+The reliability of the WRN relies on the {\bf deterministic} delivery of the CD 
+to all the designated nodes and their sufficiently {\bf accurate and stable synchronization}.  
+This means that the WRN is considered non-functional if one or more of the following occur:
+\begin{itemize}
+  \item A node is synchronized with insufficient accuracy.
+  \item A designated node receives corrupted CD or no CD.
+  \item The upper-bound delivery latency has been exceeded.
+\end{itemize}
+% (1) A node is synchronized with insufficient accuracy;
+% (2) A designated node receives corrupted CD or no CD;
+% (3) The upper-bound delivery latency has been exceeded.
+Unreliability is translated into the number of CMs considered lost (not delivered, delivered 
+corrupted or in a non-deterministic way) in a given period of time. During this time,  
+the synchronization must be always of the required quality. 
+Quantitative requirements of the accelerator facilities are listed in Table~\ref{tab:requirements}.
+
+\begin{table}[ht]
+\caption{GSI's and CERN's requirements summary.} 
+\centering
+	\begin{tabular}{| l | c | c |}                        \hline
+%\textbf{Requirement}& \multicolumn{2}{|c|}{\textbf{Value(s)}}     \\
+\rowcolor{gray!35}{}
+\textbf{Requirement}     & {\bf GSI}        & {\bf CERN}          \\ \hline
+Max latency    		 & 100$\mu s$       & 1000$\mu s$         \\ \hline
+CM failure rate          & $3.17*10^{-12}$  & $3.17*10^{-11}$     \\ \hline
+CMs lost per year        & 1                & 1                   \\ \hline
+$d_{max}$ from DM        & 2km              & 10km                \\ \hline
+CM size 		 & 200-500 bytes    & 1200-5000 bytes     \\ \hline
+Accuracy	  	 & probably 8ns     & 1$\mu s$ to  ~2ns   \\
+%accuracy                 &                  & few nodes  ~2ns     \\
+\hline
+
+\end{tabular}
+\label{tab:requirements}
+\end{table}

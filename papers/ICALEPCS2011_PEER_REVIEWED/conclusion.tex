@@ -1,0 +1,22 @@
+\section{Conclusions}
+
+
+A WRN must be considered as an ordinary Ethernet network with extra optional built-in features 
+which, when properly used, can make it robust and more reliable. This, however, comes at a price 
+of topology restrictions and redundant elements (money). The reliability study described in this 
+article and detailed in \cite{biblio:robustness} presents areas which need to be addressed to 
+increase the reliability of a WRN. The development of WR is an on-going effort and some of the 
+suggested solutions have been already properly investigated or developed (FEC, clock distribution) 
+while the others need further verification (RSTP, cut-through forwarding). 
+Suggested solutions enable to fulfill the requirements set by CERN and GSI. 
+However the costs might trigger double-checking and re-justifying of at least two of them: 
+upper-bound latency by GSI and the number of CMs lost per year.
+The former requires additional development efforts to achieve the required 100$\mu s$. 
+The latter requires a high level of network redundancy (triple or more) which is very costly. 
+Since the network topology and its reliability calculations turned out to be the greater factor in 
+the overall system reliability, it is necessary to perform more precise calculations and 
+simulations to verify the rough estimations. This might include different techniques (e.g. Monte Carlo simulations) 
+but also more real-life use cases (i.e. of the network layout suggested in 
+\cite{biblio:CERNwrControlAndTiming}, which was not available at the time of described study). 
+\modified{Especially, we need to take into account and include into calculations the fact that 
+not all the nodes connected to the WRN are equally critical in real-life applications.}

@@ -1,0 +1,56 @@
+\section{Failure Study}
+
+One of the main possible reasons for WRN failure, which affects both Timing and Data Distribution, is 
+a malfunction of its elements (switches or links). Since the distribution of information 
+in the WRN is of one-to-all character (Data/Timing Master to all nodes), all the elements of the WRN are 
+considered Single Points of Failure (SPoF)\cite{biblio:mtbf}. Malfunction of any SPoF 
+results in failure of the entire system.
+SPoFs can be eliminated by introducing redundancy of the system components. Due to its special features 
+(distribution of frequency over physical layer) and strict requirements (determinism, low data loss), 
+the number of possible redundant topologies of the WRN is restricted, as explained in the 
+following sections. 
+
+Imperfections of the physical medium as well as switching between redundant elements of the network 
+(which takes time) can cause loss or corruption of data. The deterministic and \modified{mostly} broadcast character 
+of the data distribution in the WRN enforces application of the Forward Error Correction (FEC) 
+%\cite{biblio:coding} 
+-- adding redundant information on transmission to enable recovery of lost or corrupted data 
+on reception. This brings constant data overhead and the probability that the added redundancy is 
+not sufficient to recover the data. However, it is the price to pay for ensuring low latency 
+and determinism of data delivery in the WRN. 
+
+The delivery latency of an Ethernet frame varies with cable length and the number of hops (switches) 
+it has to traverse to reach its destination, the traffic load on the way and 
+the assigned Class of Service (CoS). Therefore, to ensure the required determinism 
+of the CD delivery, we need to make sure that there is no congestion of Ethernet frames 
+carrying CMs. Moreover, the number of hops (the latency introduced by them) needs to be 
+sufficiently small, which can be done by restricting the topology. 
+
+The resilience of the Clock Distribution translates into continuous and stable 
+synchronization of all the nodes and switches in the WRN (Table~\ref{tab:requirements}). Although, 
+the network redundancy eliminates SPoFs, the switch-over between redundant elements might introduce 
+instability and render the network unreliable despite the costly redundancy. 
+Therefore, a seamless switch-over between redundant clock paths needs to be ensured. 
+Another reason for the deterioration of the synchronization 
+accuracy is the variation of external conditions (e.g. temperature) which needs to be compensated.
+
+% In terms of the Data Distribution reliability, the topology redundancy can turn out to be 
+% useless, if the switch-over between redundant elements causes more data to be lost then the 
+% capabilities of FEC scheme.
+% {\it [add here, change the rest]}
+% In summary, we need investigate how to :
+% \begin{Itemize}
+%   \item  eliminate/decrease data loss due to :
+%     \begin{Itemize}
+%       \item physical medium imperfection,
+%       \item switch over between redundant elements,
+%       \item traffic congestion,
+%     \end{Itemize}
+%   \item eliminate synchronization instability due to:
+%     \begin{Itemize}
+%       \item switch over between redundant data paths,
+%       \item external condition variations,
+%       \item Ethernet frame loss (PTP),
+%     \end{Itemize}
+%   \item ensure required upper-bound delivery latency of Control Data.
+% \end{Itemize}

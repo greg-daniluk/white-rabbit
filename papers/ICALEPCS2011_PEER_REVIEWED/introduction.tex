@@ -1,0 +1,27 @@
+\section{Introduction}
+
+The WR project is a multi-laboratory, 
+multi-company, international effort to create a universal fieldbus for control and timing systems 
+to be used at CERN, GSI and possibly other such facilities. The rationale behind WR, 
+the choice of the technologies and technical details of its functioning have been already 
+described in a number of papers \cite{biblio:WRproject}, \cite{biblio:TomekMSc}, 
+\cite{biblio:WRPTP}. 
+%, \cite{biblio:ISPCS2011}. 
+The resilience and robustness is one of the key features of any fieldbus. 
+This article presents a study on the reliability of a White Rabbit Network (WRN) 
+assuming a basic knowledge about WR. 
+
+Reliability is defined as the ability of a system to provide its services to clients under both 
+routine and abnormal circumstances. It can be estimated by calculating the probability of 
+the system's failure ($P_f$). 
+% \begin{equation}
+%   \label{eq:reliability}
+%   R =1 - P_f
+% \end{equation}
+The lesser the probability of WRN failure, the higher its reliability. Thus, in this article we 
+identify critical services of a WRN based on the study of WR's requirements. 
+Then, we analyze each critical service to identify possible 
+reasons for their failure and propose targeted counter-measures to increase reliability. 
+Finally, their impact on the overall system reliability is studied to 
+identify the highest contributor and the focus for the further studies.
+
