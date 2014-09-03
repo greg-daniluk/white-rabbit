@@ -1,0 +1,60 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{multirow}
+\usepackage{rotating}
+\usepackage{lscape}
+\usepackage{rotating}
+\usepackage{lscape}
+\usepackage{longtable}
+\usepackage{amsmath}
+\usepackage[a4paper]{geometry}
+\usepackage{fullpage}
+\usepackage{color}
+\usepackage{pdfpages} 
+\newcommand\pfeil{$\rightarrow$}
+\newcommand\visto{$\surd$}
+\usepackage{rotating}
+
+\begin{document}
+
+{\Large{\textbf{White Rabbit a Resilient Network}}} 
+
+
+White Rabbit is network meant to convey data in a deterministic way and high accuracy timing over Ethernet. 
+
+Redundancy will be applied there where a single point of failure could be not avoided and bring down the complete functionality of the network:
+
+\begin{itemize}
+	\item Data Master Node
+	\item Cabling to critical WR Nodes of the Network etc....
+\end{itemize}
+
+Redundancy increases cost of deployment, maintenance and management, therefore White Rabbit aims reliable failover mechanism to provided a truly resilient network that provides the maximum network uptime. 
+
+The equation to achieve and robust and resilient network is:
+
+\begin{center}
+Robust and resilient network = Hardware + Network Design + Networking Protocols
+\end{center}
+
+\textbf{Hardware}
+
+The WR network devices should remain available or up during a failure and provide the mechanism for diagnostics. Hardware elements like core routing and power supplies need to have redundant physical attributes as well as hot swappable card. Hardware support to acquire 
+real time information of the function of the hardware provides the means to prevent failures. 
+
+
+\textbf{Network Design}
+
+The complexity of a network design contributes positively or negatively to its resiliency. Too many redundant connections and network elements can create a solution that can be difficult to troubleshoot and maintain. Too few connections or network elements may create single points of failure or traffic
+bottlenecks. Not all the layers of a networks needs the same robustness, since the influence of a failure in a layer can affect only same receivers or thousand of them. Therefore a well define hierarchy of the network helps to identify where the effort should be invest. The Network Core Layer is a prime target, followed by the Distributed and Access Layer.
+
+{\color{blue}{I'm reading constantly the "five 9s reliability" we could use the same}}
+
+\textbf{Networking Protocol}
+
+The logical approach to ensuring network resiliency are protocols since provides the means for avoiding failure and re-covering after them. Those protocols used in the network are on top of the Hardware support and the network design, thus a thoroughly definition and design of the previous points are vital to be able to fit the protocols demanded for the network and the use-case.
+
+
+
+
+\end{document}
+

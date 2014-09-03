@@ -1,0 +1,72 @@
+\documentclass[a4paper,11pt]{report}
+\usepackage{multirow}
+\usepackage{lscape} 
+\usepackage{longtable} 
+\usepackage{amsmath}
+\usepackage[a4paper]{geometry}
+%\usepackage{fullpage}
+\newcommand\pfeil{$\rightarrow$}
+\newcommand\visto{$\surd$}
+
+\geometry{top=1.0in, bottom=1.0in, left=0.5in, right=0.5in}
+
+\begin{document}
+
+\begin{landscape}
+
+\thispagestyle{empty}
+
+\begin{center}
+\LARGE{Statuts of Timing and Data Resilience and Management in WR Networs}
+
+\end{center}
+
+\begin{table}[ht]
+\centering
+        \begin{tabular}{ c |  c |  c  |  c  |  c  |  c  |  c  |  c  |}          \cline{2-7}
+&Protocol / Technology & Software & Hardware & WR Device & Soft. Develop. & HW Develop. \\ \cline{1-7}
+
+	\multicolumn{1}{|c|}{\multirow{3}{*}{WR Data}} &
+	\multicolumn{1}{|c|}{VLAN}	& \visto&\visto	&Switch/MMN	&100 \%		&80 \%	\\ \cline{2-7}
+\multicolumn{1}{|c|}{} &
+\multicolumn{1}{|c|}{GVRP}	&\visto&$\surd$	&Switch/MMN	&Open Implementation, TBT	&0\% 	\\ \cline{2-7} 
+\multicolumn{1}{|c|}{} &
+\multicolumn{1}{|c|}{FEC}	&\visto	&\visto&Switch/MMN/Node	&30 \%		&30 \% 	\\ \cline{2-7} 
+\multicolumn{1}{|c|}{} &
+\multicolumn{1}{|c|}{STP}	&\visto &\visto	&Switch/MMN	&Kernel Support, TBT	& 0 \%	\\ \cline{2-7}
+\multicolumn{1}{|c|}{} &
+\multicolumn{1}{|c|}{Link Aggregation}&\visto &\visto&Switch/MMN &Linux Support, TBT	& 0 \%		\\ 		
+\hline
+\hline
+
+\multicolumn{1}{|c|}{\multirow{3}{*}{WR Timing}} &
+\multicolumn{1}{|c|}{PTP}	& \visto  &\visto	&Switch/MMN/Node& 0 \%		&0 \%	\\ \cline{2-7}
+\multicolumn{1}{|c|}{} &
+\multicolumn{1}{|c|}{GVRP}	&--		&$\surd$&Switch/MMN& 0 \%	&0\% 	\\	 \cline{2-7} 
+\hline
+\hline
+
+\multicolumn{1}{|c|}{\multirow{3}{*}{Resilience \& Management}} &
+\multicolumn{1}{|c|}{Traffic Monitor}	& \visto&\visto&Switch	& SFlow, TBT & 0 \%	\\ \cline{2-7}
+\multicolumn{1}{|c|}{} &
+\multicolumn{1}{|c|}{Flow Control}	&\visto&$\surd$	&Switch/MMN/Node &0 \%, TBT	&0\% 	\\ \cline{2-7} 
+\multicolumn{1}{|c|}{} &
+\multicolumn{1}{|c|}{Congestion Control}	&\visto	&\visto&Switch/MMN	&0 \%		&0 \% 	\\ \cline{2-7} 
+\multicolumn{1}{|c|}{} &
+\multicolumn{1}{|c|}{LLDP}	&\visto & --	&Switch/MMN	&LLDPd, TBT	& --	\\ \cline{2-7}
+\multicolumn{1}{|c|}{} &
+\multicolumn{1}{|c|}{SNMP}&\visto &\visto&	Switch/MMN/Node& SNMPd,TBT	& --	\\ 		
+\hline
+
+
+
+\end{tabular}
+\end{table}
+
+MMN \pfeil Master Management Node
+TBT \pfeil To Be Tested
+
+
+\end{landscape}
+
+\end{document}

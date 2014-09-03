@@ -1,0 +1,160 @@
+DATA NETWORK CONGESTION
+***********************
+When packets being transmitted through a network approach the packet-handling capacity of the network
+
+Network nodes are overloaded –> queues start filling up
+
+Arrival Rate to the Switch = a 
+Departure Rate to the Switch = b
+
+Stability Condition a/b = p < 1
+
+CONGESTION CONTROL TECHNIQUES
+******************************
+
+Backpressure
+	– Request from destination to source to reduce rate
+	– Propagates hop-by-hop backward along path
+	– Suitable for virtual circuits
+
+Choke Packet 
+	- Could be good for Switching network
+	- A host receiving a choke packet should reduce the traffic to the
+	  specified destination. A variation (Hop-by-Hop Choke Packets) operate similarly but take
+	  effect at each hop while choke packets travel back to the source.	
+
+Implicit congestion signaling -> TCP
+
+Explicit congestion signaling
+	– Network responsibility to alert end systems of growing congestion
+	– Direction
+		• Backward: network notifies the source
+		• Forward: network notifies the destination
+	– Approaches
+		• Binary: on/off approach
+		• Credit-based: how much data can be sent
+		• Rate-based: how fast data can be transmitted
+
+
+Fairness
+	Congestion effects should be distributed equally to traffic flows. Last-in-first-discarded may not be fair
+
+Quality of Service
+
+	Differentiation based on application requirements
+		• Voice, video: delay sensitive, loss insensitive
+		• File transfer, mail: delay insensitive, loss sensitive
+		• Interactive computing: delay and loss sensitive
+
+Reservation scheme
+	To provide guaranteed services
+		• Traffic policing: excess traffic discarded or handled on besteffort basis
+
+
+CONCLUSION
+**********
+Chocke or Explicit by now are the most interesting.
+
+Implementation:
+In nodes, where? not WR Core, then in the general purpose CPU in SW
+
+Alternative to this options to the Congestion control would be Switch Scheduling... it makes the switch way more difficult.
+http://www.stanford.edu/class/ee384x/papers/PIM.pdf
+
+IDEAS
+*****
+We should combine for the highest priority and the rest different strategies...
+E.g. HP blocking port if someone is (except the data master) sending them....
+
+
+Documentation
+
+Book (I didn't find it but it seems to be the bible for this topics)
+High-Speed Networks and Internets Performance and Quality of Service, Second Edition
+Web Site
+http://williamstallings.com/HsNet2e.html
+
+
+
+http://www.citidel.org/bitstream/10117/1021/1/Congestion+Control.pdf
+
+Flow and congestion control in data networks
+http://www.sis.pitt.edu/~wcerroni/Lecture03.pdf
+http://www.sis.pitt.edu/~wcerroni/wans.html
+
+The Network Layer Functions: Congestion Control
+http://meseec.ce.rit.edu/eecc694-spring2000/694-3-30-2000.pdf
+
+Modeling the Interactions of Congestion Control and Switch Scheduling
+http://webee.technion.ac.il/~isaac/p/tr08-03_modeling.pdf
+
+Techniques in Internet Congestion Control
+http://www.ee.mu.oz.au/research/cubin/downloads/cubin_BartekWydrowski_Thesis.pdf
+
+http://tools.ietf.org/html/rfc2914
+
+Approaches to Congestion Control in Packet Networks
+http://utopia.duth.gr/~emamatas/jie2007.pdf
+
+http://en.wikipedia.org/wiki/Congestion_control#Classification_of_congestion_control_algorithms
+
+------------------------------------------------------------------------------------------------------------------------------------------
+
+FLOW CONTROL
+************
+Mistake the Flow control in Ethernet, is in Layer 2---
+
+Ethernet FLow Control....
+is a mechanism for temporarily stopping the transmission of data on an Ethernet computer network. End-to-End, the switches involved.
+
+Article, it doesn't applies to us but:
+http://www.smallnetbuilder.com/index2.php?option=com_content&task=view&id=30212&pop=1&page=0&Itemid=54
+
+Alternatives 
+************
+
+Standard 
+Priority-based Flow Control, as defined by the standard IEEE 802.1Qbb provides a link level flow control mechanism that can be controlled independently for each Class of Service (CoS), as defined by IEEE 802.1p. The goal of this mechanism is to ensure zero loss under congestion in Data Center Bridging (DCB) networks.
+
+Flow Control Techniques 
+
+• Stop-and-wait flow control
+• Sliding-window protocol 
+
+ I don't like them for WR Network.....
+
+CONCLUSION
+
+Study of the Priority Based Flow Control, see what the status.
+
+Think about policy for White Rabbit Network. Defined by the user, set it from SNMP and supervised by the Network analyzer....
+
+
+LEVELS OF FLOW CONTROL
+**********************
+HP 
+SP
+etc.....
+
+DOCUMENTATION
+
+Priority Flow Control: Build Reliable Layer 2 Infrastructure
+
+http://www.cisco.com/en/US/prod/collateral/switches/ps9441/ps9670/white_paper_c11-542809_ns783_Networking_Solutions_White_Paper.html
+
+
+http://en.wikipedia.org/wiki/Ethernet_flow_control
+
+
+http://nptel.iitm.ac.in/courses/Webcourse-contents/IIT%20Kharagpur/Computer%20networks/pdf/M3L3.pdf
+
+
+Flow Control Techniques for Multicsatis in Gigabit Networks
+http://www.ieee-icnp.org/1996/papers/1996-12.pdf
+
+
+http://www.cs.virginia.edu/~zaher/classes/CS457/lectures/flow-control.pdf
+
+
+
+http://drona.csa.iisc.ernet.in/~deepakd/verification-common/spin-book-ch4.pdf

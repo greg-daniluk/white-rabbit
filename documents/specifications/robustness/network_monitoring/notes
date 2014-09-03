@@ -1,0 +1,168 @@
+*******************************
+NETWORK MONITORING (Diagnostic)
+*******************************
+
+Monitoring Requirements
+***********************
+- Guarantee the availability of the function 
+	- Maintenance
+	- Automatic reaction on operation anomalies:
+		- Real-time confi. modification in case of error
+		- Activation of redundant components
+- Dynamic reactions to changes on the network and environments
+
+	- Dynamic reaction to changes on the network
+	- Dynamic adaption 
+- Network Control
+
+	- Collection of information
+	- Definition of a database of network configurations
+
+Traffic Analysis Applications requirements
+
+	- Identify growth and abnormal occurrences in the network
+	
+Common Measurement Metrics
+***********************
+ Performance measurement
+	- Availability: percentage of time that a network system, component or application is available for a user. It is based on the reliability of the individual component of a network.
+
+Availability = MTBF / (MTBF +MTTR) 
+
+MTBF .- mean time between failures
+MTTR .- mean time to repair following a failure
+
+	- Response time: the time it takes a system to react to a given input.
+	- Accuracy: 
+	- Throughput: quantity of data that can be sent over a link in a specified amount of time.
+	- Utilization: a more fine-grained measure than throughput. It refers to determining the percentage of time that a resource is in use over a given period of time.
+	- Latency and Jitter:  amount of time it takes a packet from source to destination. 
+
+• Jitter: variance of intra-packet delay on a monodirectional link. 
+
+
+Per-Link Measurements
+*********************
+• Metrics available on a link
+	— # packets, # bytes, # packets discarded on a specific interface over the last minute
+	— # flows, # of packets per flow
+• It does not provide global network statistics.
+• Useful to ISPs for traffic measurements.
+• Examples:
+	— SNMP MIBs
+	— RTFM (Real-Time Flow Measurement)
+	— Cisco NetFlow
+
+End-to-End Measurements
+***********************
+• Network performance != Application performance
+• Most of network measurements are end-to-end.
+• Per path statistics
+• How does the network behave with long/short probe packets?
+
+Monitoring 
+**********
+Active Measurement
+	— To inject network traffic and study how the network reacts to the traffic (e.g. ping).
+	- Active measurements are often end-to-end
+Passive Measurement
+	— To monitor network traffic for the purpose of measurement (e.g. use the TCP three way handshake to measure network round-trip time).
+	- passive measurements are limited to the link where the traffic is captured
+
+• There is no good and bad. Both approaches are good, depending on the case:
+	— Passive monitoring on a switched network can be an issue.
+	— Injecting traffic on a satellite link is often doable only by the satellite provider.
+• Usually the best is to combine both approaches and compare results.
+
+Remote Monitoring with SNMP + Cisco NetFlow or RMON-1 or sFLOW (Layer 1 and Layer 2)
+
+NetFlow / RMON / sFlow -> "flow-based" monitoring
+SNMP -> "deviced-based" monitoring
+
+SNMP Vs RMON
+************
+• The SNMP protocol is used to control and configure a probe. Usually GUI managers mask the complexity of SNMP-based configuration.
+• Statistics and saved traffic are retrieved using SNMP by management applications to record statistics on a network and, possibly selected portions of the network traffic.
+
+SNMP and RMON differ in the way they gather traffic statistics: 
+— SNMP is a periodic poll-request process: it requires a query of the SNMP device to get network statistics (the network status is kept by the manager).
+— RMON, on the other hand, reduces the stress of the manager by gathering and storing the statistics in counters or buckets for retrieval by a management station.
+
+
+
+
+
+TRAFFIC MONITORING
+******************
+
+RMON
+****
+
+Collect data and periodically report it to a more central management station, which potentially reduces traffic on WAN links and polling overhead on the management station.
+• Report on what hosts are attached to the LAN, how much they talk, and to whom 
+• "see" all LAN traffic, full LAN utilization, and not just the traffic to or through the router.
+• Filter and capture packets (so you don't have to visit a remote LAN and attach a LAN Analyzer) : it is basically a remote sniffer that can capture real-time traffic (until the integrated memory buffer is full).
+• Automatically collect data, compare to thresholds, and send traps to your management station -- which offloads much of the work that might bog down the management station.
+
+
+
+The RMON1 MIB consists of ten groups:
+
+   1. Statistics: real-time LAN statistics e.g. utilization, collisions, CRC errors
+   2. History: history of selected statistics
+   3. Alarm: definitions for RMON SNMP traps to be sent when statistics exceed defined thresholds
+   4. Hosts: host specific LAN statistics e.g. bytes sent/received, frames sent/received
+   5. Hosts top N: record of N most active connections over a given time period
+   6. Matrix: the sent-received traffic matrix between systems
+   7. Filter: defines packet data patterns of interest e.g. MAC address or TCP port
+   8. Capture: collect and forward packets matching the Filter
+   9. Event: send alerts (SNMP traps) for the Alarm group
+  10. Token Ring: extensions specific to Token Ring
+
+• RMON usefull to compute network utilization.
+• Network Utilization can be calculated for all the ports of a given switch at regular intervals. This information can be gathered over the course of a day and be used to generate a network utilization profile of a switch or hub.
+
+
+NetFlow
+*******
+From Cisco, which menas: we cannot used it, though part of the protocol has been standardized.
+
+SFlow
+*****
+(From wiki copy and paste)
+
+sFlow uses sampling to achieve scalability[7] and is, for this reason, applicable to high speed networks (gigabit per second speeds and higher).[8] sFlow is supported by multiple network device manufacturers[9] and network management software vendors.[10]
+
+An sFlow system consists of multiple devices performing two types of sampling: random sampling of packets[1] or application layer operations,[3] and time-based sampling of counters.[1] The sampled packet/operation and counter information, referred to as flow samples and counter samples respectively, are sent as sFlow datagrams to a central server running software that analyzes and reports on network traffic; the sFlow collector.[11]
+
+Flow samples
+
+Based on a defined sampling rate, an average of 1 out of N packets/operations is randomly sampled. This type of sampling does not provide a 100% accurate result, but it does provide a result with quantifiable accuracy.[12]
+
+Counter samples
+
+A polling interval defines how often the network device sends interface counters. sFlow counter sampling is more efficient than SNMP polling when monitoring a large number of interfaces.[13]
+
+
+PERFORMANCE AND FEATURES
+************************
+Read the documentation
+
+Conclusion
+**********
+Apparently SFlow suits perfect for us, it can bee implemented in hardware, low bandwidth usage, memory usage, scalability and server load.
+That would be in the switches... Now if we speak about the server, MAster Management Node... well take a look at the last doc... they are using a server... we should think if the Master Management is going to take care of the protocols and then storage everything in a server...it looks like to me.
+
+
+Documentation
+*************
+
+http://www.sflow.org/sFlowOverview.pdf
+http://www.inmon.com/pdf/EmbeddedTM.pdf
+http://www.uknof.org.uk/uknof9/Hobden-LINX-sflow.pdf
+
+
+
+
+
+
