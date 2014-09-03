@@ -1,0 +1,70 @@
+\chapter{Appendix: Reliability measure (Mean Time Between Failures)}
+\label{appA}
+
+
+
+The measurement of reliability by the number of Control Messages lost per year, 
+which has been mentioned in the requirements, is neither standard nor practical.
+Therefore, in this document, we estimate reliability of White Rabbit Network 
+using method which is readily and commonly applied to Large-Scale LANs. We use 
+Mean Time Between Failures of a single network component (be it WR Switch, 
+fibre/copper link, WR Node) to estimate reliability (i.e. MTBF and failure
+probability) of entire White Rabbit Network as described in
+\cite{DesigningLSLANs}. 
+
+Mean Time Between Failures (MTBF) represents a statistical likelihood that half 
+of the number of devices, represented by a given MTBF factor, will not function 
+properly after the period given by MTBF. MTBF does not give the functional 
+relationship between time and number of failures. However, the estimation that 
+the function is linear is assumed to be sufficient (see \cite{DesigningLSLANs}, 
+page 36).
+
+For network MTBF derivation, the probability of failure related to the number of
+failures of N devices per unit time is interesting:
+  \begin{equation}
+     \label{eq:MTBFprob}
+	P_= \frac{N}{2*MTBF}  
+  \end{equation}
+
+However, to use in probability calculations, a net value is required.
+Therefore, the below equation is used. It is a probability of single device
+failing in a single day, where M denotes MTBF 
+per-day:
+
+  \begin{equation}
+      \label{eq:MTBFprobNetto}
+	P_= \frac{1 }{2*M}  
+  \end{equation}
+
+Examples of common values of MTBF of network components and corresponding 
+probability of their failure per-day are presented in 
+Table~\ref{tab:MTBFtable}.
+
+
+\begin{table}[ht]
+\caption{Example MTBFs and probabilities of network units (src: 
+	\cite{DesigningLSLANs})} 
+\centering
+	\begin{tabular}{| l |  c | c |}          \hline
+\textbf{Component} & \textbf{MTBF [hours]} & \textbf{Probability [$\%$]}\\ 
+                   &                       &                           \\ \hline
+Fiber connection   &       1000 000         & 0.0012                    \\
+\hline
+Router             &       200 000         & 0.0060                    \\ \hline
+\end{tabular}
+\label{tab:MTBFtable}
+\end{table}
+
+In order to calculate reliability of entire network, the meaning of network 
+failure needs to be defined. In case of White Rabbit Network, it is critical 
+that all the White Rabbit Nodes connected to the network receive Control 
+Messages. In other words, failure for White Rabbit Network is a failure of any 
+number of its components which prevents any WR Node from receiving Control 
+Messages. If single component causes network failure, such component is called 
+a single point of failure (SPoF).
+
+The probability of entire network failure is calculated by adding probabilities
+of all the components' simultaneous failures combinations which cause failure of
+the entire network. 
+Using equation~\ref{eq:MTBFprobNetto}, MTBF of entire network can be calculated 
+out of network failure probability.

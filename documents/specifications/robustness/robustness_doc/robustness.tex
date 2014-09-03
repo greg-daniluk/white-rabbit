@@ -1,0 +1,158 @@
+\documentclass[a4paper,11pt]{report}
+%
+%--------------------   start of the 'preamble'
+%
+\usepackage{amssymb,amstext,amsmath}
+\usepackage{pdfpages} 
+\usepackage[latin1]{inputenc}
+\usepackage{fullpage}
+\usepackage{caption}
+\usepackage{color}
+\usepackage{epstopdf}
+\usepackage{graphicx}
+\usepackage{todonotes}
+\usepackage{graphics}
+\usepackage[pdftex]{epsfig}
+\usepackage{lscape}
+\usepackage{rotating}
+\usepackage{enumerate}
+\usepackage{multirow}
+\usepackage{array}
+
+
+%
+%%    homebrew commands -- to save typing
+\newcommand\etc{\textsl{etc}}
+\newcommand\eg{\textsl{eg.}\ }
+\newcommand\etal{\textsl{et al.}}
+\newcommand\Quote[1]{\lq\textsl{#1}\rq}
+\newcommand\fr[2]{{\textstyle\frac{#1}{#2}}}
+\newcommand\miktex{\textsl{MikTeX}}
+\newcommand\comp{\textsl{The Companion}}
+\newcommand\nss{\textsl{Not so Short}}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\newcommand \cc[1]{\textcolor{red}{\textsl{-CESAR-}}{\textcolor{red}{#1}}} %comments from cesar
+\newcommand \cm[1]{\textcolor{blue}{\textsl{-MACIEJ-}}{\textcolor{blue}{#1}}}
+
+
+\newcommand{\tab}{\hspace*{2em}}
+
+%=============== Temporary solutions to naming problem ======================
+
+% full names
+% if you need space after the command,use "\" i.e. "
+% \HighPriority is" ==>> will change into "High Priorityis"
+% \HighPriority\ is" ==>> will change into "High Priority is"
+\newcommand \HighPriority[0]{High Priority}
+\newcommand \StandardPriority[0]{Standard Priority}
+\newcommand \GranularityWindow[0]{Granularity Window}
+\newcommand \ControlMessage[0]{Control Message} %White Rabbit Information Block
+
+
+% abreviations
+\newcommand \HP[0]{HP}
+\newcommand \SP[0]{SP}
+\newcommand \GW[0]{GW}
+\newcommand \CM[0]{CM} % WRIB
+
+%=============================================================================
+
+%comments from cesar
+%
+\graphicspath{{fig/}}
+%\graphicspath{{.}}
+%---------------------   end of the 'preamble'
+%
+
+%TO REMOVE THE WRITTEN CHAPTER FROM THE CHAPTER
+\makeatletter
+\renewcommand{\@makechapterhead}[1]{%
+\vspace*{0pt}%
+{\setlength{\parindent}{0pt} \raggedright \normalfont
+\bfseries\huge\thechapter.\ #1
+\par\nobreak\vspace{40 pt}}}
+\makeatother
+
+
+
+\begin{document}
+%-----------------------------------------------------------
+\title{Robustness and Determinism in White Rabbit}
+\author{Cesar Prado GSI}
+\author{Maciej Lipinski CERN}
+\date
+\maketitle
+
+\begin{titlepage}
+ 
+\begin{center}
+
+% Upper part of the page
+%\includegraphics[scale=0.50]{fig/white_rabbit.jpg}\\[1cm]
+%\includegraphics[height=80mm]{white_rabbit.ps}\\[1cm]
+\includegraphics[height=70mm]{../../../../figures/logo/WRlogo.ps}\\[1cm]
+
+% Title
+\HRule \\[0.4cm]
+{ \huge \bfseries White Rabbit and Robustness \\ [0.8cm]
+  \Large Draft for Comments}\\[0.4cm]
+\HRule \\[1.0cm]
+ 
+\textsc{\normalsize  GSI, Helmholtzzentrum fur Schwerionenforschung GmbH}
+\newline
+\textsc{\normalsize  CERN, Organisation Europeenne pour la Recherche Nucleaire}
+\\[0.5cm]
+
+% Author and supervisor
+%\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+Cesar Prados, Maciej Lipinski
+\end{flushright}
+%\end{minipage}
+ 
+\vfill
+ 
+% Bottom of the page
+\begin{flushright}
+{\large \today}
+\end{flushright}
+ 
+\end{center}
+ 
+\end{titlepage}
+
+
+%-----------------------------------------------------------
+%\begin{abstract}\centering
+%\end{abstract}
+%-----------------------------------------------------------
+\tableofcontents
+%-----------------------------------------------------------
+\include{revision_history_table}
+\include{acronyms}
+\include{chap1}
+\include{chap2}
+\include{chap3}
+\include{chap4}
+\include{chap5}
+\include{chap6}
+\include{chap7}
+\include{chap8}
+%\include{chap9}
+%-----------------------------------------------------------
+\addcontentsline{toc}{chapter}{\numberline{}Bibliography}
+\include{biblio}
+%-----------------------------------------------------------
+\appendix
+\include{app1}
+\include{app2}
+\include{app3}
+\include{app4}
+\include{app5}
+\include{app6}
+\include{app7}
+\include{app8}
+\include{app9}
+\include{app10}
+%-------------------------------------------------
+\end{document}

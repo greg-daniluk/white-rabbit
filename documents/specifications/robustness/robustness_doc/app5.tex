@@ -1,0 +1,16 @@
+\chapter{Appendix: Potential Modifications to RTU required by RSTP}
+\label{appE}
+
+Potential changes to RTU needed by RSTP: \\
+1. RTU@HW:
+\begin{itemize}
+  \item Blocking of incoming packages per-VLAN (currently only per-port).
+  \item Blocking of outcoming packages per-port (currently only per-VLAN).
+\end{itemize}
+2. RTU@SW:
+\begin{itemize}
+  \item aging of information on a given port - this means queuing Filtering
+Database for the entries belonging to given port, and removing (aging out) this
+entries).
+  \item changes enabling control of new HW parameters.
+\end{itemize}

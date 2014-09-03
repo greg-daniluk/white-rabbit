@@ -1,0 +1,96 @@
+1.  Introduction (ML):
+    - explanatin of WR
+    - introduce different kinds of info:Timing Info, Control Data, Standard Data
+    - we need to point out that increase of robustness in WR is optional, it
+will work with no redundancy the same good (as long as all components work)-
+intention - not to scare potential clients
+1.1 WR Network Requirements (regarding Robustness and Determinism)
+    - Control Messages :
+       * one message lost in one year
+       * small GW
+    - Timing Info:
+       * received by all Nodes
+       * if note received by node, no sense for it to received Control Messsage
+       * reliability of Timing must be greater or equal that of Control Message
+1.2 Reliability: MTBT
+    - we need to introduce how we are going to "measure/estimate" reliability
+    - short introduction of Mean Time Between Failures
+
+2. Physical Medium and BER (Layer 1)[CP]
+   
+3 Forward Error Correction (upper layer)
+3.1. Brief introduction (overview) of the concepts used with loads of references
+3.2. FEC in WR  
+
+4. QoS and Traffic Prioritize (CP)
+   - say that Control Messages are to be broadcast pririty 7
+   - say that non-Control Messages are called SP
+
+5 Jitter, Determinism (ML)
+   - estimate normal routing time, it's not enough to meet requirements
+   - introduce the idea of "bypass" for broadcast priority 7, call it HP
+   - say how HP improves things, make estimations regarding the number of
+     hops vs jitter
+   - say that SP traffic can be also deterministec if used with brains,
+estimate GW for SP
+
+6. Redundancy
+   - define redundancy
+   - say that we measure it's effectiveness with relibility
+   - introduce terms:
+     * clock path
+     * data path
+
+6.1 Clock Path Redundancy
+6.1.1 Layer 1 (SynchE)
+  - explain how it works
+  - explain restrictions
+6.1.2 Layer 2 (WRPTP)
+  - explain how it works
+6.1.3 Clock Path Topologies
+  - show possible topologies
+6.2 Data Path Redundancy
+6.2.1 Rapid Spanning Tree Protocol (RSTP)
+  - explain how it works
+  - say how it helps
+6.2.2 RSTP in WR
+6.2.2.1 SP Traffic
+  - hardware link down detection
+  - use ide from CISCO (UplinkFast) - I will investigate if it's possible
+6.2.2.1 HP Traffic
+  - port change in HW
+  - how we want to avoid loosing HP Packages (wait for gap between burst)
+6.2.3 Possible Topologies for WR RSTP
+  - pros/cons
+  - costs
+  - we need to consider many levels of redundancy (reliability), so analysing
+different topologies is perfect
+  - need to show topology without any redundancy and that it works
+  - 
+6.3 Data and Clock Path redundancy strategy
+  - so we now consider Data and Clock Paths togother
+  - the ultimate strategy for the Redundancy in WR
+
+7 Network Dimentions
+  - network dimention vs Granuality Window (some nice formula)
+  - Network Dimention vs topology (some nice pic)
+
+8 Diagnostic with White Rabbit Switch
+  - management IP
+    * option to have HP traffic or not to have
+    * option to have FEC in SP or not
+    * etc
+  - giving seq_numbers to HP Packages to check number of lost ones
+  - giving seq_numbers to Control Messages to check number of lost ones
+  - measuring latency in switches ???? posibble, maybe optional (forward
+messages to control port, have dummy packates to measure latency...)
+   
+x Flow Control
+x.1 Flow control in Layer 1
+x.2 Flow control in Layer 2
+
+
+x = i'm not sure which chapter, but it's quite self contained, so can be put
+somewher later Ou would say between 5 and 6
+
+ 

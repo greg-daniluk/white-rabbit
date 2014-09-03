@@ -1,0 +1,163 @@
+\chapter{Appendix:Flow Monitor} 
+\label{appSFlow}
+
+\section{sFlow}
+
+sFlow is a multi-vendor sampling technology embedded within switches and
+routers. It provides the ability to continuously monitor application level
+traffic flows at wire speed on all interfaces
+simultaneously~\ref{tab:sflow_info}.
+
+
+sFlow consists of:
+
+\begin{itemize}
+	\item sFlow Agent 
+	\item sFlow Collector
+\end{itemize}
+
+The sFlow Agent is a software process that runs in the White Rabbit Switches.
+ It combines interface Counters and Flow Samples into sFlow datagrams that are
+sent across the network to an sFlow Collector. The Counters and Flow Samples
+will be implemented in hardware in order to increase the
+processing of the data sampling. Flow samples are defined based on a sampling
+rate, an average of 1 out of N packets is randomly sampled. This type of
+sampling provides  quantifiable accuracy. A polling interval defines how often
+the network device sends interface counters. 
+
+The sFlow Agent packages the data into sFlow Datagrams that are sent on the
+network. The sFlow Collector receives the data from the Flow generators, stores
+the information and provides reports and analysis. 
+
+\subsubsection{Configuration}
+
+Every switch capable of sFlow must configure and enable:
+
+\begin{itemize}
+	\item local agent
+	\item sFlow Colector address 
+	\item ports to monitor
+\end{itemize}
+
+In order to acquire a reliable network information in a WR network:
+
+\begin{itemize}
+	\item the statistics shall be collected every ?? (sec,msec..)
+	\item a sample is taken per port every ?? (sec,msec...)
+	\item ?? samples per port shall be sent to the CPU
+
+\end{itemize}
+
+
+\section{Requirements of a Flow Monitor}
+
+General requirements:
+\begin{itemize}
+	\item Network-wide view of usage and active switches. 
+	\item Measuring network traffic, collecting, storing, and analysing
+traffic data.
+	\item Monitor links without impacting the performance of the switches
+without adding significant network load.
+	\item Industrial Standard
+\end{itemize}
+
+\noindent The Flow Monitor shall: 
+
+\begin{itemize}
+	\item Measure the volume and rate of the traffic by QoS level.
+	\item Measure the availability of the network and devices.
+	\item Measure the response time that a device takes to react to a given
+input.
+	\item Measure the throughput of the over the links.
+	\item Measure the latency and jitter of the network.	
+	\item Identify grouping of traffic by logics groups (Master, Node,
+Switch)
+	\item Identify grouping of traffic by protocols.
+	\item Define filters and exceptions associated with alarms and
+notification.
+\end{itemize} 
+
+
+\noindent The measurements shall be carried out either between network devices,
+
+\noindent Per-Link Measurements, and monitor:
+
+		\begin{itemize}	
+			\item number of packet
+			\item bytes
+			\item packet discarded on an interface
+			\item flow or burst of packets
+			\item packets per flow
+		\end{itemize}
+
+\noindent or End-to-End Measurements:
+		\begin{itemize}	
+			\item path delay  
+			\item ....
+			\item ....
+		\end{itemize} 
+
+\noindent The combination of both measurements provides a global picture of the
+network.
+
+
+\vspace{10 mm}
+
+\noindent The monitoring shall performance:
+
+\begin{itemize}
+	\item Active Measurement, injection of network traffic and study the
+reaction to the traffic
+	\item Passive Measurement,  Monitor of the traffic for measurement.
+\end{itemize}
+
+\vspace{10 mm}
+
+\noindent Performance:
+
+\begin{itemize}
+
+	\item Reaction Time ... 
+	\item Sampling...
+	
+\end{itemize}
+
+
+\section{State of the Art of Flow Controller}
+
+Currently there are three main choices for traffic monitoring:
+
+\begin{itemize}
+
+	\item RMON, IETD standard.
+	\item NetFlow, Cisco Systems.
+	\item sFlow, Industry standard
+\end{itemize}
+
+In a nutshell, all them offers the similar features and provides the same
+information, thus the selection criteria is based on the usage of resources by
+the Agent in the switches and the collector of information.
+
+\begin{table}[ht]
+\begin{center}
+    \begin{tabular}{ | c | c | c | c | c | c | c |}
+\hline
+Flow Controllers & CPU & Memory & Bandwidth & RT Statistics & Implementation \\
+\hline
+RMON & high &  very high 8-32 MB & bursty & supported & sw \\ \hline
+NetFlow & high & high 4-8 MB & high bursty & not & sw  \\ \hline
+sFlow & very low & very low akB & low smooth & supported & sw/hw \\ \hline
+    \end{tabular}
+\end{center}
+\caption{Comparison Flow Control}
+\end{table}
+
+As the Table~\ref{tab:flow_controlers} shows that sFlow requires less resources
+either in the Agent, which is placed in the switch, or the Collector. As well
+the usage of bandwidth is more conservative since the gathered information every
+short periods of time, conversely to the others controllers. It seems that
+sFlows becomes a good choice for White Rabbit. Besides sFlows allows the
+implementation of part of Agent in hardware, providing wire-speed to the
+sampling of frames. In addition the license scheme of sFlow's  allows White
+Rabbit project modify and publish our own version.
+

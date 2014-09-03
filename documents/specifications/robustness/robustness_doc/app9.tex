@@ -1,0 +1,249 @@
+\chapter{Appendix: WR-specific MIB definitions} 
+\label{appG}
+
+\section{WR PTP}
+\vspace{5 mm}
+\textbf{All applicable data sets} \\
+\vspace{5 mm}
+SYNTAX INTEGER {
+\begin{table}[!ht]
+%\begin{center}
+\scriptsize 
+\begin{tabular}{ l l }
+\textbf{ps1(23),}   & \textbf{-- The time is accurate to 1ps} \\
+\textbf{ps2p5(24),} & \textbf{-- The time is accurate to 2.5ps} \\
+\textbf{ps10(25),}  & \textbf{-- The time is accurate to 10ps} \\
+\textbf{ps25(26),}  & \textbf{-- The time is accurate to 25ps} \\
+\textbf{ps100(27),} & \textbf{-- The time is accurate to 100ps} \\
+\textbf{ps250(28),} & \textbf{-- The time is accurate to 250ps} \\
+\textbf{ns1(29),}   & \textbf{-- The time is accurate to 1ns} \\
+\textbf{ns2p5(30),} & \textbf{-- The time is accurate to 2.5ns} \\
+\textbf{ns10(31),}  & \textbf{-- The time is accurate to 10ns} \\
+ns25(32),   & -- The time is accurate to 25ns \\
+ns100(33),  & -- The time is accurate to 100ns \\
+ns250(34),  & -- The time is accurate to 250ns \\
+us1(35),    & -- The time is accurate to 1us \\
+us2p5(36),  & -- The time is accurate to 2.5us \\
+us10(37),   & -- The time is accurate to 10us \\
+us25(38),   & -- The time is accurate to 25us \\
+us100(39),  & -- The time is accurate to 100us \\
+us250(40),  & -- The time is accurate to 250us \\
+ms1(41),    & -- The time is accurate to 1ms \\
+ms2p5(42),  & -- The time is accurate to 2.5ms \\
+ms10(43),   & -- The time is accurate to 10ms \\
+ms25(44),   & -- The time is accurate to 25ms \\
+ms100(45),  & -- The time is accurate to 100ms \\
+ms250(46),  & -- The time is accurate to 250ms \\
+s1(47),     & -- The time is accurate to 1s \\
+s10(48),    & -- The time is accurate to 10s \\
+s10plus(49) & -- The time is accurate to >10s \\
+\end{tabular}
+%\end{center}
+\end{table}
+}
+\newline
+\vspace{5 mm}
+\textbf{Parent Data Set}  \\
+\vspace{5 mm}
+wrptpGrandmasterWrPortMode OBJECT-TYPE \\
+SYNTAX INTEGER \{ \\
+\tab NON\_WR (0), \\
+\tab WR\_SLAVE (1), \\
+\tab WR\_MASTER(2), \\
+\} \\
+MAX-ACCESS read-only \\
+STATUS current \\
+DESCRIPTION \\
+"Determines predefined function of the PTP grandmaster."  \\
+REFERENCE \\
+"WR Spec: Clause 6.2, Table 1" \\
+::= { ptpParentDataSet 10 } \\
+\\
+wrptpGrandmasterDeltaTx OBJECT-TYPE \\
+SYNTAX INTEGER \\
+MAX-ACCESS read-only \\
+STATUS current \\
+DESCRIPTION \\
+Grandmaster's $\Delta_{tx}$ measured in picoseconds and multiplied by $2^{16}$ .
+REFERENCE  \\
+"WR Spec: Clause 6.2, Table 1" \\
+::= { ptpParentDataSet 11 } \\
+\\
+wrptpGrandmasterDeltaRx OBJECT-TYPE \\
+SYNTAX INTEGER \\
+MAX-ACCESS read-only \\
+STATUS current \\
+DESCRIPTION \\
+"Grandmaster's $\Delta_{rx}$ measured in picoseconds and multiplied by
+ $2^{16}$."  \\
+REFERENCE  \\
+"WR Spec: Clause 6.2, Table 1" \\
+::= { ptpParentDataSet 12 } \\
+\\
+wrptpGrandmasterDeltaRx OBJECT-TYPE
+SYNTAX TruthValue
+MAX-ACCESS read-only
+STATUS current
+DESCRIPTION
+"If TRUE, the grandmaster is working in WR mode."
+REFERENCE
+"WR Spec: Clause 6.2, Table 1"
+::= { ptpParentDataSet 13 }
+\vspace{5 mm}
+\textbf{Port Data Set} \\
+\vspace{5 mm}
+
+wrptpPortState OBJECT-TYPE \\
+SYNTAX INTEGER \{ \\
+\tab idle(1), \\
+\tab present(2), \\
+\tab m\_lock(3), \\
+\tab s\_lock(4), \\
+\tab locked(5), \\
+\tab req\_calibration(6), \\
+\tab calibrated(7), \\
+\tab resp\_calib\_req(8), \\
+\tab wr\_link\_on(9) \} \\
+MAX-ACCESS read-only \\
+STATUS current \\
+DESCRIPTION \\
+"White Rabbit State Machine." \\
+REFERENCE \\
+"WR Spec: Clause 6.5.2.1" \\
+DEFVAL { idle } \\
+::= { ptpPortDataSet 11 } \\
+\\
+wrptpPortState OBJECT-TYPE  \\
+SYNTAX INTEGER \{ \\
+\tab NON\_WR (0), \\
+\tab WR\_SLAVE (1), \\ 
+\tab WR\_MASTER(2), \\
+\} \\
+MAX-ACCESS read-only \\ 
+STATUS current \\
+DESCRIPTION \\
+"Determines predefined function of WR port (static)." \\
+REFERENCE \\
+"WR Spec: Clause 6.2, Table 1" \\
+::= { ptpPortDataSet 12 } \\
+\\
+wrptpCalibrated OBJECT-TYPE \\
+SYNTAX TruthValue \\
+MAX-ACCESS read-only \\
+STATUS current \\
+DESCRIPTION \\
+"Indicates whether fixed delays of the given port are known." \\
+REFERENCE \\
+"WR Spec: Clause 6.2, Table 1" \\
+::= { ptpPortDataSet 13 } \\
+\\
+wrptpDeltaTx OBJECT-TYPE  \\
+SYNTAX INTEGER \\
+MAX-ACCESS read-only \\
+STATUS current \\
+DESCRIPTION \\
+"Port's $\Delta_{tx}$ measured in picoseconds and multiplied by $2^{16}$." \\
+REFERENCE \\
+"WR Spec: Clause 6.2, Table 1" \\
+::= { ptpPortDataSet 14 } \\
+\\
+wrptpDeltaRx OBJECT-TYPE \\
+SYNTAX INTEGER \\
+MAX-ACCESS read-only \\
+STATUS current \\
+DESCRIPTION \\
+"Port's $\Delta_{rx}$ measured in picoseconds and multiplied by $2^{16}$." \\
+REFERENCE \\
+"WR Spec: Clause 6.2, Table 1" \\
+::= { ptpPortDataSet 15 } \\
+\\
+wrptpCalPeriod OBJECT-TYPE \\
+SYNTAX INTEGER \\
+MAX-ACCESS read-only \\
+STATUS current \\
+DESCRIPTION \\
+"Calibration period in microseconds." \\
+REFERENCE \\
+"WR Spec: Clause 6.2, Table 1" \\
+::= { ptpPortDataSet 16 } \\
+\\
+wrptpCalPattern OBJECT-TYPE \\
+SYNTAX INTEGER \\
+MAX-ACCESS read-only \\
+STATUS current \\
+DESCRIPTION \\
+"Medium specific calibration pattern." \\
+REFERENCE \\
+"WR Spec: Clause 6.2, Table 1" \\
+::= { ptpPortDataSet 17 } \\
+\\
+wrptpCalPatternLen OBJECT-TYPE \\
+SYNTAX INTEGER \\
+MAX-ACCESS read-only \\
+STATUS current \\
+DESCRIPTION \\
+"Number of bits of calPattern to be repeated." \\
+REFERENCE \\
+"WR Spec: Clause 6.2, Table 1" \\
+::= { ptpPortDataSet 18 } \\
+\\
+wrptpWrMode OBJECT-TYPE \\
+SYNTAX TrueValue \\
+MAX-ACCESS read-only \\
+STATUS current \\
+DESCRIPTION \\
+"If TRUE, the port is working in WR mode." \\
+REFERENCE \\
+"WR Spec: Clause 6.2, Table 1" \\
+::= { ptpPortDataSet 19 } \\
+\\
+wrptpWrAlpha OBJECT-TYPE \\
+SYNTAX INTEGER \\
+MAX-ACCESS read-only \\
+STATUS current \\
+DESCRIPTION \\
+"Medium correlation parameter as described in section 3.1.1." \\
+REFERENCE \\
+"WR Spec: Clause 6.2, Table 1" \\
+::= { ptpPortDataSet 20 } \\
+
+\section{SyncE}
+
+wrSynceUplink1State OBJECT-TYPE \\
+SYNTAX INTEGER \{ \\
+\tab UNSYNC (0), \\
+\tab PRIMARY (1), \\
+\tab SECONDARY(2), \\
+\} \\
+MAX-ACCESS read-only \\
+STATUS current \\
+DESCRIPTION \\
+"States SyncE-wise state of uplink 1"  \\
+REFERENCE \\
+"not available" \\
+::= { syncE 1 } \\
+\\
+
+wrSynceUplink2State OBJECT-TYPE \\
+SYNTAX INTEGER \{ \\
+\tab UNSYNC (0), \\
+\tab PRIMARY (1), \\
+\tab SECONDARY(2), \\
+\} \\
+MAX-ACCESS read-only \\
+STATUS current \\
+DESCRIPTION \\
+"States SyncE-wise state of uplink 2"  \\
+REFERENCE \\
+"not available" \\
+::= { syncE 2 } \\
+\\
+
+\section{\HP Traffic}
+
+do we want to control \HP Bypass from Network Management Node ????
+
+\section{Control Data Statistics}
+
+
+We need to define MIBs for \textbf{Control Data Distribution Monitoring}

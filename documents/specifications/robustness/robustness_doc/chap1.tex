@@ -1,0 +1,181 @@
+\chapter{Introduction}
+\label{introduction}
+
+\section{What is White Rabbit?} 
+
+White Rabbit is intended to be the next-generation deterministic network based
+on synchronous Ethernet, allowing for low-latency deterministic packet routing
+and transparent, high precision timing transmission. The network consists of
+White Rabbit Nodes, White Rabbit Switches and supports integration of nodes
+and/or switches that are not White Rabbit, however with restrictions.
+
+
+The resilience and robustness is one of the key features of any
+fieldbus, specially, in safety Ethernet-based fieldbuses for critical systems
+like White Rabbit. The reliability of the WR falls on the deterministic delivery
+of Ethernet frames through a switching network and the synchronization of the
+network devices. In order to provide a service with low error, it is necessary
+to propose methods and techniques to overcome problems caused by the
+imperfection of the physical medium, dropped packets in WR switches and
+breakdowns of the network devices.
+
+
+A White Rabbit Network, consisting of White Rabbit Switches (WRS) connected
+by fibre or copper, is meant to transport information between White Rabbit
+Nodes (WRN). In this document three types of information transported over White
+Rabbit Network are distinguished:
+
+\begin{itemize}
+  \item  Timing Information - includes frequency and Coordinated Universal
+  Time (UTC), it is sent from Timing Master to White Rabbit Switches and Nodes.
+  \item  Control Data - includes \ControlMessage s (\CM), it is broadcast from
+Data Master to  White Rabbit Nodes. 
+  \item  Standard Data - all other Ethernet traffic sent between nodes and
+  switches.
+\end{itemize}
+Timing Information and Control Data are considered to be critical. 
+The types of information are closely related to their source. A Timing Master is
+a White Rabbit Switch or Node which is connected to GPS receiver. A Data Master
+is a White Rabbit Node which is responsible for \ControlMessage\   distribution.
+
+
+The main component of White Rabbit Network is a White Rabbit Switch.
+It is a Layer~2 network bridge which supports Synchronous Ethernet
+(SyncE) \cite{SynchE} and implements White Rabbit Protocol (WRPTP) \cite{WRPTP}
+which is an extension of PTP standard (IEEE1588 \cite{IEEE1588}). WRPTP, along
+with SyncE, enables to distribute common notion of time and frequency over the
+entire White Rabbit Network with sub-nanosecond precision. 
+
+\section{WR Network Requirements} 
+
+The requirements for the WR have been defined by GSI and CERN, since the
+Control Sytems of their accelerator are going to be based on WR. A Control
+System for accelerator facility requires high reliability, high precision and
+determinism. 
+
+Unreliability is translated into the number of \ControlMessage s not delivered
+to one or more designated nodes within one year. 
+
+In terms of reliability, it is expected to lose along the way from WR Data
+Master to receiving WR Nodes only one \ControlMessage\ per year. 
+
+Determinism in this chapter is understood as delivery of \ControlMessage\ to all
+designated nodes within the required time regardless of the node's location in
+the network. If the \ControlMessage\ delivery time is exceeded, the message is
+considered undelivered (lost).
+
+At GSI, White Rabbit is foreseen to control new FAIR accelerator complex. The
+requirements for the new FAIR machines \cite{FAIRtiming} state that the Control
+Message should be delivered from Data Master Node to all receiving devices
+(Nodes) within 100$\mu s$ given the maximum distance between Data Master and a
+Node of 2km \cite{FAIRtimingSystem}.
+
+At CERN, the required time to delivered the message is 1ms but the distance 
+between Data Master and a Node is substantially larger (max of 10km)
+\cite{CERNtiming}.
+
+Knowing how often a \ControlMessage\ is sent (every 100$\mu s$ at GSI and 
+1000$\mu s$ at CERN), we can calculate the maximum acceptable failure rate
+of WR Network ($\lambda_{WRN_{max}}$)
+
+\begin{equation}
+ \label{eq:failureProbability}
+	\lambda_{WRN_{max}} = \frac{number\_of\_\ControlMessage
+s\_lost\_per\_year}{number\_of\_\ControlMessage s\_sent\_per\_year}
+\end{equation}
+
+
+The requirements concerning \ControlMessage\ size differ between FAIR and CERN
+as well. While in GSI facility a \ControlMessage\ of 1500 bytes (maximum
+Ethernet Frame payload) is more than sufficient, for CERN facility it is an
+acceptable value, but the expectations are higher, e.g.: 4800bytes (see
+Appendix~\ref{appB}). Table~\ref{tab:requirements} summarizes the GSI's and
+CERN's requirements.
+
+\begin{table}[ht]
+\caption{GSI's and CERN's requirements summary.} 
+\centering
+	\begin{tabular}{| c | c | c |}          \hline
+\textbf{Requirement name}& \multicolumn{2}{|c|}{\textbf{Value(s)}}  \\
+                         & GSI              & CERN          \\ \hline
+\GranularityWindow       & 100$\mu s$       & 1000$\mu s$   \\ \hline
+max Failure rate ($\lambda_{WRN_{max}}$) & $3.170979198*10^{-12}$ &
+$3.170979198*10^{-11}$  \\ \hline
+%min Reliability ($R_{WRN}$)& 0.999 999 999 997
+% & 0.999 999 999 968\\ \hline
+Maximum Link Length      & 2km              & 10km          \\ \hline
+\ControlMessage Size     & 300-1500 bytes   & 1200 - 5000 bytes     \\ \hline
+Synchronization accuracy & probably 8ns   & most nodes 1$\mu s$ \\
+                         &                & few nodes  ~2ns \\
+\hline
+
+\end{tabular}
+\label{tab:requirements}
+\end{table}
+
+\section{The Goals of This Document} 
+
+This document introduces methods and techniques which increase 
+reliability, robustness and determinism of White Rabbit Network so that the
+requirements listed in the previous chapter are met. It also introduces
+techniques to guard the safety of the network, monitor and 
+diagnose. However, the presented solutions are considered optional. Their usage
+should be considered on individual bases and according to actual needs of 
+a particular use case.
+
+
+
+Determinism, as understood in this document, can be achieved by a precise
+knowledge of maximum delays introduced by each component of the network and 
+optimisation of the delay to meet the requirements. 
+
+\textbf{Chapter 2} discusses determinism of White Rabbit Network. In particular
+it focuses on the \ControlMessage\ maximum delivery time from the Data Master
+to WR Nodes. 
+
+Unreliability of the system is caused by physical imperfection of network's
+components. In particular, by data corruption on the physical links and failure
+of network components. Reliability of data distribution in a network can be
+increased by redundancy of data (special encoding) and components
+(switches, links). In terms of redundancy, two types of information
+distributed over White Rabbit Network are considered separately: Timing
+Information and Data (Control and Standard). 
+
+Timing Information is conveyed from a Timing Master to all nodes. Data is
+sent from any node (Data Master, in case of Control Data) to one or many nodes.
+Timing Information and Data are distributed along so called Paths. A Path is
+understood as the cables and switches by which information traverse from the
+sender to the receiver of the information. Consequently, there are two types of
+paths:
+\begin{itemize}
+  \item Clock Path - path from Timing Master to the nodes.
+  \item Data Path - path from sending node to receiving node(s).
+\end{itemize}
+A layout of all possible Paths in a network is called topology. Therefore we
+define in White Rabbit Network:
+
+\begin{itemize}
+  \item Clock Path Topology - Layout of all possible Clock Paths in the
+network.
+  \item Data Path Topology - Layout of all possible Data Paths in the
+network.
+\end{itemize}
+
+One of the unique features of White Rabbit Network is a precise synchronization
+and syntonization of all the White Rabbit network components. Failure to deliver
+this information to any White Rabbit component, or deterioration of its quality
+(instability) might have sever consequences and render the network unreliable.
+\textbf{Chapter 3} describes how the quality of Timing Information is
+guarded, its reliability increased by introducing redundancy of Clock Path and
+its stability ensured during switchover between redundant Clock Paths.
+
+\textbf{Chapter 4} describes techniques to achieved required reliability of
+Control Data delivery and substantially increase reliability of Standard Data.
+This is done by introducing redundancy of network components (topology) and
+redundancy of data (Forward Error Correction, EFC). Since, congestion of network
+traffic is undesired and dangerous for reliable message delivery, this chapter
+deals with flow control and congestion problems as well. 
+
+\textbf{Chapter 5} focuses on techniques which allows for WR Network
+monitoring as well as fast and efficient diagnostics of the network.
+

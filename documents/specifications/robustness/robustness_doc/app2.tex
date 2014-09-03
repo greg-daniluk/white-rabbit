@@ -1,0 +1,33 @@
+\chapter{Appendix: Control Messages Size at CERN}
+\label{appB}
+
+\section{Control Messages Size at CERN}
+The appendix presents how the Control Message size for CERN was estimated.
+Since there is no official document on this yet, the below information is not
+official but can be useful.
+
+Each event consists of
+\begin{itemize}
+  \item Address, estimated size: 32 bits
+  \item Timestamps, estimated size: 64 bits
+  \item Event Header (IDs), size: 32 bits
+  \item Event Payload, size: 64 bits
+\end{itemize}
+
+The total size of single event is estimated to be 192 bits or 24 bytes.
+In the current control system at CERN, there are 7 events generated per each of
+7 distribution networks (per machine). This gives 49 events every Granularity
+Window. 
+
+As a consequence, for the current system, the Control Message size would equal
+1176 bytes. However, the current number of events is not sufficient. Therefore,
+it is suggested to increase it. A desired number of events is not defined, the
+more the better. Four-fold increase, to 200 events, would be very appreciated.
+This gives the Control Message size of 4800 bytes. 
+
+Therefore, the minimum Control Message size given in the document equals 1200
+bytes and the maximum size is rounded to 5000 bytes. 
+
+
+\section{Control Messages Size at GSI}
+

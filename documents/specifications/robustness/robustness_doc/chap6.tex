@@ -1,0 +1,86 @@
+%\chapter{Flow and Congestion Control}
+\section{Flow and Congestion Control}
+\label{chap:flow_congestion}
+
+As a part of reliable network implementation, Flow Control and Congestion
+Control are responsible for ensuring that data is transmitted at a rate coherent
+with the capacities of both receiver and switches. Flow Control aims at
+preventing congestion in the network while the Congestion Control provides the
+mechanism to overcome the congestion.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Flow Control}
+It provides a mechanism for the receiver to control the transmission, so that
+the receiving node is not overwhelmed with data from transmitting node. 
+\cite{atm_traffic}. 
+
+\vspace{10 mm}
+
+\subsubsection{White Rabbit Flow Control}
+
+Since in WR we distinguish two types of traffic (\HP\ and \SP) and the most
+important traffic falls on the \HP\ which is treated in a special way, two
+different levels of flow control are needed. The configuration of flow control
+is gathered in Flow Control Policy.
+
+In a White Rabbit network, the \HP\ will flow from the Data Master Node to all
+White Rabbit Nodes. DMN is the only node that can send \HighPriority\ 
+frames \footnote{Recommended configuration}. 
+
+There are two situations regaring the flow of the \HP\ Traffic that could point
+out a malfunction or wrong configuration of a Node and cause congestion in the
+network:
+\begin{itemize}
+    \item Data Master sents more frames that it should send,
+    \item Non-Data Master Node sends \HP\ frames.
+\end{itemize}
+Therefore a simple but effective Flow Control mechanism is proposed for this
+situation. In the first case, the Data Master shall be notified so that it can
+perform appripriate action to resume propre \HP\ packages sending rate.
+Destructive consequences on the \HP\ Traffic of the second problem are prevented
+by blocking all ports connected to non-Data Master Nodes for \HP\ Traffic. The
+Appendix ~\ref{flow_control} presents a proposal for the Flow Control of the
+\HP\ traffic.
+ 
+For the \SP Traffic, the Ethernet Flow Control described in the IEEE 802.3
+\cite{IEEE8023} standard is used. The downside of this scheme is the lack of CoS
+criteria, all the priorities of CoS are treated equally.  The authors of
+this document will follow the development of IEEE 802.1qbb \cite{IEEE8021Qbb}
+specification where the different level of the CoS are taken into account and
+see the suitability of the standard in WR. 
+
+\vspace{10 mm}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Congestion Control}
+
+Congestion control is responsible for the control and regulation of the traffic 
+into WR Network. The goal is to avoid saturating or overloading switches
+in the network. The incoming traffic in a switch $\lambda_in$ should be equal to
+the outgoing traffic $\lambda_out$ . When $\lambda_out \leq \lambda_in$, there
+is a situation of congestion and the symptom are:
+\begin{itemize}
+	\item Lost packets, buffer overflow,
+	\item Long delays, queueing in buffers
+\end{itemize}
+
+\noindent and it causes:
+
+\begin{itemize}
+	\item Increased delay,
+	\item Packet loss.
+\end{itemize}
+
+%\subsubsection{WR Explicit Congestion Signalling for \HP}
+\paragraph{WR Explicit Congestion Signalling for \HP}
+
+Among the different schemes for Congestion Control, the Explicit Congestion 
+Signalling is the scheme that fulfils the responsiveness and reliability
+that \HP requires since the scheme avoids the congestion, consequently the loss
+of frames due to buffer overflow.
+
+The aim of an explicit signalling is to stop a device of sending traffic to
+avoid the congestion. 
+
+
