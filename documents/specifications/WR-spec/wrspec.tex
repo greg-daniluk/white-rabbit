@@ -1,0 +1,2502 @@
+%
+% wrspec.tex
+%
+% White Rabbit Spec. Currently an informal draft.
+%
+% best master clock algorithm 6.6.2.3
+% domain number, profiles 7.1, annex J (p. 237)
+% asymmetry 6.2.c, 7.4.2 (positive if t_MS > t_SM)
+% 
+% TODO
+% Give the values of different constants in tables.
+% Use thicker line for combined state in wr state machine figure.
+% Take cursor out of PTP state machine figure.
+\def\us{\char`\_}
+
+\documentclass[a4paper, 12pt]{article}
+%\documentclass{article}
+
+\usepackage{fullpage}
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata,shapes}
+\usepackage{multirow}
+\usepackage{color}
+\usepackage[latin1]{inputenc}
+\usepackage{verbatim}
+\usepackage{amsmath}
+\usepackage{times,mathptmx}
+\usepackage{chngcntr}
+
+%%%%%5% used in Tomeks %%%%%%%
+\usepackage{listings}
+\usepackage{cancel}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    fig/tomeksDrawings
+%\usepackage{morefloats}
+
+%\usepackage{amsfonts}
+%\usepackage{amssymb}
+%\usepackage{graphicx} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% creating subsubsubsection notation
+% src: http://www.latex-community.org/forum/viewtopic.php?f=5&t=791
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setcounter{secnumdepth}{6}
+\renewcommand\theparagraph{\Alph{paragraph}}
+
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+                                     {-3.25ex\@plus -1ex \@minus -.2ex}%
+                                     {0.0001pt \@plus .2ex}%
+                                     {\normalfont\normalsize\bfseries}}
+\renewcommand\subparagraph{\@startsection{subparagraph}{5}{\z@}%
+                                     {-3.25ex\@plus -1ex \@minus -.2ex}%
+                                     {0.0001pt \@plus .2ex}%
+                                     {\normalfont\normalsize\bfseries}}
+%\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\renewcommand{\thefootnote}{\alph{footnote}}
+
+\counterwithin{paragraph}{subsubsection}
+\counterwithin{subparagraph}{paragraph}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\eqoffset}[1]{%
+  {\ensuremath{%
+      {\text{offset}}_{#1}}%
+  }%
+}
+\newcommand{\eqdelay}[1]{{\text{delay}}_{#1}}
+\newcommand{\eqasymm}{{\text{asymmetry}}}
+
+\begin{document}
+
+\title{White Rabbit Specification: \\Draft for Comments\\\normalsize {version 2.0}\\\small{(06-07-2011)}}
+\author{Emilio G. Cota\\Maciej Lipi\'{n}ski\\Tomasz W\l{}ostowski\\Erik van der Bij\\Javier Serrano}
+\date{July 2011}
+\maketitle
+\thispagestyle{empty}
+
+\begin{figure}[ht!]
+  \centering
+  \vspace{1.3cm}
+  \includegraphics[width=0.50\textwidth]{../../../figures/logo/WRlogo.ps}
+  \label{fig:wr_logo}
+\end{figure}
+
+%\vspace{2cm}
+%\begin{center}
+%\large \textbf{Acknowledgements:} 
+%\end{center}
+
+%\vspace{1.3cm}
+
+%\begin{center}
+%Many thanks to John Eidson and the White Rabbit Community\\ for the feedback and comments.
+%\end{center}
+
+\newpage
+
+\setcounter{page}{1}
+\begin{center}
+\large Revision History Table 
+\end{center} 
+
+
+\begin{table}[ht!]
+%\begin{table}[tbp]
+%\caption{White Rabbit Specification Revision History Table } 
+\centering
+\begin{tabular}{| c |  c | c | p{8cm}    |}          \hline
+\textbf{Version} & \textbf{Date} & \textbf{Authors} & \textbf{Description}  \\ 
+ & &  &\\ \hline
+0.1 & 10/09/2010 & E.G., M.L.   & First draft for comments.  \\ \hline
+0.2 & 7/09/2010  & T.W., M.L.   & Added introduction about PTP.  \\ \hline
+0.3 & 8/09/2010  & J.S., M.L.   & Language\&Style-related corrections, reference to Peter's paper.  
+\\ \hline
+0.4 & 14/09/2010 & E.V.D.B., M.L.& 1.~Merged the FSM of the Slave and the FSM of the Master into 
+                                      a single and linear FSM,\\
+    &            &              & 2.~Changed WR managementIDs,\\
+    &            &              & 3.~Added authors, this rev. table, explanatory figures and 
+                                                              descriptions. \\ \hline
+0.5 & 17/09/2010 & E.V.D.B., J.S.& 1.~Added Table of Contents. \\
+    &            &               & 2.~Re-ordered appendixes. \\
+    &            &               & 3.~Fixed some typos. \\ 
+\hline
+1.0 & 26/04/2011 & M.L.          & 1.~Included feedback from comments. \\
+    &            &               & 2.~Created WR PTP Profile. \\
+    &            &               & 3.~Added modification to BMC. \\ 
+    &            &               & 4.~Enabled WR Switch to be a "real" Boundary Clock. \\ 
+    &            &               & 5.~Added figure clarifying WRPTP vs. PTP FSMs operation from 
+                                      Power On. \\ 
+    &            &               & 6.~Mentioned (missing) modification to PTP FSM. \\ 
+\hline
+1.1 & 2/05/2011  & J.S., T.W., M.L. & Clarity and typos. \\ 
+\hline
+1.2 & 26/05/2011 & M.L.          & Modified according to John Eidson's feedback: . \\
+    &            &               & 1.~Clear distinction between HW and WRPTP (interface defined). \\
+    &            &               & 2.~Clarification of WR Message sending/receiving. \\
+    &            &               & 3.~WR Link Setup in PTP Master state on the WR Master. \\
+    &            &               & 4.~Added information about HW requirements and HW 
+				      implementation. \\
+    &            &               & 5.~WR Data Set field initialization defined and specified. \\
+    &            &               & Other cosmetic changes. \\
+\hline
+1.3 & 7/06/2011  & M.L.          & Added Appendixes: \\
+    &            &               & 1.~Extract from Tomek's MSc. \\
+    &            &               & 2.~WR computation of offset and delay with asymmetry correction.\\
+\hline
+\end{tabular}
+\label{tab:revHist}
+\end{table}
+
+\newpage
+
+\begin{table}[ht!]
+%\begin{table}[tbp]
+%\caption{White Rabbit Specification Revision History Table } 
+\centering
+\begin{tabular}{| c |  c | c | p{8cm}    |}          \hline
+\textbf{Version} & \textbf{Date} & \textbf{Authors} & \textbf{Description}  \\ 
+ & & \textcolor{white}{E.V.D.B., J.S} &\\ \hline
+1.4 & 02/07/2011 & M.L.          & Changes based on ptpx daemon implementation: \\
+    &            &               & 1.~Name changed: REQ\_CALIBRATION to CALIBRATION.\\
+    &            &               & 2.~Included Tx calibration into the CALIBRATION.\\
+    &            &               & 3.~Added Link Down event description.\\
+    &            &               & 4.~Specified additional wrModeOn's re-setting.\\
+    &            &               & 5.~Re-modified BMC, completed DS Update tables.\\
+    &            &               & 6.~Added fields to DS: calRetry and otherPortCalRetry.\\
+    &            &               & 7.~Added calRetry field to WR TLV CALIBRATE Signaling Message.\\
+\hline
+2.0 & 04/07/2011 & J.S.          & Clarity and typos (version 2.0 release). \\
+\hline
+\end{tabular}
+\label{tab:revHist}
+\end{table}
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Introduction}
+
+White Rabbit (WR) is a protocol developed to synchronize nodes in 
+a packet-based network with sub-ns accuracy. The protocol results 
+from the combination of IEEE1588-2008 (PTP)\cite{IEEE1588} with two further
+requirements: precise knowledge of the link delay and clock
+syntonization\footnote{The adjustment of two electronic circuits or devices in terms of frequency.} 
+over the physical layer with Synchronous Ethernet (SyncE) \cite{SynchE}.
+
+A WR link is formed by a pair of nodes, master and slave 
+%(Figure~\ref{fig:wrNodes})
+. The master
+node uses a traceable clock to encode data over the physical layer, while the slave
+recovers this clock (synchronization) and bases its timekeeping on it. Absolute time
+synchronization between master and slave is achieved by adjusting
+the clock phase and offset of the slave to that of the master. 
+The \textit{offset} refers to the clock (e.g. time defined in Coordinated Universal Time or
+International Atomic Time standards), 
+while the \textit{phase} refers to the clock signal (e.g. 125 MHz clock signal). 
+The phase and offset adjustment is done through the two-way exchange of PTP sync messages, which 
+are time-stamped
+to achieve sub-ns accuracy thanks to hardware support such as described in section~\ref{sec:hw}.
+Details of a sample hardware implementation are presented in 
+Appendix~\ref{sec:sampleHW}.
+
+In White Rabbit, the precise knowledge of the link delay is obtained by accurate hardware 
+timestamps (see section~\ref{sec:timestamps}) and calculation of the delay asymmetry (see 
+section~\ref{sec:delayAsymCal}) supported by knowledge of delays introduced by the hardware (see 
+section~\ref{sec:fixedDelays}).
+
+The described single-link synchronization can be replicated. 
+Multi-link WR networks are obtained by chaining WR links forming a
+hierarchical topology. This hierarchy is imposed by the fact that
+a frequency traceable to a common grandmaster must be distributed
+over the physical layer, resulting in a \textit{cascade} of master
+and slave nodes. As a result of this topology, a WR~network consists of two kinds of WR network 
+devices:
+\textit{WR boundary clocks} (WR Switches) and \textit{WR ordinary clocks} 
+(WR Nodes), see section~\ref{sec:definitions}. A WR boundary clock distributes the frequency 
+and time retrieved from the upstream link to all the downstream links.
+
+\begin{figure}[ht!]
+  \centering
+%  \vspace{-1.3cm}
+  \includegraphics[width=0.60\textwidth]{../../../figures/network/wrTopology.eps}
+  \caption{White Rabbit network; it forms a hierarchical topology.}
+  \label{fig:wrNetwork}
+\end{figure}
+
+Some applications need WR and IEEE1588-2008 nodes to coexist. Examples
+of this are networks where the need for highly accurate time synchronization is concentrated on a
+certain group of nodes. For this purpose the WR protocol enables WR Nodes or Switches 
+to defer to IEEE1588 behavior when not connected to another WR Node or Switch.
+
+
+
+
+\newpage
+
+\section{Precision Time Protocol}
+\label{sec:ptp}
+
+The IEEE1588-2008 standard, known as Precision Time Protocol (PTP), 
+is repeatedly referenced in this document. Knowledge of basic PTP concepts is 
+required to read this specification. Therefore, they are explained in this section. 
+
+PTP is a packet-based protocol designed to synchronize devices in distributed systems. 
+The standard defines two kinds of messages which are exchanged between \textit{PTP nodes}: 
+\textit{event messages} and \textit{general messages}. Both, the time of transmission and 
+the time of reception of event messages are \textit{recorded}. General messages 
+are used by PTP nodes to identify other PTP nodes, establish clock hierarchy and 
+exchange data, e.g.~timestamps, settings or parameters. PTP defines several methods 
+for node synchronization. Figure~\ref{fig:wrPTPmsgs} presents the messages used when 
+the \textit{delay request-response mechanism} (with a \textit{two-step clock}) is used, 
+which is the case in White Rabbit. 
+% For simplicity reasons, a PTP node is 
+% considered an \textit{ordinary clock} in the remainder of this section; such clocks 
+% have only one port. 
+
+\begin{figure}[ht!]
+  \centering
+  \includegraphics[width=0.30\textwidth]{../../../figures/protocol/ptpMSGs.ps}
+  \caption{PTP messages used by WRPTP.}
+  \label{fig:wrPTPmsgs}
+\end{figure}
+
+An \textit{Announce Message} is periodically broadcast by the PTP node which is 
+in the Master state. The message carries information about its originator and 
+the originator's clock source quality. This enables other PTP nodes receiving 
+the announce message to perform the Best Master Clock (BMC) Algorithm. 
+This algorithm defines the role of each PTP node in the PTP network hierarchy; 
+the outcome of the algorithm is the recommended next state of the PTP node and 
+the node's synchronization source (grandmaster). In other words, a PTP node 
+decides to which other PTP node it should synchronize based on the information 
+provided in the announce messages and using the BMC algorithm. A PTP node which is in 
+the SLAVE state synchronizes to the clock of another PTP node. A PTP node 
+which is in the MASTER state is regarded as a source of synchronization 
+for the other PTP nodes. The full PTP state machine with state descriptions 
+is included in Appendix~\ref{ptpFSM}.
+
+
+
+\textit{Sync Messages} and \textit{Delay\_Req Messages} are timestamped 
+($t_{1}$, $t_{2}$, $t_{3}$, $t_{4}$) and these timestamps are used to calculate 
+the offset and the link delay between the nodes exchanging the messages. \textit{Follow\_Up Messages} 
+and \textit{Delay\_Resp Messages} are used to send timestamps between Master 
+and Slave (in the case of a two-step clock). 
+
+\textit{Management Messages} are used only for configuration and 
+administrative purposes. \textit{Signaling Messages} are used for communication between clocks 
+for optional or experimental features of the PTP standard as well as implementation-specific 
+mechanisms. Both, Management and Signaling messages, are not essential for PTP synchronization.
+
+
+The flow of events in the PTP delay request-response (two-step clock) mechanism is the following 
+(simplified overview): 
+\begin{enumerate}
+\item The master sends Announce messages periodically.
+\item The slave receives the Announce message and uses the BMC algorithm to establish its place in 
+      the network hierarchy.
+\item The master periodically sends a Sync message (timestamped on transmission, $t_1$) followed by 
+      a Follow\_Up message which carries $t_1$.
+\item The slave receives the Sync message sent by the master (timestamped on reception, $t_2$).
+\item The slave receives the Follow\_Up message (which carries the Sync transmission time,  
+      $t_1$) sent by the master .
+\item The slave sends a Delay\_Req message (timestamped on transmission, $t_3$).
+\item The master receives the Delay\_Req message sent by the slave (timestamped on reception, 
+      $t_4$).
+\item The master sends the Delay\_Resp message which carries $t_4$.
+\item The slave receives the Delay\_Resp.
+\item The slave adjusts its clock using the clock offset and the link delay calculated with timestamps 
+      ($t_{1}$, $t_{2}$, $t_{3}$, $t_{4}$). This results in the Slave's synchronization with the
+      Master clock.
+\item Repeat 1-10.
+\end{enumerate}
+
+
+\newpage
+
+\section{Link Delay Model}
+\label{sec:delaymodel}
+
+The delay of a message traveling from master to slave (see Figure~\ref{fig:delaymodel}) 
+can be expressed as the sum
+
+\begin{equation}
+  \label{eq:delayms}
+  \eqdelay{ms} = \Delta_{tx_m} + \delta_{ms} + \Delta_{rx_s}
+\end{equation}
+
+where $\Delta_{tx_m}$ is the fixed delay due to the master's transmission
+circuitry, $\delta_{ms}$ is the variable delay incurred in the
+transmission medium and $\Delta_{rx_s}$ is the fixed delay due to the
+slave's reception circuitry.
+In a similar fashion, the delay of a message traveling from slave to
+master can be decomposed as
+
+\begin{equation}
+  \label{eq:delaysm}
+  \eqdelay{sm} = \Delta_{tx_s} + \delta_{sm} + \Delta_{rx_m}
+\end{equation}
+
+The characterization of the link is completed with an equation to
+relate the two variable delays $\delta_{ms}$ and $\delta_{sm}$.
+%  From now
+% on in this document we refer to this missing equation as the \textit{physical
+% medium correlation}. 
+Describing a procedure to obtain this equation is out of the scope of this document. However, 
+section~\ref{sec:physcorr} provides such an equation obtained empirically for one scenario.
+
+\begin{figure}[ht!]
+  \centering
+    \includegraphics[width=0.95\textwidth]{../../../figures/protocol/delaymodel.eps}
+  \caption{Delay model of a WR link. The timestamps are accurately corrected
+    for link asymmetries by the usage of the four fixed delays
+    $\Delta_{\{tx_m, rx_s, tx_s, rx_m\}}$ and the relationship
+    between both variable delays $\delta_{\{ms, sm\}}$. }
+  \label{fig:delaymodel}
+\end{figure}
+
+\subsection{Relative Delay Coefficient}
+\label{sec:physcorr}
+
+An accurate relation between both variable delays on the transmission line
+is essential for obtaining an acceptable estimate of the delay asymmetry on a
+WR link. The relation between $\delta_{ms}$ and $\delta_{sm}$ is represented in 
+this document by the \textit{relative delay coefficient} ($\alpha$).
+Its origin is highly implementation-dependent. Thus this document just assumes that it exists 
+and is known. 
+
+\subsubsection{1000base-X over a Single-mode Optical Fiber}
+\label{sec:singlefiber}
+When a single-mode fiber is used as bi-directional communication medium,
+it can be shown that both variable delays are related by an equation of
+the form \cite{Peek2010}:
+\begin{equation}
+\delta_{ms} = (1 + \alpha) \, \delta_{sm}
+\label{eq:singlefiber}
+\end{equation}
+
+\section{Delay Asymmetry Calculation}
+\label{sec:delayAsymCal}
+
+Let us start from the PTP sync timestamps, represented by the familiar
+set $t_1$, $t_2$, $t_3$ and $t_4$. The mean path delay is then defined as
+\begin{equation}
+\label{eq:meanPath}
+  \mu = \frac{(t_2 - t_1) + (t_4 - t_3)}{2}
+\end{equation}
+Note that the transmission delays $t_2 - t_1$ and $t_4 - t_3$ can be
+expressed in terms of WR's Delay Model:
+\begin{align}
+\
+  t_2 - t_1 = \Delta_{tx_m} + \delta_{ms} + \Delta_{rx_s} + \eqoffset{ms}\\
+  t_4 - t_3 = \Delta_{tx_s} + \delta_{sm} + \Delta_{rx_m} - \eqoffset{ms}
+\end{align} where \eqoffset{ms} is the time offset between the
+slave's clock and the master's. Combining the three equations above
+we obtain
+\begin{equation}
+\label{eq:mu}
+  2\mu = \Delta + \delta_{sm} + \delta_{ms}
+\end{equation} where $\Delta$ accounts for all fixed delays in the path,
+i.e.
+\begin{equation}
+\label{eq:delta}
+  \Delta = \Delta_{tx_m} + \Delta_{rx_s} + \Delta_{tx_s} + \Delta_{rx_m}
+\end{equation}
+
+The delay asymmetry as specified in section 7.4.2 of the PTP standard is expressed in our own 
+notation by using equations \eqref{eq:delayms},
+\eqref{eq:delaysm} and \eqref{eq:mu} as follows:
+\begin{align}
+  \eqdelay{ms} = \mu + \eqasymm
+  \label{eq:asymm} \\
+  \eqdelay{sm} = \mu - \eqasymm
+\end{align}
+
+
+\subsection{Solution for Ethernet over a Single-mode Optical Fiber}
+\label{sec:EthernetOverSingleModeFiber}
+Combining equations \eqref{eq:singlefiber} and \eqref{eq:mu} we obtain:
+\begin{gather}
+  \delta_{ms} = \frac{1 + \alpha}{2 + \alpha} \, (2\mu - \Delta)
+  \label{eq:deltams} \\
+  \delta_{sm} = \frac{2\mu - \Delta}{2 + \alpha}
+  \label{eq:deltasm}
+\end{gather}
+\\
+The delay asymmetry can then be derived from equations \eqref{eq:delayms}, \eqref{eq:asymm}, 
+\eqref{eq:deltams} and
+\eqref{eq:deltasm}:
+\begin{equation}
+\label{eq:aqasymm}
+  \eqasymm = \Delta_{tx_m} + \Delta_{rx_s} - \frac{\Delta - \alpha \mu + \alpha \Delta}{2 + \alpha}
+\end{equation}
+\\
+
+
+\newpage
+
+\section{Hardware Support}
+\label{sec:hw}
+
+
+This section gives a general overview of hardware requirements to support the White Rabbit protocol. 
+Hardware supporting WR must fulfill the following requirements:
+\begin{itemize}
+  \item It shall distribute frequency over physical layer with SyncE.
+  \item It shall feature constant rx/tx latencies during operation and inform higher layers 
+	about these latencies.
+  \item It shall provide timestamps with a sufficient precision. 
+  \item It shall be able to generate the WR calibration pattern 
+	(RD+K28.7 code group, Appendix 36A.2 of \cite{IEEE802.3}).
+\end{itemize}
+
+Figure~\ref{fig:clocksHwSpec} (a) gives a general picture of the data flow in the WR 
+protocol, WR Hardware Support and the interface between theme
+Figure~\ref{fig:clocksHwSpec} (b) explains the WR synchronization and synchronization scheme.
+An example hardware implementation is described in detail in Appendix~\ref{sec:sampleHW}.
+
+\begin{figure}[ht!]
+  \centering
+  \includegraphics[width=0.9\textwidth]{../../../figures/protocol/clocksHwSpec.ps}
+  \caption{WR protocol and WR Hardware overview.}
+  \label{fig:clocksHwSpec}
+\end{figure}
+
+
+\subsection{Synchronous Ethernet}
+\label{sec:syncE}
+SyncE is responsible for clock syntonization (frequency transfer) in the White Rabbit Network. 
+In the SyncE scheme, the reference clock (125MHz) is used to encode the outgoing data
+stream. The same clock is retrieved on the other side of the physical link.
+The retrieved frequency can be further distributed and is always looped back to the sender.
+Having the same frequency allows the use of phase detector technologies as a means of evaluating
+delays. The measurement of phase can be used for increasing the precision of timestamps 
+beyond the resolution allowed by the 125MHz clock (section~\ref{sec:timestamps}) and to obtain 
+the transmit/receive (Rx/Tx) fixed delays introduced by the PHY (section~\ref{sec:fixedDelays}).
+
+\subsection{Fixed delays}
+\label{sec:fixedDelays}
+The knowledge of all fixed delays $\Delta_{\{tx_m, rx_s, tx_s, rx_m\}}$ is necessary to calculate 
+the delay asymmetry using the WR Link Model (section~\ref{sec:delaymodel}). They might include circuit, 
+components (e.g. PHY, SFP) and FPGA internal latencies (Appendix~\ref{s:asymmetry} describes 
+fixed delays in the WR optical link model). Such delays may be constant for 
+the lifetime of the hardware, its up-time or the duration of the link connection. Therefore, 
+the method for obtaining fixed delays is medium-specific and implementation-dependent. 
+The WR protocol requires the fixed delay values and enables PHY delay
+measurement, but does not specify how they shall be obtained.
+
+The PHY's delays are measured (if necessary) and their values are distributed across the link during 
+the process of establishing the WR link, which is called \textit{WR Link Setup} in this document. 
+A WR~node participates in the measurement of another 
+WR node's reception fixed delays ($\Delta_{\{rx_m, rx_s\}}$) upon request, e.g. by sending 
+a calibration pattern in Gigabit Ethernet. The calibration pattern sent by WR nodes to measure 
+fixed delays shall be generated by a repeated transmission of the RD+ K28.7 code-group. 
+Measurement of fixed delays during WR Link Setup is optional and in principle needed only once, 
+while the WR link is being set up. It is only required if non-deterministic reception/transmission 
+elements (i.e. with latencies varying after each power cycle or lock) are used.
+
+Figure~\ref{fig:clocksHwSpec} (a) presents a possible method of fixed delay measurement for a 
+non-deterministic Gigabit Ethernet PHY -- detection of the clock signal's phase difference between 
+the input and output of the PHY (detailed description in Appendix~\ref{sec:calibForGigbitE}). 
+
+
+\subsection{Timestamps}
+\label{sec:timestamps}
+
+WR requires precise timestamps. 
+The precision of timestamps shall be sufficient to take advantage of the calculated asymmetry
+and is dictated by the required synchronization accuracy. 
+
+In standard implementations of timestamping units the precision is limited by 
+the timestamping resolution (e.g. 8ns for 125MHz). 
+In particular, the precision of the reception timestamps ($t_2$, $t_4$) needs to be enhanced. 
+This can be done by using the common notion of frequency distributed with SyncE to cast the 
+problem of timestamping into a phase detection measurement.
+
+% For example, in order to achieve sub-nanosecond synchronization accuracy, the precision of 
+% timestamps provided by the hardware shall be in a picoseconds range. 
+An overview of a possible solution enabling highly precise timestamping is illustrated in 
+Figure~\ref{fig:clocksHwSpec}. The timestamping unit produces timestamps on both the rising 
+and falling edges of the clock. It is provided with the phase measurement of the round-trip phase 
+($phase_{MM}$) in case of the Master, and the setpoint phase ($phase_{S}$) in case of the Slave. 
+The phase measurement is used by the timestamping unit to choose the correct edge timestamp and 
+enhance it to the precision allowed by the phase detector. 
+Details of the implementation of the presented solution are included in Appendix~\ref{s:fine_delay}.
+
+
+
+
+\newpage
+
+\section{White Rabbit PTP }
+
+
+White Rabbit extends the IEEE1588-2008 (PTP) standard to achieve sub-ns accuracy while still 
+benefiting from PTP's synchronization, management and messaging mechanisms. From now on in this
+document, the White Rabbit extension to the PTP standard will be referred to as \textit{WRPTP}.
+
+WRPTP takes advantage of PTP's customization facilities, i.e. \textit{PTP profiles} and 
+\textit{Type-Length-Value} (TLV).
+%, and makes an extension to the PTP standard which is out of the scope of these facilities. 
+It also defines \textit{implementation specific} functionalities (e.g. WR-specific fields of 
+Data Sets and hardware support requirements) which are compatible with the PTP standard. 
+For the sake of simplicity and clarity, this section explains all the mechanisms of WRPTP without 
+classifying them into PTP-profile
+% , PTP-extension 
+and implementation-specific. The distinction is 
+made in the last subsection, where the \textit{White Rabbit PTP profile} is defined and 
+the implementation-specific recommendations are listed.
+%and the extensions to PTP are listed.
+
+\subsection{Overview}
+\label{sec:wrptpOverview}
+
+
+WRPTP introduces \textit{the White Rabbit Link Setup} (WR Link Setup), which is a process for 
+establishing the WR link  (Figure~\ref{fig:wrptpMSGs}). It includes syntonization of the local clock
+ over the physical layer, measurement of fixed delays (calibration)  and distribution of the 
+information about fixed delays over the link. WRPTP uses the Link Delay 
+Model to obtain an accurate delay estimation, e.g. it uses the delay asymmetry equation 
+\eqref{eq:aqasymm}  for Gigabit Ethernet over optical fiber. The additional communication between 
+a master and a slave needed to exchange parameters and state information is done through extended 
+PTP messaging facilities. 
+
+WRPTP is compliant with standard PTP. Figure~\ref{fig:hybrid-network} depicts the tree topology 
+of a \emph{hybrid} WR/IEEE1588 network with a grandmaster as a root. 
+
+WRPTP protocol cannot be performed over a non-WR network device (i.e. switches, repeaters, routers). 
+For example, if a non-WR device is connected between two WR-compatible nodes, 
+the standard PTP protocol will be used for synchronization. 
+
+
+\begin{figure}[ht!]
+  \centering
+%  \vspace{-1.3cm}
+  \includegraphics[width=0.8\textwidth]{../../../figures/network/hybrid.ps}
+  \caption{Hybrid WR/IEEE1588 network. White Rabbit nodes work
+    transparently with PTP nodes. WR ordinary clock 3 is more accurately
+      synchronized to the grandmaster than WR ordinary clock 2, which
+      is below a standard PTP boundary clock.}
+  \label{fig:hybrid-network}
+\end{figure}
+
+
+\begin{figure}[ht!]
+  \centering
+%  \vspace{-1.3cm}
+  \includegraphics[width=0.99\textwidth]{../../../figures/protocol/wrptpMSGs_1.ps}
+  \caption{Simplified overview of the message flow in WRPTP.}
+  \label{fig:wrptpMSGs}
+\end{figure}
+
+\newpage 
+
+The flow of events for standard PTP which is presented in section~\ref{sec:ptp} is extended 
+as depicted in Figure~\ref{fig:wrptpMSGs} and described below:
+\newpage
+\begin{enumerate}
+\item \textbf{WR Node A} which is in PTP\_MASTER state periodically sends WR Announce messages with 
+      a custom suffix.
+\item \textbf{WR Node B} receives Announce message(s), recognizes the WR Announce message and 
+      uses the modified BMC algorithm (section~\ref{sec:wrBMC}) to establish its place in the WR 
+      network hierarchy.
+\item \textbf{WR Node B} enters WR Slave mode (based on the conditions in 
+      \ref{sec:wrSlaveFSMstart}) and starts the WR Link Setup by sending the SLAVE\_PRESENT 
+      WR Signaling message.
+\item \textbf{WR Node A} enters WR Master mode (based on the conditions in 
+      \ref{sec:wrMasterFSMstart}) and sends the LOCK WR Signaling message to request the WR Slave 
+      to start syntonization.
+\item The WR Slave sends the LOCKED WR Signaling message as soon as the syntonization process is 
+finished (notification from the hardware).
+\item The WR Master sends the CALIBRATE WR Signaling message to request the calibration pattern. 
+It calibrates its transmission and reception fixed delay.
+\item The WR Master sends the CALIBRATED WR Signaling message as soon as the calibration is 
+finished (notification from hardware).
+\item The WR Slave sends the CALIBRATE WR Signaling message to request the calibration pattern. 
+It calibrates its transmission and reception fixed delay.
+\item The WR Slave sends the CALIBRATED WR Signaling message as soon as the calibration is 
+finished (notification from hardware).
+\item The WR Master sends the WR\_MODE\_ON WR Signaling message to indicate completion of  the WR
+Link Setup process.
+\item The WR Master periodically sends a Sync message (timestamped on transmission, $t_1$)  followed
+by a Follow\_Up message which carries $t_1$.
+\item The WR Slave receives the Sync message sent by the master (timestamped on reception, $t_2$).
+\item The WR Slave receives the Follow\_Up message sent by the master.
+\item The WR Slave sends a Delay\_Req message (timestamped on transmission, $t_3$).
+\item The WR Master receives the Delay\_Req message sent by the slave (timestamped on reception, $t_4$).
+\item The WR Master sends a Delay\_Resp message which carries $t_4$.
+\item The WR Slave receives the Delay\_Resp.
+\item The WR Slave adjusts its clock using the clock offset and the link delay calculated with 
+the timestamps ($t_{1}$, $t_{2}$, $t_{3}$, $t_{4}$). This results in the slave's synchronization 
+with the master clock with sub-ns accuracy.
+\item Repeat 1, 11-18.
+\end{enumerate}
+
+\newpage
+
+\subsection{Definitions}
+\label{sec:definitions}
+
+
+The following definitions used in this document are based on Clause 3.1 of PTP:\\
+\textbf{node}:  A device that can issue or receive Precision Time Protocol (PTP) communications on a
+network.\\
+\textbf{boundary clock}: A clock that has multiple Precision Time Protocol (PTP) ports in a domain 
+and maintains the timescale used in the domain. It may serve as the source of time and frequency, 
+i.e., be a master clock, and may synchronize and syntonize to another clock, 
+i.e., be a slave clock. The frequency retrieved by the slave clock is re-distributed 
+to syntonize other slave clocks connected to its ports.\\
+\textbf{ordinary clock}: A clock that has a single Precision Time Protocol (PTP) port in a domain 
+and maintains the timescale used in the domain. It may serve as a source of time and frequency, 
+i.e., be a master clock, or may synchronize and syntonize to another clock, 
+i.e., be a slave clock.\\
+\\
+This document introduces the following definitions:\\
+\textbf{White Rabbit Port (WR Port)}: a WRPTP-enabled port of a boundary clock 
+or an ordinary clock.\\
+\textbf{White Rabbit Master (WR Master)}: a WRPTP-enabled port of a boundary clock or an 
+ordinary clock which acts as a source of time and frequency for another White Rabbit enabled port of 
+a boundary or an ordinary clock.\\
+\textbf{White Rabbit Slave (WR Slave)}: a WRPTP-enabled port of a boundary clock or an 
+ordinary clock which retrieves time and frequency sent over a link by 
+the WR Master.\\
+\textbf{White Rabbit Switch (WR Switch)}: a boundary clock implementing WRPTP, compatible with 
+standard PTP. \\
+\textbf{White Rabbit Node (WR Node)}: an ordinary clock implementing WRPTP, compatible with 
+standard PTP. \\
+
+
+
+
+
+\subsection{WRPTP Data Set Fields}
+\label{sec:wrDS}
+
+The PTP standard defines data sets (DS) to store the static and dynamic variables needed for  the
+operation of the protocol (clause 8, PTP). WRPTP:
+\begin{itemize}
+  \item adds fields to the DSs defined in the PTP standard to store the WR-specific parameters,
+  \item defines a new DS: backupParentDS. 
+\end{itemize}
+
+
+\subsubsection{New fields of PTP Data Sets}
+Table~\ref{tab:wrDS} defines the additional DS fields required by WRPTP that are not part of
+the PTP standard (see Appendix~\ref{ap:wrDataTypes} for a definition of primitive data types). 
+
+\newpage
+
+\begin{table}[ph!]
+\caption{WRPTP Data Sets fields}
+\centering
+\begin{tabular}{| l     |     c        |           l             |   c   |   c   | c |  }        \hline   
+   
+\textbf{DS member}     	& \textbf{DS name}& \textbf{Allowed}       & \textbf{Initialization}& 
+\textbf{D}ynamic & \textbf{Unit}            \\  
+			&              & \textbf{values}           &\textbf{values}& 
+or \textbf{S}tatic    &                    
+                                                                                        \\ \hline
+wrConfig   		& portDS       & NON\_WR,		   &       -       & S & - \\
+			&	       & WR\_S\_ONLY,  		   &		   &   &   \\
+			&	       & WR\_M\_ONLY, 		   &		   &   &   \\
+			&	       & WR\_M\_AND\_S	           &               &   &   \\ \hline
+wrMode			& portDS       & NON\_WR,\footnotemark[2]  & NON\_WR	   & D & - \\
+			&	       & WR\_SLAVE,  		   &		   &   &   \\
+			&	       & WR\_MASTER                &    	   &   &   \\ \hline
+wrModeOn 		& portDS       & TRUE, FALSE               & FLASE         & D & - \\ \hline
+wrPortState 		& portDS       & Table~\ref{tab:wrFSMdesc} & IDLE          & D & - \\ \hline
+knownDeltaTx   		& portDS       & UInteger64                &       -       & S & [$2^{16}$ps]\footnotemark[3]\\ \hline
+knownDeltaRx   		& portDS       & UInteger64                &       -       & S & [$2^{16}$ps]\footnotemark[3]\\ \hline
+deltasKnown		& portDS       & TRUE, FALSE               &       -       & S & - \\ \hline
+calibrated 		& portDS       & TRUE, FALSE               & deltasKnown   & D & - \\ \hline
+deltaTx       		& portDS       & UInteger64                & knownDeltaTx  & D & [$2^{16}$ps]\footnotemark[3]\\ \hline
+deltaRx     		& portDS       & UInteger64                & knownDeltaRx  & D & [$2^{16}$ps]\footnotemark[3]\\ \hline
+
+wrStateTimeout		& portDS       & UInteger32                &       -       & S & [ms]\\ \hline
+wrStateRetry		& portDS       & UInteger8                 &       -       & S & - \\ \hline
+
+calPeriod   		& portDS       & UInteger32\footnotemark[4]&    -       & S & [us]\\ \hline
+calRetry   		& portDS       & UInteger8\footnotemark[5]&    -       & S & -\\ \hline
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+parentWrConfig 		& portDS       & NON\_WR,  		  & NON\_WR	   & D & - \\
+			&	       & WR\_S\_ONLY,   	  &		   &   &   \\ 
+			&	       & WR\_M\_ONLY,  		  &		   &   &   \\
+			&	       & WR\_M\_AND\_S            &                &   &   \\ \hline
+parentWrMode		& portDS       & NON\_WR,		  & NON\_WR 	   & D & - \\
+			&	       & WR\_SLAVE,    		  &		   &   &   \\
+			&	       & WR\_MASTER               &	           &   &   \\ \hline
+parentWrModeOn 		& portDS       & TRUE, FALSE              & FALSE          & D & - \\ \hline
+parentCalibrated	& portDS       & TRUE, FALSE              & FALSE          & D & - \\ \hline
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+otherPortDeltaTx      	& portDS       & UInteger64               & 0x0            & D & [$2^{16}$ps]\footnotemark[2]\\ \hline
+otherPortDeltaRx     	& portDS       & UInteger64               & 0x0            & D & [$2^{16}$ps]\footnotemark[2]\\ \hline
+otherPortCalPeriod   	& portDS       & UInteger32               & 0x0            & D & [us]\\ \hline
+otherPortCalRetry   	& portDS       & UInteger8		  & 0x0       	   & D & - \\ \hline
+otherPortCalSendPattern & portDS       & TRUE, FALSE              & FALSE          & D & - \\ \hline
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+primarySlavePortNumber	& currentDS    & UInteger16               & 0x0           & D  & - \\ \hline
+
+\end{tabular}
+\label{tab:wrDS}
+\end{table}
+\footnotetext[2]{Not re-initialized on exiting IDLE state of WR State Machine.}
+\footnotetext[3]{The value of $\Delta_{tx_m,rx_s,rx_m,tx_s}$ measured in picoseconds and 
+multiplied by $2^{16}$.}
+\footnotetext[4]{Maximum shall be smaller than AnnounceInterval (see PTP).}
+\footnotetext[5]{Maximum shall be 32.}
+\addtocounter{footnote}{4}
+
+\newpage
+
+\paragraph{(Re-)Initialization}
+\label{sec:initialization}
+
+Initialization rules listed in PTP (clause 8.1.3) apply to WR fields. 
+In particular:
+\begin{itemize}
+  \item Data set members shall be initialized before leaving the PTP INITIALIZATION state,
+  \item Static members shall be initialized to the implementation-specific values meeting the 
+        specifications for the member.
+\end{itemize}
+Additionally, the values of dynamic WR fields shall be set to initializing values on the occurrence 
+of the following events:
+\begin{itemize}
+  \item exiting IDLE state of the WR State Machine (except for wrMode).
+  \item EXCEED TIMEOUT RETRIES transition event.
+\end{itemize}
+The initialization values of dynamic WR fields are specified in Table~\ref{tab:wrDS}, while 
+the initialization values of static fields are implementation and configuration-specific 
+(if not defined by implementation, the default values in Table~\ref{tab:wrDSdefault} shall be used).
+
+
+
+\begin{table}[ph!]
+\caption{Default values for static DS.}
+\centering
+\begin{tabular}{| l     |     c           |           c           |    }        \hline   
+   
+\textbf{DS member}     	& \textbf{DS name}& \textbf{Default value} \\   
+			&                 & 			   \\ \hline
+wrConfig   		& portDS          & WR\_M\_AND\_S	   \\ \hline
+deltasKnown		& portDS          & FALSE                 \\ \hline
+knownDeltaTx   		& portDS          & 0 [$2^{16}$ps]\footnotemark[2]                 \\ \hline
+knownDeltaRx   		& portDS          & 0 [$2^{16}$ps]\footnotemark[2]                 \\ \hline
+calPeriod   		& portDS          & 3000 [us]              \\ \hline
+calRetry   		& portDS          & port number + 2         \\ \hline
+wrStateTimeout		& portDS          & 1000 [ms]              \\ \hline
+wrStateRetry		& portDS          & 3                      \\ \hline
+
+\end{tabular}
+\label{tab:wrDSdefault}
+\end{table}
+
+\paragraph{New Fields Description}
+
+\subparagraph{wrConfig} Determines the predefined function of a WR Port: 
+\begin{itemize}
+  \item WR\_M\_AND\_S shall be the default on boundary and non-slave-only ordinary clocks.
+  \item WR\_SLAVE shall be the default on a WR Node which is a slave-only ordinary clock.
+  \item WR\_MASTER shall be default on a WR Node (ordinary clock) which is, by design, 
+	supposed to be always connected to a primary source of time, so-called master-only.
+  \item NON\_WR might be used on any kind of clock to disable the WRPTP protocol on a given port. 
+	Such configuration can result from administrative constraints or requirements.  
+\end{itemize}
+
+\subparagraph{wrMode} 
+\label{par:wrMode}
+Contains the current WR-role of a WR Port which is determined using the modified 
+BMC algorithm (section~\ref{sec:wrBMC}) by the conditions described in 
+sections~\ref{sec:wrSlaveFSMstart}~and~\ref{sec:wrMasterFSMstart}. 
+The WR-role is recommended or active depending on the value of wrModeOn:
+\begin{itemize}
+  \item wrMode is \textit{recommended} when wrModeOn is FALSE.
+  \item wrMode is \textit{active} when wrModeOn is TRUE.
+\end{itemize}
+A WR Port in WR\_SLAVE mode is called a WR Slave. Similarly, a WR Port in WR\_MASTER mode is 
+called WR Master. 
+The wrMode field shall be reset to NON\_WR on the reception of HW\_LINK\_DOWN hardware 
+event notification (see \ref{sec:hwOutput}) and on reception of an 
+ANNOUNCE\_RECEIPT\_TIMEOUT\_EXPIRES event on the WR Slave.
+
+\subparagraph{wrModeOn} 
+\label{par:wrModeON}
+If TRUE, it indicates that the WR Link Setup has been performed successfully 
+and the WR Port is synchronized using WRPTP, consequently the role defined in wrMode is active.
+
+It is set to TRUE on successful completion of the WR State Machine (WR\_LINK\_ON state, 
+section~\ref{wrFSM}).
+
+It is set to FALSE :
+\begin{itemize}
+  \item when link-down is detected on the WR Port, section~\ref{sec:hwOutput},
+  \item on initialization and re-initialization as described in section~\ref{sec:initialization},
+  \item on occurrence of the WR\_MODE\_OFF event, section~\ref{sec:reestablishingWRLink}.
+  \item on exiting the PTP\_SLAVE state.
+\end{itemize}
+
+
+\subparagraph{wrPortState} 
+Stores the current state of the WRPTP state machine (see section~\ref{wrFSM}).
+
+\subparagraph{knownDeltaTx} 
+If the transmission fixed delay ($\Delta_{tx}$) is not known a priori (i.e. a non-deterministic 
+PHY is used, see \ref{sec:fixedDelays}), it shall be set to 0x0. 
+Otherwise, it stores the value of $\Delta_{tx}$ measured in picoseconds and multiplied 
+by ${2^{16}}$.
+
+\subparagraph{knownDeltaRx} 
+If the reception fixed delay ($\Delta_{rx}$) is not known a priori (i.e. a non-deterministic 
+PHY is used, see \ref{sec:fixedDelays}), it shall be set to 0x0. 
+Otherwise, it stores the value of $\Delta_{rx}$ measured in picoseconds and multiplied 
+by ${2^{16}}$.
+
+\subparagraph{deltasKnown} 
+TRUE if the fixed delays are known a priori (a deterministic PHY is used) and their values are 
+provided in the knownDeltaTx and knownDeltaRx Data Set fields. Otherwise FALSE.
+
+
+\subparagraph{calibrated}
+\label{par:calibrated} 
+If TRUE, it indicates that the fixed delays of the given port are currently known (measured and 
+stored in deltaTx/deltaRx DS fields).
+
+\subparagraph{deltaTx} 
+\label{par:deltaTx}
+Port's $\Delta_{tx}$ measured in picoseconds and multiplied by ${2^{16}}$. 
+% If knownDeltaTx is not 
+% equal 0x0, the value shall be set to knownDeltaRx during initialization 
+% (section~\ref{sec:initialization}). Otherwise, it shall be measured during WR Link Setup.
+
+\subparagraph{deltaRx} 
+\label{par:deltaRx}
+Port's $\Delta_{rx}$ measured in picoseconds and multiplied by ${2^{16}}$. 
+% If knownDeltaRx is not 
+% equal 0x0, the value shall be set to knownDeltaRx during initialization 
+% (section~\ref{sec:initialization}). Otherwise, it shall be measured during WR Link Setup.
+
+\subparagraph{wrStateTimeout}
+\label{par:wrStateTimeout} 
+Determines the timeout (in microseconds) for an execution of a state of the WR State Machine.
+
+\subparagraph{wrStateRetry} 
+\label{par:wrStateRetry}
+Determines the default number of times a state of WR State Machine is re-entered 
+(as a consequence of wrStateTimeout expiration) before the WR Link Setup is abandoned. If the 
+number of the given state execution retries equals wrStateRetry, the EXC\_TIMEOUT\_RETRY event is 
+generated (see \ref{sec:wrEventsAndConditions}). 
+
+\subparagraph{calPeriod} 
+\label{par:calPeriod}
+Calibration period in microseconds required to perform the measurement of the deltaTx and deltaRx 
+fixed delays (see \ref{sec:fixedDelays}). Its value shall be less than the 
+value of the AnnounceInterval of PTP determined by the portDS.logAnnounceInterval 
+(see clause 15.5.3.7.2.1 of PTP). If its value is greater than 0x0, it overwrites wrStateTimeout 
+for the \textit{CALIBRATION} state of the WR State Machine. 
+It is distributed to the partner-port to determine the timeout of its \textit{RESP\_CALIB\_REQ} 
+state.
+
+\subparagraph{calRetry} 
+\label{par:calRetry}
+If greater then 0x0, it overwrites wrStateRetry (\ref{par:wrStateRetry}) for 
+the \textit{CALIBRATION} state of the WR State Machine. It is distributed to 
+the partner port and used to overwrite wrStateRetry for the \textit{RESP\_CALIB\_REQ} state. 
+The maximum allowed value is 32.
+
+\subparagraph{primarySlavePortNumber} 
+Zero value indicates that no Primary Slave is selected. 1, 2 ,...N -- values indicate the
+portNumber (clause 7.5.2.3 PTP) selected as the Primary Slave, see section~\ref{sec:wrBMC}.
+
+\subparagraph{parentWrConfig} 
+Stores the value of wrConfig of the parent port which is sent in the Announce Message 
+(section~\ref{sec:wrAnnounceMSG}).
+
+\subparagraph{parentWrMode} 
+Stores the value of wrMode of the parent port which is sent in the Announce Message 
+(section~\ref{sec:wrAnnounceMSG}).
+
+\subparagraph{parentWrModeOn} 
+\label{par:parentWrModeON}
+Stores the value of wrModeOn of the parent port which is sent in the Announce Message 
+(section~\ref{sec:wrAnnounceMSG}). It shall be set to TRUE in the WR\_LINK\_ON state on the WR Slave.
+
+\subparagraph{parentCalibrated} 
+\label{par:parentCalibrated}
+Stores the value of calibrated of the link-parent port which is sent in the Announce Message 
+(section~\ref{sec:wrAnnounceMSG}).
+
+\subparagraph{otherPortDeltaTx} 
+\label{par:otherPortDeltaTx}
+Stores the value of deltaTx of the link-partner port exchanged during the WR Link Setup. It is 
+sent in the WRPTP Signaling Message (section~\ref{wrSignalingMSG}).
+
+\subparagraph{otherPortDeltaRx} 
+\label{par:otherPortDeltaRx}
+Stores the value of deltaRx of the partner port exchanged during the WR Link Setup. It is 
+sent in the WRPTP Signaling Message (section~\ref{wrSignalingMSG}).
+
+\subparagraph{otherPortCalPeriod} 
+\label{par:otherPortCalPeriod}
+Stores the value of the calPeriod parameter of the link-partner port which is 
+sent in the CALIBRATE message (\ref{par:CALIBRATE}). 
+If greater than 0, the value defines the time (in microseconds) for which the calibration pattern 
+should be sent by the port which received the message -- it overwrites wrStateTimeout 
+(\ref{par:wrStateTimeout}) for the \textit{RESP\_CALIB\_REQ} state of the WR State Machine 
+on the receiving port. It is exchanged 
+during the WR Link Setup by the WRPTP Signaling Message (section~\ref{wrSignalingMSG}).
+
+\subparagraph{otherPortCalRetry} 
+\label{par:otherPortCalRetry}
+Stores the value of the calRetry parameter of the link-partner port which is 
+sent in the CALIBRATE message (\ref{par:CALIBRATE}). 
+If greater than 0x0, it overwrites the wrStateRetry (\ref{par:wrStateRetry}) for 
+the \textit{RESP\_CALIB\_REQ} state of the WR State Machine on the receiving port.
+
+
+\subparagraph{otherPortCalSendPattern} 
+\label{par:otherPortCalSendPattern}
+Stores the value of calSendPattern sent by the WRPTP Signaling Message 
+(section~\ref{wrSignalingMSG}) which indicates whether sending of the calibration pattern is 
+required.
+
+%\paragraph{parentCalPattern} Stores the value of calPattern parameter of the parent port.
+
+%\paragraph{parentCalPatternLen} Stores the value of calPatternLen parameter of the parent port.
+
+
+\subsubsection{backupParentDS data set specifications}
+
+A boundary clock shall maintain an implementation-specific backupParentDS Data Set for the purpose 
+of qualifying redundant sources of synchronization, i.e.:
+\begin{itemize}
+  \item backup paths to the current grandmaster clock, or
+  \item paths to alternative grandmaster clock(s).
+\end{itemize}
+Each entry of the data set contains:
+
+\begin{itemize}
+  \item backupParentDS.secondarySlavePortNumber - the number of the port on which the Announce 
+	message from a backup parent has been received (Secondary Slave port),
+  \item backupParentDS.backupParentSourcePortIdentity - the portIdentity of the port on the backup 
+        master.
+\end{itemize}
+
+The implementation-specific backupParentDS set shall have a minimum capacity of three backup parent 
+records. The order of the records is established using the Data Set Comparison Algorithm as described
+in section~\ref{StadeDecisionAlg}.
+
+The initialization rules stated in PTP (clause 8.1.3) apply to the backupParentDS Data Set.
+
+%on $E_{rbest}$ 
+%which are qualified as backup Masters by modified State Decision Algorithm, record number 0 being the
+%best (described in the section~\ref{StadeDecisionAlg}).
+
+
+
+\subsection{Modified Best Master Clock Algorithm}
+\label{sec:wrBMC}
+
+\subsubsection{Overview}
+The Best Master Clock (BMC) algorithm is used in PTP to compare clocks (determine which 
+clock is the \textit{best}) and to recommend the next state of the PTP state machine (Clause 9.3 
+of PTP). The BMC is used to prune the physical network topology to obtain logical tree(s) with the
+\textit{best} clock, the grandmaster (preferably the one synchronized to a primary reference time 
+source), as a root. In the case when more than one clock in a network is synchronized to a primary 
+reference time source, the BMC produces disjoint logic trees. Each tree has a single grandmaster. 
+
+As a result of BMC, no more than one port of a Boundary Clock can be in the PTP\_SLAVE state. Such a
+solution allows for redundancy of the time source and topology but is not optimal for the continuity 
+of the synchronization. For example, in case of a failure of one of the \textit{best} clocks
+(reference-synchronized grandmasters), all the slave nodes in its logic tree need to switch 
+synchronization to the alternate grandmaster. This requires the restart of the estimation of the 
+clock drift, mean path delay and offset which might cause fluctuations in the notion of time. 
+
+The modified BMC allows for more than one \textit{best} clock in a single domain, enabling the 
+creation of a logic topology with multiple roots. A Boundary Clock running the modified BMC can have 
+more than one port in the PTP\_SLAVE state. This means that timing information is exchanged between 
+the Boundary Clock and more than one source of time (Ordinary Clock or Boundary Clock). At any time 
+any of these links can be used to perform synchronization, including a weighted average from all 
+SLAVE ports as mentioned in \cite{Takahide}.
+
+The BMC algorithm includes the State Decision Algorithm (SDA) and the Data Set Comparison
+Algorithm (DCA) and defines which fields of Data Sets should be updated depending on the outcome of
+the SDA. The modifications to the BMC are detailed below. The DCA is not modified, therefore it is not
+discussed.
+
+\subsubsection{State Decision Algorithm (SDA)}
+\label{StadeDecisionAlg}
+
+The original SDA is depicted in Figure~26 of the PTP standard. The modified SDA, depicted in
+Figure~\ref{fig:modifiedSDA}, enforces the $BMC\_SLAVE$ state instead of the $BMC\_PASSIVE$ state 
+on the clocks with Class field value greater than 127 (block-13 of Figure~\ref{fig:modifiedSDA}). 
+A port being in a $PTP\_SLAVE$ state as a result of the SDA modification (block-13) is considered 
+a Secondary SLAVE port. The port which enters 
+the $PTP\_SLAVE$ state based on the decision at block-11, is considered the Primary SLAVE port.
+This means that:
+\begin{itemize}
+  \item the Primary SLAVE port and the Secondary SLAVE port(s) are synchronized to the same 
+	grandmaster clock but the connection of the Primary SLAVE port is possibly better by path, or
+  \item the Primary SLAVE port and the Secondary SLAVE port(s) are synchronized to different 
+	grandmaster clocks of the same clockClass range (1-127 or 128-255,see Table~5 of PTP) 
+	but the grandmaster clock connected to the Primary SLAVE port is better or better by path.
+\end{itemize}
+
+The best qualified Announce messages ($E_{rbest}$, see Clause 9.3.2.3 of PTP) from all Secondary 
+SLAVE ports shall be compared with the DCA to determine the "second best master" and the lower order
+masters. The sequence of events is as follows (the idea originated from \cite{Takahide}):
+\begin{itemize}
+  \item The best master is computed with the BMC -- the Primary SLAVE port established (block-11 of
+	Figure~\ref{fig:modifiedSDA}) and the parentDS data set updated (S1). The port number is 
+	stored in currentDS.primarySlavePortNumber.
+  \item If the recommended state is $BMC\_SLAVE$ at block-13, the master is considered
+        a second best master and its data is stored in $E_{srbest}$.
+  \item The BMC algorithm is executed on all the $E_{srbest}$.
+  \item The best master selected is considered second best master and its reception port is 
+	considered the best Secondary SLAVE port.
+  \item The BMC is repeated excluding $E_{srbest}$ of the best master until the set of $E_{srbest}$ 
+	is empty.
+\end{itemize}
+The order of second and lower level best masters determined in this way is used to update the
+backupParentDS data set.
+
+
+\begin{figure}[ht!]
+  \centering
+  \includegraphics[width=0.85\textwidth]{../../../figures/protocol/SDA.ps}
+  \caption{Modified State Decision Algorithm (modifications in red).}
+  \label{fig:modifiedSDA}
+\end{figure}
+
+\newpage
+
+\subsubsection{Update of Data Sets}
+
+The modifications to the rules governing the update of the data sets are twofold:
+\begin{itemize}
+  \item Modifications to already existing "update tables" (Table~13 and Table~16, clause 9.3 of
+	PTP) to accommodate the new DS fields.
+  \item Addition of a new "update table" to accommodate the new backupParentDS data set and 
+	the modifications in the SDA.
+\end{itemize}
+
+\begin{table}[tbp]
+\caption{Modification to Table~13 of IEEE1588-2008: Update for state decision code M1 and M2.}
+\centering
+\begin{tabular}{| p{7.5cm} | p{7.5cm}|}           \hline
+\textbf{Update this field}  		&  
+\textbf{From the indicated field of the defaultDS data set of the clock unless otherwise stated} \\ 
+					&  						\\ \hline
+\multicolumn{2}{|c|}{currentDS}								\\ \hline
+currentDS.primarySlavePortNumber   	& set to 0					\\ \hline
+\multicolumn{2}{|c|}{portDS}	   	 						\\ \hline
+portDS.parentWrConfig   		& portDS.wrConfig				\\ \hline
+portDS.parentWrMode   			& portDS.wrMode					\\ \hline
+portDS.parentWrModeOn   		& portDS.wrModeOn				\\ \hline
+portDS.parentCalibrated		   	& portDS.calibrated				\\ \hline
+
+\end{tabular}
+\label{tab:modifiedM1M2}
+\end{table}
+
+\begin{table}[tbp]
+\caption{Modification to Table~16 of IEEE1588-2008: Update for state decision code S1.}
+\centering
+\begin{tabular}{| p{7.5cm} | p{7.5cm}|}           \hline
+\textbf{Update this field}  		&  \textbf{From the indicated source}  	\\ 
+					&  						\\ \hline
+\multicolumn{2}{|c|}{currentDS}    								\\ \hline
+currentDS.primarySlavePortNumber   	& portDS.portIdentity.portNumber		\\ \hline
+
+\end{tabular}
+\label{tab:modifiedS1}
+\end{table}
+
+\begin{table}[tbp]
+\caption{Update for state decision code S2}
+\centering
+\begin{tabular}{| p{8.5cm} | p{6.5cm}|}          \hline
+\textbf{Update this field}  			&  \textbf{From the indicated source}  	\\ 
+						&  					\\ \hline
+\multicolumn{2}{|c|}{backupParentDS} 							\\ \hline
+backupParentDS.secondarySlavePortNumber 	& portDS.portIdentity.portNumber	\\ \hline
+backupParentDS.backupParentSourcePortIdentity 	& sourcePortIdentity of $E_{rbest}$	\\ \hline
+
+\end{tabular}
+\label{tab:modifiedS2}
+\end{table}
+
+\newpage
+
+\subsection{WRPTP Messages}
+\label{sec:wrMSG}
+
+White Rabbit benefits from PTP's messaging facilities. It defines a \textit{WR Type-Length-Value} 
+(WR TLV) extension to exchange WR-specific information and uses the two-step clock delay 
+request-response mechanism for synchronization. In particular, it adds a suffix to the Announce 
+message to enable recognition of WR nodes and uses Signaling Messages to exchange WR-specific 
+information (Figure~\ref{fig:wrptpMSGs}). During the exchange of timestamps, their
+fractional nanoseconds part is always included in the messages as defined in the PTP standard 
+(cause 9.5.10) and explained in Appendix~\ref{ap:computationsExplanation}.
+
+A WR port in the $PTP\_MASTER$ state announces its presence by adding a suffix to the Announce 
+message. The suffix is defined by the PTP standard as a set of TLV entities (section 13.4, PTP). 
+Unrecognized by standard PTP nodes WR TLVs are ignored(section 14.1, PTP), 
+but read and interpreted by White Rabbit nodes. 
+The information provided in the WRPTP Announce message is sufficient for another WR port to decide 
+whether the WR link can be established and maintained. A WR port receiving a 
+WRPTP Announce message enters (if conditions in \ref{sec:wrSlaveFSMstart} are fulfilled) 
+the WR Slave mode and starts the Link Setup process (performed in the $PTP\_UNCALIBRATED$ state, 
+see Appendix~\ref{ap:ptpAndWrFSMS}). It requests the sender of the WRPTP announce message 
+to enter the WR Master mode (see section \ref{sec:wrMasterFSMstart}) and start 
+the Link Setup process as well. During the WR Link Setup, communication between the WR Master and 
+the WR Slave is performed using PTP Signaling Messages carrying WR TLVs 
+(section~\ref{sec:communicationWRfsm}). Once the WR link has been established, the WR nodes use 
+a PTP delay request-response mechanism (section 11.3, PTP).
+
+
+\subsubsection{WR Type-Length-Value}
+\label{sec:wrTLVtype}
+
+All PTP messages can be extended by means of a standard \textit{type, length, value} (TLV) 
+extension mechanism. White Rabbit uses the \textit{ORGANIZATION\_EXTENSION} TLV type \\
+(tlvType=0x0003) which is defined in clause 14.3 of PTP. TLVs represented by this type 
+are designated for vendors and standard organizations to extend the protocol for specific needs. 
+The organization-specific TLV fields for the WR extension are defined and described in 
+Table~\ref{tab:wrTLVtype}. 
+
+\begin{table}[h!]
+\caption{Organization specific TLV fields for WR (see Table~35, PTP).}
+\centering
+\begin{tabular}{| c | c | c | c | c | c | c | c | c | c |c|  p{4.3cm}  |}
+\hline
+\multicolumn{8}{|c|}{\textbf{Bits}} & \textbf{Octets} & \textbf{TLV} & \textbf{WR TLV} & \\
+%\hline
+\cline{0-7}
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0 &  &  \textbf{Offset}  & \textbf{Content} & \textbf{Description} \\
+\hline
+\multicolumn{8}{|c|}{tlvType            } & 2 & 0  & 0x0003   & Organization extension, 
+								see Table~34 PTP. \\ \hline
+\multicolumn{8}{|c|}{lengthField        } & 2 & 2  & 8+N      & N is an even number of wrDataField
+								octets. \\ \hline
+\multicolumn{8}{|c|}{OrganizatinId      } & 3 & 4  & 0x080030 & OUI owned by CERN. \\
+\hline
+\multicolumn{8}{|c|}{organizationSubType} & 2 & 7  & magicNumber & 0xABCD - identifies WRPTP 
+						      within protocols identified by CERN's OUI. \\
+\cline{9-12} %\hline
+\multicolumn{8}{|c|}{}                    & 1 & 9  & versionNumber& 0x01 - WRPTP version.\\
+ \hline
+\multicolumn{8}{|c|}{DataField}           & 2 & 10 & wrMessageID  & WR-specific messages identifier,
+								    see Table~\ref{tab:wrMessageId}. \\
+\cline{9-12} %\hline 
+\multicolumn{8}{|c|}{  }                 & N & 12 & wrDataField   & Content of WR-specific message. \\
+\hline
+\end{tabular}
+\label{tab:wrTLVtype}
+\end{table}
+The WR-specific TLVs are identified by wrMessageID which is defined in 
+Table~\ref{tab:wrMessageId}. The different types of WR messages are described in subsequent 
+sections.
+
+\begin{table}[tbp]
+\caption{White Rabbit Message ID values}
+\centering
+\begin{tabular}{| l | p{2.5cm} | c | c |}          \hline
+\textbf{WR Message Name}  &  \textbf{wrMessageId value (hex)} &  \textbf{Sent in message type} \\ 
+& &  \\ \hline
+SLAVE\_PRESENT     &  0x1000 & Signaling \\ \hline
+LOCK               &  0x1001 & Signaling \\ \hline
+LOCKED             &  0x1002 & Signaling \\ \hline
+CALIBRATE          &  0x1003 & Signaling \\ \hline
+CALIBRATED         &  0x1004 & Signaling \\ \hline
+WR\_MODE\_ON       &  0x1005 & Signaling \\ \hline
+ANN\_SUFIX	   &  0x2000 & Announce  \\ \hline
+\end{tabular}
+\label{tab:wrMessageId}
+\end{table}
+
+\newpage
+
+\subsubsection{WRPTP Announce Message}
+\label{sec:wrAnnounceMSG}
+
+
+The standard PTP Announce Message is suffixed by one WR TLV entity. 
+The WRPTP Announce message has the structure defined in Table~\ref{tab:wrAnnounce}. The $dataField$
+of the suffix WR TLV stores the $wrFlags$ defined in Table~\ref{tab:wrFlags}.
+
+\begin{table}[ht!]
+\caption{White Rabbit Announce Message.}
+\centering
+\begin{tabular}{| c | c | c | c | c | c | c | c | c | c | p{4.5cm} |}
+\hline
+\multicolumn{8}{|c|}{\textbf{Bits}} & \textbf{Octets} & \textbf{TLV}  & \textbf{Content} \\
+%\hline
+\cline{0-7}
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0 &     & \textbf{Offset}  &  \\
+\hline
+\multicolumn{8}{|c|}{header        }  & 34 & 0  & section 13.3, PTP. \\ \hline
+\multicolumn{8}{|c|}{body          }  & 30 & 34 & section 13.5, PTP.         \\ \hline
+\multicolumn{8}{|c|}{tlvType       }  & 2  & 64 & 0x0003, see \ref{sec:wrTLVtype}. \\ \hline
+\multicolumn{8}{|c|}{lengthField   }  & 2  & 66 & 0xA.   \\ \hline
+\multicolumn{8}{|c|}{OrganizationId}  & 3  & 68 & 0x080030.               \\ \hline
+\multicolumn{8}{|c|}{magicNumber   }  & 2  & 71 & 0xABCD.               \\ \hline
+\multicolumn{8}{|c|}{versionNumber }  & 1  & 73 & 0x01.               \\ \hline
+\multicolumn{8}{|c|}{wrMessageId   }  & 2  & 74 & 0x0010.               \\ \hline
+\multicolumn{8}{|c|}{wrFlags       }  & 2  & 76 & see Table~\ref{tab:wrFlags}.    \\ \hline
+\end{tabular}
+\label{tab:wrAnnounce}
+\end{table}
+
+
+\begin{table}[ht!]
+\caption{White Rabbit flags.}
+\centering
+\begin{tabular}{| c | c | c | c | p{5.3cm} |}          \hline
+
+\textbf{Octet} &\textbf{Bit} & \textbf{Message type} & \textbf{Name}  & \textbf{Description}  \\ 
+               &             &                       &                &              \\ \hline
+0              &0   	& \multirow{2}{*}{Announce} 	& \multirow{2}{*}{wrConfig}  &
+\multirow{2}{5.3cm}{The value of wrConfig parameter from portDS.} \\ \cline{1-2}
+0              &1            &				& 		&\\ \hline
+0              &2            & Announce              & calibrated     & TRUE if the source port 
+									is calibrated.\\
+									\hline
+0              &3            & Announce              & wrModeOn     & The wrModeOn value 
+								      (\ref{par:wrModeON}) of the 
+								      sending port which shall be
+								      stored in parentWrModeOn
+								      (\ref{par:parentWrModeON})
+								      of the receiving port.
+% 								      The value of wrModeON
+% 								      parameter of portDS.
+								      \\ \hline
+\end{tabular}
+\label{tab:wrFlags}
+\end{table}
+
+\newpage
+
+
+\subsubsection{WRPTP Signaling Messages}
+\label{wrSignalingMSG}
+
+White Rabbit uses Signaling Messages (defined in clause 13.12 of PTP) to exchange WR-specific 
+information, except for the flags transported in the suffix of the Announce message. 
+
+The Signaling Messages conform to the format presented in Table~\ref{tab:wrSignalingMSG}. Each WR
+Signaling Message transports a single WR TLV structure as defined in Section~\ref{sec:wrTLVtype}.
+The \textit{targetPortIdentity} shall be always set to the \textit{clockIdentity} of the port 
+on the other side of the link (conveyed in the Announce Message). 
+
+The Signaling Messages are used in WRPTP to trigger transitions in the WR State Machine and exchange 
+WR-specific parameters. Each message is sent on entering particular states of the WR State Machine as 
+described in section~\ref{sec:communicationWRfsm}.
+
+The distinction between WR Signaling Messages is made by the \textit{wrMessageId} field of the 
+\textit{WR TLV}, defined in Table~\ref{tab:wrMessageId}. Signaling Messages are exchanged only 
+within a single link connection (no forwarding). This is ensured by setting the targetPortId 
+appropriately. The rest of this subsection describes the WRPTP Signaling Messages in detail.
+
+\begin{table}[h!]
+\caption{PTP Signaling message fields (Table 33, PTP) }
+\centering
+\begin{tabular}{| c | c | c | c | c | c | c | c | c | c |}
+\hline
+\multicolumn{8}{|c|}{\textbf{Bits}}               & \textbf{Octets} & \textbf{TLV}  \\
+%\hline
+\cline{0-7}
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0                     &                 & \textbf{Offset}    \\
+\hline
+\multicolumn{8}{|c|}{header                    }  & 34             & 0             \\ \hline
+\multicolumn{8}{|c|}{targetPortIdentity        }  & 10             & 34            \\ \hline
+\multicolumn{8}{|c|}{WR TLV                    }  & M              & 44             \\ \hline
+\end{tabular}
+\label{tab:wrSignalingMSG}
+\end{table}
+
+
+\paragraph{SLAVE\_PRESENT} Message sent by the WR Port which became WR Slave (entered WR Slave mode) 
+to the link-partner WR Port. It initiates the WR Master mode (the port becomes WR Master) 
+on the link-partner WR Port which starts the WR Link Setup. The message shall have the form specified 
+in Table~\ref{tab:wrOtherTLV}.
+
+\paragraph{LOCK} Message sent by the WR Master to the WR Slave to request 
+the start of frequency locking. The message shall have the form specified in Table~\ref{tab:wrOtherTLV}.
+
+\paragraph{LOCKED} Message sent by the WR Slave to the WR Master. It indicates the successful 
+completion of frequency locking. The message shall have the format specified in 
+Table~\ref{tab:wrOtherTLV}.
+
+
+\begin{table}[h!]
+\caption{WR TLV for SLAVE\_PRESENT, LOCK, LOCKED AND WR\_MODE\_ON Signaling Messages.}
+\centering
+\begin{tabular}{| c | c | c | c | c | c | c | c | c | c | p{4.5cm} |}
+\hline
+\multicolumn{8}{|c|}{\textbf{Bits}} & \textbf{Octets} & \textbf{TLV}  & \textbf{Content} \\
+%\hline
+\cline{0-7}
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0 &     & \textbf{Offset}  &  \\
+\hline
+\multicolumn{8}{|c|}{tlvType       }  & 2  & 0  & 0x0003, see \ref{sec:wrTLVtype}. \\ \hline
+\multicolumn{8}{|c|}{lengthField   }  & 2  & 2  & 0x8.   \\ \hline
+\multicolumn{8}{|c|}{OrganizationId}  & 3  & 4  & 0x080030.               \\ \hline
+\multicolumn{8}{|c|}{magicNumber   }  & 2  & 7  & 0xABCD.               \\ \hline
+\multicolumn{8}{|c|}{versionNumber }  & 1  & 9  & 0x01.               \\ \hline
+\multicolumn{8}{|c|}{wrMessageId   }  & 2  & 10 & Defined in Table~\ref{tab:wrMessageId}.\\ \hline
+\end{tabular}
+\label{tab:wrOtherTLV}
+\end{table}
+
+
+
+\paragraph{CALIBRATE}
+\label{par:CALIBRATE}
+Message sent by the WR port entering the \textit{CALIBRATION} state  (see
+section~\ref{wrFSM}). It informs the other port 
+whether sending a calibration pattern (see section~\ref{sec:fixedDelays}) is required (defined by
+the value of \textit{calSendPattern} flag). If calibration is required, it carries  
+the calibration period. The message format and parameters are described  in
+Table~\ref{tab:wrCalibrateTLV}.
+
+
+\begin{table}[h!]
+\caption{WR TLV CALIBRATE Signaling Message }
+\centering
+\begin{tabular}{| c | c | c | c | c | c | c | c | c | c | p{7.5cm} |}
+\hline
+\multicolumn{8}{|c|}{\textbf{Bits}} & \textbf{Octets} & \textbf{TLV}  & \textbf{Content} \\
+%\hline
+\cline{0-7}
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0 &     & \textbf{Offset}  &  \\
+\hline
+\multicolumn{8}{|c|}{tlvType               }  & 2  & 0  & 0x0003, see \ref{sec:wrTLVtype}. \\ \hline
+\multicolumn{8}{|c|}{lengthField           }  & 2  & 2  & 0x0E.   \\ \hline
+\multicolumn{8}{|c|}{OrganizationId        }  & 3  & 4  & 0x080030.               \\ \hline
+\multicolumn{8}{|c|}{magicNumber           }  & 2  & 7  & 0xABCD.               \\ \hline
+\multicolumn{8}{|c|}{versionNumber         }  & 1  & 9  & 0x01.               \\ \hline
+\multicolumn{8}{|c|}{wrMessageId           }  & 2  & 10 & CALIBRATE.               \\ \hline
+\multicolumn{8}{|c|}{calSendPattern}          & 1  & 12 & The value determines whether the calibration 
+						          pattern should be sent. If the value
+						 	  is 0x1, the calibration pattern is sent. 
+							  If the value is 0x0, the calibration 
+							  pattern is not sent. The value shall be 
+							  based on the information provided by the
+							  $calibrated$ Data Set field 
+							  (\ref{par:calibrated}) It shall be
+							  stored in otherPortCalSendPattern 
+							  (\ref{par:otherPortCalSendPattern}).
+							  \\ \hline
+\multicolumn{8}{|c|}{calRetry (UInteger8)}  & 1 & 13  & The calRetry value 
+							  (\ref{par:calRetry})
+							  of the sending port which shall be stored 
+							  in otherPortCalRetry 
+							  (\ref{par:otherPortCalRetry}) of 
+							  the receiving port.\\ \hline
+\multicolumn{8}{|c|}{calPeriod (UInteger32)}  & 4 & 14  & The calPeriod value 
+							  (\ref{par:calPeriod})
+							  of the sending port which shall be stored 
+							  in otherPortCalPeriod 
+							  (\ref{par:otherPortCalPeriod}) of 
+							  the receiving port.\\ \hline
+% \multicolumn{8}{|c|}{calibrationPattern}    & 4 & 18 & The  value defines the calibration pattern
+% 							which should be sent by the receiving
+% 							node.\\ \hline
+% \multicolumn{8}{|c|}{calibrationPatternLen} & 2 & 22 & The  value defines the number of bits of
+% 							\textit{calibrationPattern} field which
+% 							should be used as repeated pattern (starting
+% 							  with the LSB). \\\hline
+\end{tabular}
+\label{tab:wrCalibrateTLV}
+\end{table}
+
+
+\newpage
+
+
+
+\paragraph{CALIBRATED} Message sent by a WR port entering the \textit{CALIBRATED} state. 
+If preceded by the \textit{CALIBRATE} message with \textit{calSendPattern} set to TRUE, 
+it indicates successful completion of the calibration. The message provides the other port with the 
+values of its fixed delays ($\Delta_{tx}$ and $\Delta_{rx}$). 
+The message shall have the format specified in Table~\ref{tab:wrCalibratedTLV}.
+
+\begin{table}[tbp]
+\caption{WR TLV for CALIBRATED Signaling Message.}
+\centering
+\begin{tabular}{| c | c | c | c | c | c | c | c | c | c |  p{7.5cm}  |}
+\hline
+\multicolumn{8}{|c|}{\textbf{Bits}} & \textbf{Octets} & \textbf{TLV} &\\
+%\hline
+\cline{0-7}
+7 & 6 & 5 & 4 & 3 & 2 & 1 & 0 &  &  \textbf{Offset}  & \textbf{Content}  \\
+\hline
+\multicolumn{8}{|c|}{tlvType               }  & 2  & 0  & 0x0003, see \ref{sec:wrTLVtype}. \\ \hline
+\multicolumn{8}{|c|}{lengthField           }  & 2  & 2  & 0x18.   \\ \hline
+\multicolumn{8}{|c|}{OrganizationId        }  & 3  & 4  & 0x080030.               \\ \hline
+\multicolumn{8}{|c|}{magicNumber           }  & 2  & 7  & 0xABCD.               \\ \hline
+\multicolumn{8}{|c|}{versionNumber         }  & 1  & 9  & 0x01.               \\ \hline
+\multicolumn{8}{|c|}{wrMessageId           }  & 2  & 10 & CALIBRATED.               \\ \hline
+\multicolumn{8}{|c|}{deltaTx (UInteger64)  }  & 8  & 12 & The deltaTx value (\ref{par:deltaTx}) 
+							  of the sending port which shall be stored
+							  in otherPortDeltaTx (\ref{par:otherPortDeltaTx})
+							  of the receiving port.
+% 							  The value of $\Delta_{tx_m}$ measured in 	
+% 						   	  picoseconds and multiplied by ${2^{16}}$.
+							  \\ \hline
+\multicolumn{8}{|c|}{deltaRx (UInteger64) }  & 8  & 20 & The deltaRx value (\ref{par:deltaRx}) 
+							  of the sending port which shall be stored
+							  in otherPortDeltaRx (\ref{par:otherPortDeltaRx})
+							  of the receiving port. 
+% 							  The value of $\Delta_{rx_m}$ measured in
+% 							  picoseconds and multiplied by ${2^{16}}$.
+							  \\ \hline
+\end{tabular}
+\label{tab:wrCalibratedTLV}
+\end{table}
+
+
+
+
+\paragraph{WR\_MODE\_ON} Message sent by the WR Master to the WR Slave. It indicates the successful completion 
+of the WR Link Setup process and requests the WR~Slave to validate its WR~mode (by setting wrModeOn 
+to TRUE). The message shall have the format specified in Table~\ref{tab:wrOtherTLV}.
+
+\newpage
+
+\subsection{PTP State Machine}
+\label{ptpStateMachine}
+
+The WR Link Setup (WR State Machine) is performed in the PTP\_MASTER state of the PTP state machine 
+on a WR Port in WR Master mode (WR Master). On a WR Port in WR Slave mode (WR Slave), 
+the WR State Machine is executed in the PTP\_UNCALIBRATED state of the PTP state machine. 
+Therefore, it is essential for a WR port to implement the PTP\_UNCALIBRATED state as specified in the 
+PTP state machine (\textcolor{blue}{1} in Figure~\ref{fig:modifiedPtpFSM}): a transition state 
+between the  LISTENING or PRE\_MASTER or MASTER or PASSIVE state and the SLAVE state.
+Additionally, WRPTP defines the implementation-specific \textit{SYNCHRONIZATION\_FAULT} and  \\
+\textit{MASTER\_CLOCK\_SELECTED} PTP state transition events, see Figure~\ref{fig:modifiedPtpFSM}.
+
+
+\subsubsection{MASTER\_CLOCK\_SELECTED}
+\label{sec:masterClockSelected}
+
+On successful completion of WR State Machine execution (transition from WR\_LINK\_ON to the IDLE 
+state with wrModeOn set to TRUE) on the port being in the WR Slave mode and PTP\_UNCALIBRATED state, 
+the MASTER\_CLOCK\_SELECTED event (\textcolor{blue}{2} in Figure~\ref{fig:modifiedPtpFSM}, 
+defined in Clause 9.2.6.13 of PTP) shall occur. Consequently, the PTP\_SLAVE state shall be 
+entered.
+
+\subsubsection{SYNCHRONIZATION\_FAULT}
+\label{sec:synchronizationFault}
+
+The port being in the WR Slave mode and PTP\_SLAVE state shall evaluate values of two WR-specific 
+parameters: $wrModeOn$ (\ref{par:wrModeON}) and $parentWrModeOn$ (\ref{par:parentWrModeON}). 
+If the value of at least one of the parameters is FALSE, the SYNCHRONIZATION\_FAULT event 
+(\textcolor{blue}{3} in Figure~\ref{fig:modifiedPtpFSM}, defined in Clause 9.2.6.12 of PTP) shall 
+occur and PTP\_UNCALIBRATED shall be entered. Consequently the WR Link Setup is performed. 
+Such implementation enables forced re-calibration of WR ports which can be triggered by both, 
+WR Master and WR Slave.
+
+ 
+
+% \subsubsection{CALIBRATION\_FORCED\_BY\_SLAVE}
+% 
+% WRPTP introduces a new state transition event to the original PTP state machine: 
+% \textit{CALIBRATION\_FORCED\_BY\_SLAVE}. It is depicted in red (number \textcolor{blue}{2})
+%  in Figure~\ref{fig:modifiedPtpFSM}. The event shall be instantiated by the reception of
+%  the $SLAVE\_PRESENT$ Signaling Message on a WR-Master-enabled port (the value of portDS.wrConfig 
+%  is WR\_M\_AND\_S or WR\_M\_ONLY) in $PTP\_MASTER$ state. 
+% This transition allows a WR Slave to start WR Master mode and trigger a WR Link Setup process in 
+% another WR port.
+
+\newpage
+
+\begin{figure}[ht!]
+  \centering
+  \includegraphics[width=0.85\textwidth]{../../../figures/protocol/modifiedPtpFSM.ps}
+  \caption{Modified PTP Finite State Machine.}
+  \label{fig:modifiedPtpFSM}
+\end{figure}
+
+
+
+\newpage
+
+\subsection{White Rabbit State Machine}
+\label{wrFSM}
+
+The White Rabbit Finite State Machine (WR FSM) controls the process of establishing a White Rabbit 
+link between a WR Master and a WR Slave (WR Link Setup). It shall be non-preemptive with regards 
+to the execution of the PTP State Machine. This means that, once the IDLE state of the WR State Machine is 
+exited (WR State Machine execution started), no transitions on the PTP State Machine shall occur 
+until the WR State Machine finishes execution and returns to the IDLE state. 
+
+WR Link Setup involves the recognition of two 
+compatible WR ports, syntonization over the physical layer, optional measurement of fixed delays and 
+exchange of their values across the link. The procedure differs between WR Master and WR Slave. 
+Therefore three states of the WR FSM are Slave-only (entered only if the port is in WR Slave mode) 
+and one state is Master-only (entered only if the port is in WR Master mode). The WR FSM shall be 
+executed in the PTP UNCALIBRATED state on the WR Slave (WR Port in WR Slave mode) and in 
+the PTP MASTER state on the WR Master (WR Port in WR Master mode).
+The WR FSM is depicted in Figure~\ref{fig:wrFSM} and described in the rest of this section.
+
+Successful completion of WR FSM results in the validation (\textit{wrModeOn} set to TRUE) 
+of the recommended WR mode (\textit{wrMode}) and WRPTP synchronization. If EXC\_TIMEOUT\_RETRY 
+(section \ref{sec:wrEventsAndConditions}) occurs, it means that WR Link Setup failed, 
+WRPTP synchronization cannot be established and standard PTP is performed.
+
+A typical flow of a complete WR Signaling Message exchange between a WR Slave and a WR Master 
+during WR Link Setup is presented in Appendix~\ref{ap:wr_lsu_flow}. For clarity, the cooperation of 
+PTP and WR state machines from the power up is presented in Appendix~\ref{ap:ptpAndWrFSMS}.
+
+\subsubsection{Conditions to enter WR Slave mode and start the WR FSM}
+\label{sec:wrSlaveFSMstart}
+
+
+%The WR FSM in 
+A WR port becomes a WR Slave (portDS.wrMode = WR\_SLAVE) and starts execution 
+of the WR FSM by entering the \textit{PRESENT} state, only when the following conditions are met:
+\begin{itemize}
+\item the port is WR Slave-enabled: \\ 
+      \textit{portDS.wrConfig = ($WR\_S\_ONLY$ \textbf{OR} $WR\_M\_AND\_S$)}\\ 
+      \textbf{AND}
+\item the PTP state machine enters the PTP UNCALIBRATED state as a result of \\
+      STATE\_DECISION\_EVENT:
+      Recommended State == BMC\_SLAVE (\textcolor{blue}{1} in Figure~\ref{fig:modifiedPtpFSM})
+      \textbf{OR} SYNCHRONIZATION\_FAULT event\\
+      \textbf{AND}
+\item the parent port is WR Master-enabled: \\ 
+      \textit{portDS.parentWrConfig = ($WR\_M\_ONLY$ \textbf{OR} $WR\_M\_AND\_S$)} \\ 
+      \textbf{AND}
+\item at least one of the ports on the link is not in WR Mode:  \\ 
+      \textit{portDS.wrMode = FALSE \textbf{OR} portDS.ParentPortWrMode = FALSE}.
+\end{itemize}
+
+\newpage
+
+\subsubsection{Conditions to enter WR Master mode and start the WR FSM}
+\label{sec:wrMasterFSMstart}
+
+A WR port becomes a WR Master (portDS.wrMode = WR\_Master) and starts execution of WR FSM
+by entering the \textit{M\_LOCK} state only when the following conditions are met:
+\begin{itemize}
+\item the port is WR Master-enabled:\\
+      \textit{portDS.wrConfig = $WR\_M\_ONLY$ \textbf{OR} $WR\_M\_AND\_S$} \\ 
+      \textbf{AND}
+\item the port is in PTP\_MASTER state \\
+      \textbf{AND}
+\item the $SLAVE\_PRESENT$ Signaling Message has been received. 
+% \item the PTP state machine enters the a PTP\_UNCALIBRATED state as a result of 
+%       CALIBRATION\_FORCED\_BY\_SLAVE transition event (\textcolor{blue}{2} in 
+%       Figure~\ref{fig:modifiedPtpFSM})
+\end{itemize}
+
+
+%The WR FSM in a WR Master-enabled port (\textit{$WR\_M\_ONLY$ \textbf{OR} $WR\_M\_AND\_S$})
+%exits the IDLE state and starts execution by entering the \textit{M\_LOCK} state only when 
+%PTP state machine enters the PTP\_UNCALIBRATED state as a result of 
+%CALIBRATION\_FORCED\_BY\_SLAVE transition event (\textcolor{blue}{2} in 
+%igure~\ref{fig:modifiedPtpFSM}).
+
+
+%\paragraph{State Description}
+\subsubsection{State Description}
+
+Table~\ref{tab:wrFSMdesc} specifies the WR states notation used in Figure~\ref{fig:wrFSM}.
+
+\newpage
+
+\begin{table}[hp!]
+\caption{WR state definition}
+\centering
+\begin{tabular}{| c | p{12.2cm} |}          \hline
+\textbf{PTP portState}  &  \textbf{Description} \\ 
+%&   \\ 
+\hline
+\small
+% IDLE               &  The WR FSM shall be in the IDLE state if the PTP FSM is in a state other than 
+% 		      UNCALIBRATED or MASTER. \\ \hline
+IDLE               &  The WR FSM shall be in the IDLE state while WR Link Setup is not being performed. 
+		      \\ \hline
+PRESENT            &  Slave-only state. Upon entering this state, the WR Slave sends a SLAVE\_PRESENT
+		      message to the WR Master and waits for the $LOCK$ message.\\ \hline
+M\_LOCK            &  Master-only state. Upon entering this state, the WR Master sends the $LOCK$ 
+		      message. In this state, the WR Master waits for the WR Slave to finish 
+		      successfully the locking process (reception of the $LOCKED$ message). \\ \hline
+S\_LOCK            &  Slave-only state. The WR Slave locks its clock signal to the frequency  distributed
+		      over the physical layer by the WR Master. \\ \hline
+LOCKED             &  Slave-only state. Upon entering this state, the WR Slave sends the $LOCKED$ message 
+		      to inform that it is syntonized, and waits for the \textit{CALIBRATE} message.
+		      \\ \hline
+CALIBRATION 	   &  In this state, optional calibration of the port's reception and/or 
+		      transmission fixed delays can be performed. 
+		      Upon entering this state, the WR Port sends a \textit{CALIBRATE} message to 
+		      the other WR Port. If the calibration of reception fixed delay is needed,
+		      the \textit{calSendPattern} flag in the \textit{CALIBRATE} message 
+		      is set to TRUE (0x1). If the calibration is not needed, the
+		      \textit{calSendPattern} flag is set to FALSE (0x0).  
+		      If calibration is not needed, the next state is entered, otherwise an
+		      indication from the hardware
+		      that the calibration has been finished successfully is awaited. \\ \hline
+CALIBRATED         &  Upon entering this state, the WR Port sends a \text{CALIBRATED} message with the 
+		      values of its fixed delays. \\ \hline
+RESP\_CALIB\_REQ   &  The WR Port's action in this state depends on the value of the 
+		      \textit{calSendPattern} flag received in the \textit{CALIBRATE} 
+		      message. A TRUE value of the flag
+		      indicates that the calibration pattern shall be enabled while the WR State 
+		      Machine is in this state. The pattern shall  be
+		      disabled on exiting the state (after the timeout of \textit{calPeriod} or 
+		      on reception of the \textit{CALIBRATED} message). If the value of  the
+		      \textit{calSendPattern} flag is FALSE, 
+		      the \textit{CALIBRATED} message is awaited for a timeout of calPeriod or 
+		      wrStateTimeout (if calPeriod is 0x0). On 
+		      reception of the \textit{CALIBRATED} message, the next state is entered.\\
+		      \hline
+WR\_LINK\_ON       &  Upon entering this state, the WR Master sends the WR\_LINK\_ON message. 
+		      In this state, the values of \textit{wrModeOn (\ref{par:wrModeON})} and 
+		      \textit{parentWrModeOn (\ref{par:parentWrModeON})} are set to 
+		      TRUE\footnotemark[6] and the \textit{IDLE}  state is entered unconditionally. 
+		      The execution of the WR FSM is considered to be completed successfully. \\ \hline
+\end{tabular}
+\label{tab:wrFSMdesc}
+\end{table}
+
+\footnotetext[6]{Depending on the implementation, it might be necessary to update the wrModeOn 
+		 field of the best Foreign Master record (clause 9.3.2.4.1 of PTP).}
+
+\addtocounter{footnote}{1}
+
+\begin{figure}[ht!]
+  \centering
+%  \vspace{-1.3cm}
+  \includegraphics[width=1.00\textwidth]{../../../figures/protocol/wrFSM.eps}
+  \caption{White Rabbit state machine.}
+  \label{fig:wrFSM}
+\end{figure}
+
+
+
+\newpage
+
+
+%\paragraph{WR FSM Transition Events and Conditions}
+\subsubsection{WR FSM Transition Events and Conditions}
+\label{sec:wrEventsAndConditions}
+\begin{description}
+\item[POWERUP]				Turning on power to the device or resetting.
+
+\item[WR LINK SETUP REQUIRED DECISION] 	(abrv. D\_WR\_SETUP\_REQ) 	Event indicating that a 
+      Link Setup is required and that the WR FSM should be executed starting at the
+      \textit{PRESENT} state. It occurs when the condition presented in 
+      section~\ref{sec:wrSlaveFSMstart} is fulfilled.
+
+\item[SLAVE PRESENT MESSAGE] 		(abrv. M\_SLAVE\_PRESENT) 	Event triggered by the 
+      reception of the $SLAVE\_PRESENT$ Signaling message. It requests the recipient to enter 
+      the \textit{M\_LOCK} state.
+
+\item[LOCK MESSAGE] 			(abrv. M\_LOCK) 		Event triggered by the 
+      reception of the $LOCK$ Signaling message.
+% which triggers frequency locking over the physical layer.
+
+\item[LOCKED HARDWARE EVENT] 		(abrv. HW\_LOCKED) 		Event triggered by the 
+      reception of the hardware event notification (Table~\ref{tab:outputWrCommWithHW}) indicating 
+      that frequency locking has been completed successfully.
+
+\item[LOCKED MESSAGE] 			(abrv. M\_LOCKED)		Event triggered by the 
+      reception of the $LOCKED$ Signaling Message which notifies the WR Master that frequency 
+      locking has been completed successfully by the WR Slave.
+
+\item[CALIBRATE MESSAGE] 		(abrv. M\_CALIBRATE) 		Event triggered by the 
+      reception of the $CALIBRATE$ Signaling message. It requests the recipient to enter the \\
+      \textit{RESP\_CALIB\_REQ} state.
+% , indicates whether sending of the calibration pattern is
+%       required and provides calibration parameters.
+
+% \item[CALIBRATED HARDWARE EVENT] 	(abrv. HW\_CALIBRATED) 		Notification from the
+%       hardware indicating that calibration has been completed successfully. 
+
+\item[CALIBRATED MESSAGE] 		(abrv. M\_CALIBRATED)		Event triggered by the 
+      reception of the  \text{CALIBRATED} Signaling message. It indicates that the port is 
+      calibrated. If the \textit{CALIBRATED} message is received when the calibration pattern is 
+      being sent by the recipient, sending of the pattern shall be disabled. 
+% The message carries information about fixed delays
+%       of the sending port.
+
+\item[WR MODE ON] 			(abrv. M\_WR\_MODE\_ON)		Event triggered by the 
+      reception of the \textit{WR\_MODE\_ON} Signaling message. It indicates that the WR Master 
+      finished successfully the WR Link Setup and set the \text{wrModeOn} flag to TRUE. 
+%       It requests the WR Slave to set the \text{wrModeON} flag to TRUE.
+
+\item[RETRY $n_{name}$]	The White Rabbit state
+      machine waits in a given state for a transition event only for a limited time, called timeout.
+      The default timeout for the following states is defined by \textit{wrStateTimeout} 
+      (\ref{par:wrStateTimeout}): \textit{M\_LOCK}, \textit{CALIBRATED}, \textit{PRESENT}, 
+      \textit{S\_LOCK}, \textit{LOCKED}, \textit{CALIBRATION} and \textit{RESP\_CALIB\_REQ}.\\
+      The timeout for the  \textit{CALIBRATION} state shall be overwritten by the 
+      calPeriod \\ (\ref{par:calPeriod}), if its value is greater than 0x0. Otherwise 
+      \textit{wrStateTimeout} shall be used.
+      The timeout for the \textit{RESP\_CALIB\_REQ} shall be overwritten by the otherPortCalPeriod 
+      (\ref{par:otherPortCalPeriod}), if its value is greater than 0x0. Otherwise 
+      \textit{wrStateTimeout} shall be used.\\
+      After the timeout expires, the state is re-entered. A state can be re-entered for a maximum 
+      number of   
+      $n_{\{M\_LOCK, CALIBRATION, CALIBRATED, PRESENT, S\_LOCK, LOCKED, RESP\_CALIB\_REQ\}}$ times.\\
+      The default maximum number of state re-entering (retries) is defined by \textit{wrStateRetry} 
+      (\ref{par:wrStateRetry}). The number of $n_{CALIB}$ shall be overwritten by \textit{calRetry} 
+      (\ref{par:calRetry}) and $n_{RESP\_CALIB\_REQ}$ shall be overwritten by otherPortCalRetry 
+      (\ref{par:otherPortCalRetry}) if their values are greater then 0x0. Otherwise, 
+      \textit{wrStateRetry} shall be used.
+
+\item[EXCEED TIMEOUT RETRIES] 		(abrv. EXC\_TIMEOUT\_RETRY)	Indicates that a state 
+      has been re-entered for a maximum number of times \\
+      ($n_{\{M\_LOCK, CALIBRATION, CALIBRATED, PRESENT, S\_LOCK, LOCKED, RESP\_CALIB\_REQ\}}$) and 
+      the $n^{th}$ timeout has expired.
+									  
+\end{description}
+
+\newpage
+
+\subsection{Communication between WR State Machines}
+\label{sec:communicationWRfsm}
+
+This section clarifies the communication of the WR State Machines executed on different WR Ports 
+on the same link during the WR Link Setup. The communication is performed using WR Signaling Messages
+(section~\ref{wrSignalingMSG}). In particular, each WR Signaling Message is sent by a WR Port 
+upon entering a particular state of WR State Machine. The same message received on the other WR~Port 
+triggers a transition in the WR State Machine (section~\ref{sec:wrEventsAndConditions}).
+
+Table~\ref{tab:wrMsgVsEvents} lists the WR Signaling Messages associating them with the moment 
+of their transmission and the event they trigger on the reception WR Port. 
+It also specifies the WR Mode of the sending port.
+
+
+\begin{table}[ph!]
+\caption{Communication between WR State Machines on different Boundary Clocks.}
+\centering
+\begin{tabular}{| l | c | p{2.5cm} | c |}          \hline
+
+\textbf{WR Message} &\textbf{Sent on entering WR state} & \textbf{Sent by port} & 
+\textbf{Triggers event}    \\ 
+               &             	  & \textbf{in wrMode} 	  &  			           \\ \hline
+SLAVE\_PRESENT & PRESENT     	  & WR Slave		  & M\_SLAVE\_PRESENT	           \\ \hline
+LOCK           & M\_LOCK      	  & WR Master		  & M\_LOCK		           \\ \hline
+LOCKED         & LOCKED	     	  & WR Slave		  & M\_LOCKED		           \\ \hline
+CALIBRATE      & REQ\_CALIBRATION & WR Slave or 	  & M\_CALIBRATE	           \\ 
+	       & 		  & WR Master 		  & 			           \\ \hline
+CALIBRATED     & CALIBRATED	  & WR Slave or 	  & M\_CALIBRATED	           \\ 
+	       & 		  & WR Master 		  & 			           \\ \hline
+WR\_MODE\_ON   & WR\_LINK\_ON     & WR Master 		  & M\_WR\_MODE\_ON	           \\ \hline
+\end{tabular}
+\label{tab:wrMsgVsEvents}
+\end{table}
+
+\newpage
+
+\subsection{Communication between the WR State Machine and the hardware}
+\label{sec:communicationWithHW}
+
+White Rabbit extends the standard PTP communication with the hardware which includes 
+transmission/reception of messages and retrieval of timestamps.
+The WR communication with the hardware is needed during the WR Link Setup process 
+(by the WR State Machine) to control syntonization and fixed delay measurement and to retrieve 
+their values. Additionally, outside of the WR Link Setup process (throughout the normal operation 
+of the PTP State Machine) a quick detection of the link-down event is necessary. 
+
+\subsubsection{Input to hardware}
+\label{sec:inputHW}
+
+The information to the hardware by the WR State Machine is sent on the exiting or entering 
+a state of this machine, as described in the Table~\ref{tab:inputWrCommWithHW}. The inputs notify 
+the hardware about the need to start/stop a process (i.e. syntonization, pattern transmission).
+
+\subsubsection{Output from hardware}
+\label{sec:hwOutput}
+
+The hardware shall communicate two types of information to the WR State Machine
+\begin{itemize}
+\item event notification, i.e. termination of fixed delays measurement, completion of phase locking or
+      disconnection of the cable. 
+\item parameter value, i.e. fixed delays. 
+\end{itemize}
+
+An event notification shall be evaluated in a particular state of the WR State Machine (defined in 
+Table~\ref{tab:outputWrCommWithHW}) by means of polling or interrupt. Its occurrence in other 
+state than defined in Table~\ref{tab:outputWrCommWithHW} shall be ignored.
+
+The hardware output of a parameter value (i.e. deltaTx, deltaRx) shall be evaluated on the 
+occurrence of an associated event notification (i.e. HW\_CALIBRATED) 
+and its value shall be stored in the local Data Set, as defined in Table~\ref{tab:outputWrCommWithHW}.
+
+\newpage
+
+\begin{table}[ht!]
+\caption{Input to hardware.}
+\centering
+\begin{tabular}{| p{5.1cm} | p{2cm} | p{5.5cm} | p{2.6cm} |}          \hline
+
+\textbf{Hardware input}       & \textbf{Type }     & \textbf{Sent on }         & \textbf{Sent by port}  \\ 
+                     &                    &         	 	      & \textbf{in wrMode} \\ \hline
+\small
+HW\_START\_LOCKING   & event notification & entering the 
+					    S\_LOCK State          & WR Slave           \\ \hline
+HW\_START\_CALIBRATION\footnotemark[7]
+		      & event notification & entering the CALIBRATION  
+					    State		       & WR Slave and WR Master \\ \hline
+HW\_ENABLE\_PATTERN  & event notification & entering the CALIBRATION and 
+					    RESP\_CALIB\_REQ States & WR Slave and WR Master \\ \hline
+HW\_DISABLE\_PATTERN & event notification & exiting the CALIBRATION and 
+					    RESP\_CALIB\_REQ States & WR Slave and WR Master           \\ \hline
+\end{tabular}
+\label{tab:inputWrCommWithHW}
+\end{table}
+
+\footnotetext[7]{Calibration is optional and implementation specific.}
+\addtocounter{footnote}{1}
+
+
+\begin{table}[ht!]
+\caption{Output to hardware.}
+\centering
+\begin{tabular}{| p{5.1cm} | p{2cm} | p{3.5cm} | p{1.7cm} | p{2.4cm} |}          \hline
+
+\textbf{Hardware output}
+            &\textbf{Type}& \textbf{Evaluated}    & \textbf{Evaluated by port} & \textbf{Action} \\ 
+            &             &         	          & \textbf{in wrMode}         &           \\ \hline
+\small
+HW\_CALIBRATED\footnotemark[7]
+		& event notification    & in the CALIBRATION 
+			    State		  & WR~Slave and WR~Master& $calibrated$ Data Set field is set to TRUE, consequently WR State Machine transition is triggered\\ \hline
+HW\_LOCKED      & even notification     & in the S\_LOCK State   & WR~Slave& Triggers transition in WR State Machine\\ \hline
+HW\_LINK\_DOWN  & even notification     & always   & WR~Slave and WR~Master & Defined in \ref{sec:LinkDown}.\\ \hline
+%Set wrModeON to FALSE, and wrMode to NON\_WR \\ \hline
+$deltaTx$\footnotemark[7]
+		& UInteger64~\footnotemark[8]  & on reception of 
+                            HW\_CALIBRATED        & WR~Slave and WR~Master& Save the value in deltaTx DS field.\\ \hline
+$deltaRx$\footnotemark[7]
+		& UInteger64~\footnotemark[8]  & on reception of 
+                            HW\_CALIBRATED        & WR~Slave and WR~Master& Save the value in deltaRx DS field. \\ \hline
+% $t_{1}$	    & Integer64   & on sending Sync message& WR~Master             & Send in FollowUp (nanosecond part in correctionField)\\ \hline
+% $t_{p2}$    & Integer64   & on receiving Sync message & WR~Slave              & Save\\ \hline
+% $t_{3}$     & Integer64   & on sending Delay\_Req message & WR~Slave              & Save\\ \hline
+% $t_{p4}$    & Integer64   & on receiving Delay\_Req message & WR~Master             & Send in Delay\_Resp (nanosecond part in correctionField)\\ \hline
+
+
+\end{tabular}
+\label{tab:outputWrCommWithHW}
+\end{table}
+
+\footnotetext[8]{The value of $\Delta_{tx_m,rx_s,rx_m,tx_s}$ measured in picoseconds and 
+multiplied by $2^{16}$.}
+\addtocounter{footnote}{1}
+
+\newpage
+
+\subsection{Link Down}
+\label{sec:LinkDown}
+
+Standard PTP can accommodate a temporary connection loss on a link performing the protocol. Therefore 
+detection of link down does not mean instant break in the operation of the PTP protocol. Appropriate 
+action is taken only after a timeout expires (i.e. PTP State Machine transition and 
+Data Sets updates). 
+In WR, any loss of connection on a link performing WRPTP results in syntonization failure 
+and requires re-establishing the WR Link. Therefore, on reception of the HW\_LINK\_DOWN hardware event 
+notification (\ref{sec:hwOutput}), the following actions shall be performed:
+\begin{itemize}
+  \item wrModeOn (\ref{par:wrModeON}) shall be set to the initialization value (Table~\ref{tab:wrDS}).
+  \item wrMode (\ref{par:wrMode}) shall be set to the initialization value (Table~\ref{tab:wrDS}).
+  \item calibrated (\ref{par:calibrated}) shall be set to the initialization value (Table~\ref{tab:wrDS}).
+  \item the record of Foreign Masters on the port on which the event occurred shall be cleared.
+\end{itemize}
+
+
+\subsection{Re-establishing the WR Link}
+\label{sec:reestablishingWRLink}
+
+It shall be possible for an external event (user demand, management message) which occurs on 
+a WR Port in an \textit{active} WR Mode (wrModeOn=TRUE, section~\ref{par:wrMode}) 
+to enforce re-establishing of the WR Link, i.e. by performing the WR Link Setup. 
+ 
+The WR\_MODE\_OFF event instantiation is WR-implementation-specific. This event should be
+instantiated whenever a WR Port is in the IDLE state of the WR State Machine (regardless of the
+PTP state) and the implementation circumstances are detected that require re-establishing 
+the WR Link.
+
+The WR\_MODE\_OFF event results in setting the wrModeOn DS field of a given WR Port to FALSE.
+
+% \subsection{Master-only WR ordinary clocks}
+% \label{sec:masterOnly}
+% 
+% A WR Node may be designated to be a master-only. A master-only WR Node shall be a WR-compatible 
+% non-slave-only (as defined in PTP) ordinary clock with the following changes to a default WR 
+% configuration:
+% \begin{itemize}
+%   \item wrConfig   = WR\_M\_ONLY.
+%   \item clockClass = 70 (see \ref{sec:wrptpProfile}).
+% \end{itemize}
+
+\newpage
+
+\subsection{White Rabbit PTP Profile Summary}
+\subsubsection{Identification}
+\label{sec:wrptpProfile}
+
+\begin{table}[ph!]
+\caption{Profile print form (clause 19.3.3 of PTP)}
+\centering
+\begin{tabular}{| c | c |}          					\hline
+\multicolumn{2}{|c|}{\textbf{PTP Profile}}  				  \\ \hline
+profleName           &  White Rabbit     				  \\ \hline
+profileVersion       &  1.0               				  \\ \hline
+profileIdentifier    &  08-00-03-00-01-00 				  \\ \hline
+organizationName     &  European Organization for Nuclear Research (CERN) \\ \hline
+sourceIdentification &  http://www.ohwr.org/projects/white-rabbit         \\ \hline
+\end{tabular}
+\label{tab:wrPtpProfile}
+\end{table}
+
+\subsubsection{PTP attribute values}
+
+All nodes shall support the ranges and shall have the default initialization values for 
+the attributes as follows:
+\begin{itemize}
+  \item portDS.logSyncInterval: The default initialization value shall be 0. The configuration range
+	shall be -1 to 6.
+  \item defaultDS.priority1: The default initialization value shall be 64.
+  \item defaultDS.domainNumber: The default initialization value shall be 0. Only the default 
+	domain is allowed.
+\end{itemize}
+
+\subsubsection{PTP Options}
+
+All options of 15.5.4.1.7 and clause 17 of PTP are permitted. By default, these options shall be 
+inactive unless specifically activated by a management procedure.
+\\
+The node management shall implement the management message mechanism of the IEEE1588-2008 standard.
+\\
+The best master algorithm shall be the algorithm specified in section~\ref{sec:wrBMC} of this 
+document (Modified BMC).
+\\
+The delay request-response mechanism shall be the only path delay measurement mechanism.
+\\
+The TLV mechanism described in section~\ref{sec:wrMSG} shall be supported.
+\\
+
+% \subsection{WRPTP Extension to PTP}
+% 
+% WRPTP extends PTP by adding the state transition event defined in section~\ref{ptpStateMachine}.
+
+\subsection{Implementation-specific additions to PTP required by WRPTP}
+ 
+WRPTP shall implement the following implementation-specific features:
+\begin{itemize}
+  \item issuing PTP messages with a WR TLV (i.e. suffixed Announce and Signaling messages),
+	as described in section~\ref{sec:wrMSG},
+  \item proper handling of PTP messages with a WR TLV as described in \ref{sec:wrMSG},
+  \item a non-preemptive WR state machine as defined in \ref{wrFSM},
+  \item WR data set and additional WR-specific fields to PTP data sets as defined in 
+	\ref{sec:wrDS},
+  \item SYNCHRONIZATION\_FAULT state transition as defined in \ref{sec:synchronizationFault},
+  \item MASTER\_CLOCK\_SELECTED state transition as defined in \ref{sec:masterClockSelected},
+  \item communication with hardware as described in \ref{sec:communicationWithHW}.
+\end{itemize}
+
+
+\newpage
+\begin{center}
+\huge Appendix
+\end{center} 
+
+\normalsize
+\appendix
+\section{PTP State Machine}
+\label{ptpFSM}
+
+ \begin{figure}[ht!]
+   \centering
+   \includegraphics[width=0.8\textwidth]{../../../figures/protocol/ptpFSM.ps}
+   \caption{State machine for a full implementation of PTP (Figure 23, IEEE1588).}
+   \label{fig:ptpFSM}
+ \end{figure}
+ 
+ \newpage
+
+
+
+\begin{table}[hp!]
+\caption{PTP portState definition (Table 10, IEEE1588).}
+\centering
+\begin{tabular}{| c | p{9.5cm} |}          \hline
+\textbf{PTP portState}  &  \textbf{Description} \\ 
+&   \\ \hline
+\small
+INITIALIZING       &  \small While a port is in the INITIALIZING state, the port initializes its 
+		      data sets, hardware, and
+		      communication facilities. No port of the clock shall place any PTP messages
+		      on its
+		      communication path. If one port of a boundary clock is in the INITIALIZING 
+		      state, then all ports
+		      shall be in the INITIALIZING state.  \\ \hline
+FAULTY             &  \small The fault state of the protocol. A port in this state shall not place 
+		      any PTP messages except for
+		      management messages that are a required response to another management 
+		      message on its
+		      communication path. In a boundary clock, no activity on a faulty port  
+		      shall affect the other ports
+		      of the device. If fault activity on a port in this state cannot be confined 
+		      to the faulty port, then all
+		      ports shall be in the FAULTY state. \\ \hline
+DISABLED           &  \small The port shall not place any messages on its communication path. In a
+		      boundary clock, no
+		      activity at the port shall be allowed to affect the activity at any other
+		      port of the boundary clock.
+		      A port in this state shall discard all PTP received messages except for 
+		      management messages. \\ \hline
+LISTENING          &  \small The port is waiting for the announceReceiptTimeout to expire or to
+		      receive an Announce
+		      message from a master. The purpose of this state is to allow orderly addition 
+		      of clocks to a
+		      domain. A port in this state shall not place any PTP messages on its 
+		      communication path except
+		      for Pdelay\_Req, Pdelay\_Resp, Pdelay\_Resp\_Follow\_Up, or signaling 
+		      messages, or management
+		      messages that are a required response to another management message. \\ \hline
+PRE\_MASTER         & \small The port shall behave in all respects as though it were in the 
+		      MASTER state except that it shall
+		      not place any messages on its communication path except for Pdelay\_Req, 
+		      Pdelay\_Resp,
+		      Pdelay\_Resp\_Follow\_Up, signaling, or management messages.  \\ \hline
+MASTER             &  \small The port is behaving as a master port.   \\ \hline
+PASSIVE            &  \small The port shall not place any messages on its communication path except 
+		      for Pdelay\_Req,
+		      Pdelay\_Resp, Pdelay\_Resp\_Follow\_Up, or signaling messages, or management
+		      messages that
+		      are a required response to another management message.\\ \hline
+UNCALIBRATED       &  \small One or more master ports have been detected in the domain. The 
+		      appropriate master port has
+		      been selected, and the local port is preparing to synchronize to the selected 
+		      master port. This is a
+		      transient state to allow initialization of synchronization servos, updating of
+		      data sets when a new
+		      master port has been selected, and other implementation-specific activity.   
+		      \\ \hline
+SLAVE              &  \small The port is synchronizing to the selected master port.  \\ \hline
+\end{tabular}
+\label{tab:ptp_port_state_def}
+\end{table}
+
+
+\newpage
+
+\section{Example White Rabbit Hardware Support Implementation}
+\label{sec:sampleHW}
+
+%\subsection{Introduction}
+
+A White Rabbit switch, described in Tomasz W\l{}ostowski's Master Thesis \cite{tomekMSC}, 
+implements WRPTP and WR Hardware Support for Gigabit Ethernet over fiber. 
+The most important fragments of the document are cited below (with necessary modifications).
+The citation is approved by the author.
+
+% Figure \ref{fig:ptp_wr_flow} shows the order of the PTP message exchanges
+% during all the phases of the synchronization process, indicating which
+% messages are standard PTP (black) and WR-specific (red). The drawing is an overview of 
+% the entire WR-PTP synchronization flow described in below.
+% 
+% \begin{figure}[htb]
+%   \centering
+%   \includegraphics[width=0.8\textwidth]{fig/tomeksDrawings/ptp_wr_flow.eps}
+%   \caption{PTP message flow during WR synchronization.}
+%   \label{fig:ptp_wr_flow}
+% \end{figure}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+\input{from_tomeks_msc}
+% \include{from_tomeks_msc}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \subsection{Measurement of fixed delays for Gigabit Ethernet over Optic Fiber}
+% \label{sec:calibForGigbitE}
+% 
+% The variation of $\Delta_{\{tx_m, rx_s, tx_s, rx_m\}}$ delays is often caused by 
+% the PHY's serializer / deserializer (SerDes), phase locked loop (PLL) or clock and 
+% data recovery circuitry (CDR). The delay on the PHY can be measured by detecting 
+% the phase shift between SerDes I/O and Tx/Rx clock. Such methods can by applied to the
+% PHYs whose maximum ($\Delta_{max}$) and minimum ($\Delta_{min}$) delays are known 
+% (provided in the datasheet) and the delay's variation is
+% \begin{equation}
+%   \label{eq:fixedDelayVariation}
+%   \Delta_{variable} \in \langle 0 : \Delta_{max} - \Delta_{min} \rangle
+% \end{equation}
+% e.g. below 10 bit times in case of Gigabit Ethernet. 
+% Therefore, a fixed delay can be expressed as a sum of a constant value 
+% ($\Delta_{min}$) and a variable part ($\Delta_{variable}$) which needs to be measured:
+% \begin{equation}
+%   \label{eq:fixedDelay}
+%   \Delta_{\{tx_m, rx_s, tx_s, rx_m\}} = \Delta_{min\_\{tx_m, rx_s, tx_s, rx_m\}} + \Delta_{variable\_\{tx_m, rx_s, tx_s, rx_m\}}
+% \end{equation}
+%  
+% In White Rabbit, the measurement of fixed delay's variable part ($\Delta_{variable}$) is done by 
+% sending a repeated pattern of five "0" and five "1" (0000011111) over Gigabit Ethernet.
+% Such signal creates a 125~MHz clock on the SerDes I/O. Since the Tx/Rx clock 
+% frequency is 125~MHz, the phase shift between the SerDes I/O and the Tx/Rx 
+% clocks is equal to $\Delta_{variable}$ of the PHY (see Figure~\ref{fig:wrCalibration}). 
+% 
+% 
+% The repeated pattern of five "0" and five "1" is defined by the IEEE 802.3 standard \cite{IEEE802.3} 
+% as \textit{Low-frequency test pattern} (Appendix~36A.2). It shall be generated in WR nodes 
+% by a repeated transmission of RD+ K28.7 code-group.
+% 
+% 
+% \begin{figure}[ht!]
+%   \centering
+%   \includegraphics[width=0.60\textwidth]{fig/calibrate.ps}
+%   \caption{Measurement of fixed delays $\Delta_{\{tx, rx\}}$ in Gigabit Ethernet-based WR node with 
+% not fully-deterministic PHY.}
+%   \label{fig:wrCalibration}
+% \end{figure}
+% 
+% Measurement of fixed delays for Gigabit Ethernet over optic fiber, and any other medium, is optional. 
+% It is not needed if deterministic PHYs or internal FPGA transceivers which can be internally 
+% characterized \cite{Peek2010} are used. In such case, the information about the fixed delays is 
+% distributed across the link without preceding measurement.
+% 
+% \newpage
+% 
+% \subsection{Fine Delay Measurement}
+% \label{sec:FineDelayMeasurement}
+
+
+\newpage
+
+\section{Typical flow of WR Signaling message exchange}
+\label{ap:wr_lsu_flow}
+\begin{figure}[ht!]
+  \centering
+%  \vspace{-1.3cm}
+  \includegraphics[width=1.0\textwidth]{../../../figures/protocol/wrMSGsExchangeFlow.ps}
+  \caption{Typical flow of events (no exceptions) during WR Link Setup.}
+  \label{fig:wrFSMcommun}
+\end{figure}
+
+\newpage
+
+
+\section{PTP and WR FSMs from POWER ON use case}
+\label{ap:ptpAndWrFSMS}
+\begin{figure}[ht!]
+  \centering
+%  \vspace{-1.3cm}
+  \includegraphics[width=1.0\textwidth]{../../../figures/protocol/ptpAndWrFSMs.ps}
+  \caption{PTP and WR FSMs from POWER ON use case}
+  \label{fig:wrFSMcommun}
+\end{figure}
+
+\newpage
+
+
+\section{Primitive data types}
+\label{ap:wrDataTypes}
+
+\begin{table}[ht!]
+\caption{Primitive data types}
+\centering
+\begin{tabular}{| c | c |}          					\hline
+\textbf{Data type  } &  \textbf{Definition}				  \\ 
+		     &  	               				  \\ \hline
+UInteger8	     &   8-bit unsigned integer				  \\ \hline
+UInteger16	     &  16-bit unsigned integer				  \\ \hline
+UInteger32	     &  32-bit unsigned integer				  \\ \hline
+ Integer64	     &  64-bit integer					  \\ \hline
+UInteger64	     &  64-bit unsigned integer				  \\ \hline
+\end{tabular}
+\label{tab:wrPtpProfile}
+\end{table}
+
+
+\section{Computations using the two-step delay request-response mechanism with asymmetry correction}
+\label{ap:computationsExplanation}
+
+The method of incorporating asymmetry obtained using the WR Link Model by the WR Slave 
+is WRPTP-implementation specific. Below, a summary of PTP offset ($<offsetFromMaster>$) 
+and mean delay ($<meanDelayPath>$) calculations are presented. They are followed by 
+two methods of including WR asymmetry, with the later being recommended. 
+The method used might vary among WR Slaves.
+
+\subsection{Overview of PTP offset and mean path delay calculations}
+\label{ap:ptpComputations}
+[Citing \cite{IEEE1588}] \\
+The two-step delay request-response for a boundary or ordinary clock,:
+\begin{enumerate}
+  \item Sync message transmission (section 9.5.9 of \cite{IEEE1588}):
+    \begin{itemize}
+      \item The $<syncEventEgressTimestamp>$  ($t_1$) shall be generated upon 
+	    transmission of the Sync message.
+      \item The originTimestamp field of the Sync message shall be 0.
+      \item The correctionField of the Sync message shall be set to 0.
+    \end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\begin{align}
+	  \label{eq:Sync_tx}
+	  Sync.originTimestamp = 0 \\
+	  Sync.correctionField = 0
+	\end{align}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \item Sync message reception (section 9.5.4 and 11.6.2 of \cite{IEEE1588}):
+    \begin{itemize}
+      \item The $t_2$ shall be generated upon reception of the Sync message.
+      \item The sync message correctionField shall be adjusted for asymmetry by adding the value of 
+	    the ingress path delayAsymmetry prior to its any use in a computation.
+    \end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\begin{align}
+	  \label{eq:Sync_rx}
+	  Sync.correctionField = delayAsymmetry
+	\end{align}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \item Follow\_Up message transmission (section 9.5.10 of \cite{IEEE1588}):
+    \begin{itemize}
+      \item The preciseOriginTimestamp field of the Follow\_Up should be \\
+	    the $<syncEventEgressTimestamp>$ of the associated Sync message excluding 
+	    any fractional nanoseconds of the associated Sync message.
+      \item The correctionField field of the Follow\_Up shall be the fractional nanoseconds part of 
+	    the $<syncEventEgressTimestamp>$ of the associated Sync message.
+    \end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\begin{align}
+	  \label{eq:follow_up_tx}
+	  Follow\_Up.preciseOriginTimestamp &= seconds\_and\_nanoseconds(t_1)\\
+	  Follow\_Up.correctionField &=  fractional\_ns\_part(t_1)\\
+	  <syncEventEgressTimestamp>= t_1 &= Follow\_Up.preciseOriginTimestamp \\
+		\nonumber	     &+ Follow\_Up.correctionField
+	\end{align}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \item Delay\_Req message transmission (section 11.6.3 and 11.3.2 of \cite{IEEE1588}):
+    \begin{itemize}
+      \item Prior to transmission on an egress port the correctionField of 
+	    the Delay\_Req message shall be modified by subtracting the value of the egress 
+	    path delayAsymmetry from its correctionField.
+      \item The $t_3$ timestamp shall be generated upon transmission of the Delay\_Req message.
+    \end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	  \begin{align}
+	    \label{eq:follow_up_rx}
+	    Delay\_Req.correctionField &= -delayAsymmetry \\
+	    Delay\_Req.originTimestamp &= 0
+	  \end{align}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \item Delay\_Req message reception (section 9.5.6 of \cite{IEEE1588}):
+    \begin{itemize}
+      \item The $<delayReqEventIngressTimestamp>$ ($t_4$)  
+	    shall be generated upon receipt of the Delay\_Req message.
+    \end{itemize}
+  \item Delay\_Resp message transmission (section 9.5.12 and 11.3.2 of \cite{IEEE1588}):
+    \begin{itemize}
+      \item The receiveTimestamp field of the Delay\_Resp message shall be set to the seconds and 
+	    nanoseconds portion of the time $t_4$.
+      \item The correctionField of the Delay\_Req message shall be set to 0 and then 
+	    the correctionField of the Delay\_Resp message shall be added to it and
+	    the fractional nanoseconds portion of $t_4$ shall be subtracted from the 
+	    corrctionField of Delay\_Resp message.
+    \end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	  \begin{align}
+	    \label{eq:delay_resp_tx}
+	    Delay\_Resp.correctionField 	&= Delay\_Req.correctionField \\
+					  &- fractional\_ns\_part(t_4)\\
+	  \nonumber	 		&= -(delayAsymmetry + fractional\_ns\_part(t_4)) \\
+	    Delay\_Resp.receiveTimestamp 	&= seconds\_and\_nanoseconds(t_4)
+	  \end{align}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \item Delay\_Resp message reception (section 11.3.2 of \cite{IEEE1588}):
+    \begin{itemize}
+      \item The $<meanPathDelay>$ shall be computed as follows
+    \end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	  \begin{align}
+	    \label{eq:meanPathDelay}
+	    <meanPathDelay> &=[(t_2 - t_3) \\
+	  \nonumber	  &+ (Delay\_Resp.receiveTimestamp \\
+	  \nonumber	  &- Follow\_Up.preciseOeriginTrimestamp)\\ 
+	  \nonumber	  &- Sync.correctionField \\
+	  \nonumber	  &- Follow\_Up.correctionField \\
+	  \nonumber	  &- Delay\_Resp.correctionField]/2
+	  \end{align}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \item Computation of the clock offset  (section 11.2 of \cite{IEEE1588}):
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	  \begin{align}
+	    \label{eq:offset}
+	    <offsetFromMaster> &=t_2 \\
+	  \nonumber	  &- Follow\_Up.preciseOriginTimestamp \\
+	  \nonumber	  &- <meanPathDelay> \\
+	  \nonumber	  &- Sync.correctionField \\
+	  \nonumber	  &- Follow\_Up.correctionField 
+	  \end{align}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{enumerate}
+
+\subsection{WR asymmetry as PTP communication path asymmetry}
+
+The asymmetry obtained using the WR Link Model ($asymmetry$, section \ref{sec:delayAsymCal}) 
+can be seen as a communication path asymmetry $delayAsymmetry$ as defined in 7.4.2 
+of \cite{IEEE1588}
+\begin{equation}
+\label{eq:ptpAsym}
+  delayAsymmetry= asymmetry
+\end{equation}
+and incorporated into the PTP calculations as described in Appendix~\ref{ap:ptpComputations}, 
+equations \eqref{eq:Sync_rx} and \eqref{eq:follow_up_rx}.
+
+\subsubsection{Solution for Ethernet over a Single-mode Optical Fiber}
+
+In the case of the solution for Ethernet over a single-mode Optic Fiber 
+(section\ref{sec:EthernetOverSingleModeFiber}), it can be calculated using directly 
+equation~\eqref{eq:aqasymm}, where $\mu$ is $<meanDelayPath>$ obtained using 
+equation~\eqref{eq:meanPathDelay}:
+\begin{equation}
+\label{eq:delayAsymmetry}
+  delayAsymmetry= \Delta_{tx_m} + \Delta_{rx_s} - \frac{\Delta - \alpha * <meanDelayPath> 
+			  + \alpha * \Delta}{2 + \alpha}
+\end{equation}
+It needs to be noted, that the $delayAsymmetry$ used in calculation of $<meanDelayPath>$ and\\
+$<offsetFromMaster>$ is computed based on a previous measurement of the \\$<meanDelayPath>$. 
+This is because the standard \cite{IEEE1588} seems to assume that, if available, the 
+$delayAsymmetry$ is constant and known in advance.
+
+Therefore, a direct incorporation of the asymmetry calculated using the WR Link Model into 
+$<meanDelayPath>$ and $<offsetFromMaster>$ is recommended.
+
+\subsection{Direct WR asymmetry incorporation into PTP computations}
+
+The asymmetry obtained using the WR Link Model ($asymmetry$, section \ref{sec:delayAsymCal})  
+can be incorporated directly into the computation 
+of $<meanDelayPath>$ and $<offsetFromMaster>$. In such case, the $delayAsymmetry$ as defined 
+in 7.4.2 of \cite{IEEE1588}, is set to 0x0 (equations \eqref{eq:Sync_rx} and 
+\eqref{eq:follow_up_rx}). The $<meanDelayPath>$ value is calculated using \eqref{eq:meanPathDelay} 
+and corrected with $asymmetry$ to obtain $<pathDelay_{MS}>$,
+\begin{equation}
+\label{eq:pathDelayMS}
+  <pathDelay_{MS}>= <meanDelayPath> + asymmetry
+\end{equation}
+which is used to compute $<offsetFromMaster>$ using \eqref{eq:offset}:
+\begin{align}
+  \label{eq:WRoffset}
+  <offsetFromMaster> &=t_2 \\
+\nonumber	  &- Follow\_Up.preciseOriginTimestamp \\
+\nonumber	  &- <pathDelay_{MS}> \\
+\nonumber	  &- 0 \\
+\nonumber	  &- Follow\_Up.correctionField \\
+		  &=t_{2}-t_1 - <pathDelay_{MS}>
+\end{align}
+
+
+\subsubsection{Solution for Ethernet over a Single-mode Optical Fiber}
+
+A WR Slave, which assumed communication path asymmetry to be 0 ($delayAsymmetry=0$) and measured
+timestamps $t_2$ and $t_3$, can assemble the timestamps received from the WR Master follows:
+\begin{align}
+  \label{eq:t1}
+	    t_1 &= Follow\_Up.preciseOriginTimestamp \\
+ \nonumber 	&+ Follow\_Up.correctionField 
+\end{align}
+and
+\begin{align}
+  \label{eq:t4}
+	    t_{4} 	&= Delay\_Resp.receiveTimestamp \\
+\nonumber		&- Delay\_Resp.correctionField 	
+\end{align}
+Having all timestamps ($t_1$, $t_2$, $t_3$, $t_4$), the fixed delays 
+($\Delta_{txm}$,$\Delta_{rxs}$, $\Delta_{txs}$, $\Delta_{rxm}$) and relative delay coefficient 
+($\alpha$), the WR Link Model can be combined with the PTP computation to obtain directly the 
+correct values of $<delayPath_{MS}>$ and $<offsetFromMaster>$ :
+\begin{eqnarray}
+  <delayPath_{MS}> & = & \frac{1+\alpha}{2+\alpha} 
+			[(t_4-t_1) + (t_3-t_2) - \Delta] + \Delta_{txm} + \Delta_{rxs} \\
+  <offsetFromMaster> & = & t_{2} - t_{1}  - <delayPath_{MS}>
+\end{eqnarray}
+where
+\begin{eqnarray}
+  \Delta & = & \Delta_{txm} + \Delta_{rxs} + \Delta_{txs} + \Delta_{rxm}
+\end{eqnarray}
+
+\newpage
+
+
+\begin{thebibliography}{9}
+
+
+
+\bibitem{IEEE1588}
+  IEEE Std 1588-2008
+  \emph{IEEE Standard for a Precision Clock Synchronization Protocol for Networked Measurement and 
+Control Systems}.
+  IEEE Instrumentation and Measurement Society, New York,
+  2008,
+  http://ieee1588.nist.gov/.
+
+\bibitem{IEEE802.3}
+  IEEE Std 802.3-2008
+  \emph{IEEE Standard for Information technology -- Telecommunications and information exchange 
+	between systems -- Local and Metropolitan area networks -- Specific requirements}.
+  IEEE Computer Society, New York,
+  2008.
+
+\bibitem{SynchE}
+  ITU-T G.8262/Y.1362
+  \emph{Timing characteristics of a synchronous
+  Ethernet equipment slave clock}.
+  TELECOMMUNICATION STANDARDIZATION SECTOR OF ITU, 
+  07/2010.
+
+\bibitem{tomekMSC}
+  Tomasz W\l{}ostowski
+  \emph{Precise time and frequency transfer in a White Rabbit network}.
+  Warsaw University of Technology, 
+  05/2011.
+
+\bibitem{Peek2010}
+  P.P.M. Jansweijer, H.Z. Peek,
+  \emph{Measuring propagation delay over a 1.25 Gbps bidirectional data link}.
+  National Institute for Subatomic Physics, Amsterdam,
+  2010,\\
+  http://www.nikhef.nl/pub/services/biblio/technicalreports/ETR2010-01.pdf.
+
+\bibitem{Takahide}
+  Takahide Murakami and Yukio Horiuchi,
+  \emph{A Master Redundancy Technique in IEEE 1588 Synchronization with a Link Congestion
+  Estimation}.
+  ISPCS Proccedings,
+  2010,\\
+
+\bibitem{allan90}
+  D.B Sullivan, D.W. Allan, D.A. Howe, F.L. Walls,
+  \emph{Characterization of Clocks and Oscillators}.
+  http://tf.nist.gov/general/pdf/868.pdf, 
+  NIST Technical Note,
+  1990.\\
+
+\bibitem{icalepcs09}
+  J. Serrano, P. Alvarez, M. Cattin, E. G. Cota, J. H. Lewis, P. Moreira, T. W\l{}ostowski
+  and others,
+  \emph{The White Rabbit Project}.
+  ICALEPCS TUC004,
+  2009.\\
+
+\bibitem{saleh07}
+  Bahaa E.A. Saleh and Malvin Carl Teich,
+  \emph{Fundamentals of Photonics}.
+  Wiley-Interscience,
+  2007.\\
+
+\end{thebibliography}
+
+
+\end{document}
