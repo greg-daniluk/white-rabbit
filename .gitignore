@@ -1,0 +1,12 @@
+*~
+*.swp
+*.ps
+*.eps
+#latex generated stuff
+*.dat
+*.log
+*.out
+*.aux
+*.dvi
+*.ps
+*.toc
