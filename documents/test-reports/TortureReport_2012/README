@@ -1,0 +1,6 @@
+A complete data set gathered during tests described in the report is available
+in the White Rabbit svn repository:
+http://svn.ohwr.org/white-rabbit-old/trunk/documentation/temperature-tests/dataAnalysis
+
+Figures used in the report can be found under:
+figures/measurements/TortureReport_2012 in this git repository.
