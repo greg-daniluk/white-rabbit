@@ -2,16 +2,12 @@ all : robustness.pdf
 
 .PHONY : all clean
 
-robustness.pdf : robustness.tex figs
+robustness.pdf : robustness.tex
 	latex $^
 	latex $^
 	dvips robustness
 	ps2pdf robustness.ps
 
-figs:
-	$(MAKE) -C fig
-
 clean :
-	$(MAKE) clean -C fig 
-	rm -f *.eps *.pdf *.dat *.log *.out *.aux *.dvi *.ps
+	rm -f *.eps *.pdf *.dat *.log *.out *.aux *.dvi *.ps *.nav *.snm *.toc
 
