@@ -58,6 +58,8 @@
    \addtocounter{framenumber}{\value{framenumberappendix}} 
 }
 
+\graphicspath{ {../../figures/} }
+
 
 \title[White Rabbit \hspace{2em}\insertframenumber/\inserttotalframenumber]
 {The White Rabbit project\\ \small an Ethernet-based solution for sub-ns synchronization and deterministic delivery}
@@ -68,7 +70,7 @@
 \date{30 January 2014}
 
 
-\pgfdeclareimage[height=0.6cm]{wr-logo}{../../figures/logo/WRlogo.ps}
+\pgfdeclareimage[height=0.6cm]{wr-logo}{logo/WRlogo.ps}
 \logo{\pgfuseimage{wr-logo}}
 \AtBeginSection[]
 
@@ -92,7 +94,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{What's in a name ?}
 \begin{center}
-\includegraphics[height=5cm]{../../figures/misc/Alice-wr.ps}
+\includegraphics[height=5cm]{misc/Alice-wr.ps}
 \end{center}
 \begin{center}
 \textit{Oh dear! Oh dear! I shall be too late!}\\
@@ -116,7 +118,7 @@ The White Rabbit in charge of real time
 	  \end{itemize}
 	\column{0.3\textwidth}
 		\begin{center}
-		\includegraphics[width=1.0\textwidth]{../../figures/logo/WRlogo.ps}
+		\includegraphics[width=1.0\textwidth]{logo/WRlogo.ps}
 		\end{center}
 	\end{columns}
 \end{frame}
@@ -124,7 +126,7 @@ The White Rabbit in charge of real time
 
 \begin{frame}{Why we use Open Hardware ?}
   \begin{center}
-    \includegraphics[width=.7\textwidth]{../../figures/ohwr/commercial_vs_proprietary.ps}
+    \includegraphics[width=.7\textwidth]{ohwr/commercial_vs_proprietary.ps}
   \end{center}
   \begin{itemize}
     \item Get a design just the way we want it
@@ -156,7 +158,7 @@ The White Rabbit in charge of real time
 	  \end{itemize}
 	\column{0.5\textwidth}
 		\begin{center}
-		\includegraphics[width=1.0\textwidth]{../../figures/misc/rabbit.eps}
+		\includegraphics[width=1.0\textwidth]{misc/rabbit.eps}
 		\end{center}
 	\end{columns}
 
@@ -187,7 +189,7 @@ The White Rabbit in charge of real time
 
   \column{.6\textwidth}
     \begin{center}
-    \includegraphics[height=1.05\textwidth]{../../figures/network/wr_network-enhanced_pro.eps}
+    \includegraphics[height=1.05\textwidth]{network/wr_network-enhanced_pro.eps}
     \end{center}
 \end{columns}
 
@@ -197,7 +199,7 @@ The White Rabbit in charge of real time
 \begin{frame}{White Rabbit Switch }
 
     \begin{center}
-    \includegraphics[width=6.0cm]{../../figures/switch/wrSwitchV3.ps}
+    \includegraphics[width=6.0cm]{switch/wrSwitchV3.ps}
     \end{center}
 
 	\begin{itemize}
@@ -218,17 +220,17 @@ The White Rabbit in charge of real time
     \item all carriers equipped with a White Rabbit port
   \end{itemize}
   \begin{center}
-  \includegraphics[height=0.5\textheight]{../../figures/node/shw_kit2.ps}
+  \includegraphics[height=0.5\textheight]{node/shw_kit2.ps}
   \end{center}
 \end{frame}
 
 \begin{frame}{White Rabbit Node - example}
   \begin{center}
-  \includegraphics<1>[width=\textwidth]{../../figures/node/specInterior2.ps}
-  \includegraphics<2>[width=\textwidth]{../../figures/network/kit_sync1.ps}
-  \includegraphics<3>[width=\textwidth]{../../figures/network/kit_sync2.ps}
-  \includegraphics<4>[width=\textwidth]{../../figures/network/kit_sync3.ps}
-  \includegraphics<5>[width=\textwidth]{../../figures/network/kit_sync4.ps}
+  \includegraphics<1>[width=\textwidth]{node/specInterior2.ps}
+  \includegraphics<2>[width=\textwidth]{network/kit_sync1.ps}
+  \includegraphics<3>[width=\textwidth]{network/kit_sync2.ps}
+  \includegraphics<4>[width=\textwidth]{network/kit_sync3.ps}
+  \includegraphics<5>[width=\textwidth]{network/kit_sync4.ps}
   \end{center}
 \end{frame}
 
@@ -241,7 +243,7 @@ The White Rabbit in charge of real time
 	\end{itemize}
 
     \begin{center}
-    \includegraphics<1>[height=0.5\textheight]{../../figures/node/wrpc_overview.eps}
+    \includegraphics<1>[height=0.5\textheight]{node/wrpc_overview.eps}
     \end{center}
 \end{frame}
 
@@ -255,7 +257,7 @@ The White Rabbit in charge of real time
     \end{itemize}
     \column{.4\textwidth}
     \begin{center}
-      \includegraphics[width=\textwidth]{../../figures/ohwr/ohr_logo.eps}
+      \includegraphics[width=\textwidth]{ohwr/ohr_logo.eps}
       \begin{block}{}
         \begin{center}
         \url{http://www.ohwr.org}
@@ -293,7 +295,7 @@ The White Rabbit in charge of real time
 \begin{columns}[c]
   \column{1.2in}
   \begin{center}
-    \includegraphics[height=5cm]{../../figures/protocol/ptp_exchange.eps}
+    \includegraphics[height=5cm]{protocol/ptp_exchange.eps}
   \end{center}
   \column{3in}
     
@@ -319,7 +321,7 @@ The White Rabbit in charge of real time
 \begin{frame}{Layer 1 Syntonization}
 
   \begin{center}
-    \includegraphics[width=1.0\textwidth]{../../figures/misc/l1_sync.eps}
+    \includegraphics[width=1.0\textwidth]{misc/l1_sync.eps}
   \end{center}
 \end{frame}
 
@@ -333,7 +335,7 @@ The White Rabbit in charge of real time
   \end{itemize}
 
   \begin{center}
-    \includegraphics[width=1.0\textwidth]{../../figures/misc/phase_tracking_v2_simple.eps}
+    \includegraphics[width=1.0\textwidth]{misc/phase_tracking_v2_simple.eps}
   \end{center}
 
 \end{frame}
@@ -342,8 +344,8 @@ The White Rabbit in charge of real time
 \begin{frame}{WR synchronization performance}
 
     \begin{center}
-    \includegraphics<1>[height=7.0cm]{../../figures/measurements/meas_setup.eps}
-    \includegraphics<2->[height=5.0cm]{../../figures/measurements/meas_results.ps}
+    \includegraphics<1>[height=7.0cm]{measurements/meas_setup.eps}
+    \includegraphics<2->[height=5.0cm]{measurements/meas_results.ps}
     \onslide<3> {
     \begin{columns}[c]
       \column{.7\textwidth}
@@ -371,9 +373,9 @@ The White Rabbit in charge of real time
   \column{0.5\textwidth}
 
     \begin{center}
-       \includegraphics<1>[width=1.0\textwidth]{../../figures/misc/PTPv3_blank.eps} 
-       \includegraphics<2>[width=1.0\textwidth]{../../figures/misc/PTPv3_PAR.eps} 
-       \includegraphics<3>[width=1.0\textwidth]{../../figures/misc/PTPv3-wr-2.eps}
+       \includegraphics<1>[width=1.0\textwidth]{misc/PTPv3_blank.eps} 
+       \includegraphics<2>[width=1.0\textwidth]{misc/PTPv3_PAR.eps} 
+       \includegraphics<3>[width=1.0\textwidth]{misc/PTPv3-wr-2.eps}
     \end{center}
 
 \end{columns}
@@ -394,7 +396,7 @@ The White Rabbit in charge of real time
     \vspace{-0.3cm}
 
     \begin{center}
-    \includegraphics[height=0.8\textheight]{../../figures/robustness/wrn_reliability.ps}
+    \includegraphics[height=0.8\textheight]{robustness/wrn_reliability.ps}
     \end{center}
 	  
     \vspace{-0.7cm}
@@ -423,7 +425,7 @@ The White Rabbit in charge of real time
     \end{itemize}
   \column{.6\textwidth}
     \begin{center}
-    \includegraphics[height=0.65\textheight]{../../figures/robustness/communication_channel-pro.eps}
+    \includegraphics[height=0.65\textheight]{robustness/communication_channel-pro.eps}
     \end{center}
 
 \end{columns}
@@ -446,7 +448,7 @@ The White Rabbit in charge of real time
   \end{itemize}
   
   	\begin{center}
-      \includegraphics[width=.7\textwidth]{../../figures/robustness/FEC.eps}
+      \includegraphics[width=.7\textwidth]{robustness/FEC.eps}
     \end{center}
   
 \end{frame}
@@ -477,12 +479,12 @@ The White Rabbit in charge of real time
   \column{0.45\textwidth}
 
     \begin{center}
-    \includegraphics[width=1.0\textwidth]{../../figures/robustness/switchover.eps} 
+    \includegraphics[width=1.0\textwidth]{robustness/switchover.eps} 
     \end{center}
 
   \column{0.6\textwidth}
     \begin{center}
-    \includegraphics[width=1.0\textwidth]{../../figures/robustness/switchover288-ok.eps}
+    \includegraphics[width=1.0\textwidth]{robustness/switchover288-ok.eps}
     \end{center}
 
 \end{columns}
@@ -497,7 +499,7 @@ The White Rabbit in charge of real time
 \end{frame}
 
 \begin{frame}{Distributed oscilloscope}
-  \includegraphics[width=.8\textwidth]{../../figures/applications/distr_oscill.eps}
+  \includegraphics[width=.8\textwidth]{applications/distr_oscill.eps}
   \begin{block}{}
     \begin{itemize}
       \item Common clock in the entire network: no skew between ADCs.
@@ -510,7 +512,7 @@ The White Rabbit in charge of real time
 
 \begin{frame}{CERN Neutrinos to Gran Sasso project}
   \begin{center}
-    \includegraphics[width=.8\textwidth]{../../figures/applications/cngs-general.eps}
+    \includegraphics[width=.8\textwidth]{applications/cngs-general.eps}
   \end{center}
   \begin{itemize}
     \item Investigation of neutrino oscillation
@@ -521,7 +523,7 @@ The White Rabbit in charge of real time
 \begin{frame}{CERN Neutrinos to Gran Sasso project}
   \only<1> {
     \begin{center}
-      \includegraphics[width=.9\textwidth]{../../figures/applications/cngs-timing-31.eps}
+      \includegraphics[width=.9\textwidth]{applications/cngs-timing-31.eps}
     \end{center}
   }
  
@@ -541,7 +543,7 @@ The White Rabbit in charge of real time
     \end{itemize}
     \column{.4\textwidth}
     \begin{center}
-      \includegraphics[height=0.75\textheight]{../../figures/applications/lngs_installation.eps}
+      \includegraphics[height=0.75\textheight]{applications/lngs_installation.eps}
     \end{center}
   \end{columns}
   }
@@ -563,11 +565,11 @@ The White Rabbit in charge of real time
     \column{0.45\textwidth}         
 
     \begin{center}
-      \includegraphics<1>[width=0.80\textwidth]{../../figures/applications/gsiANDcern.eps}   \pause
-      \includegraphics<2>[width=1\textwidth]{../../figures/applications/tunka.eps}        \pause
-      \includegraphics<3>[width=1\textwidth]{../../figures/applications/lhaaso.eps}       \pause
-      \includegraphics<4>[width=.7\textwidth]{../../figures/applications/mikes.ps}       \pause
-      \includegraphics<5>[width=1\textwidth]{../../figures/applications/KM3NeT.eps}
+      \includegraphics<1>[width=0.80\textwidth]{applications/gsiANDcern.eps}   \pause
+      \includegraphics<2>[width=1\textwidth]{applications/tunka.eps}        \pause
+      \includegraphics<3>[width=1\textwidth]{applications/lhaaso.eps}       \pause
+      \includegraphics<4>[width=.7\textwidth]{applications/mikes.ps}       \pause
+      \includegraphics<5>[width=1\textwidth]{applications/KM3NeT.eps}
    \end{center}
 
 \end{columns}
@@ -589,8 +591,8 @@ The White Rabbit in charge of real time
       Successful international collaboration of institutes, universities and companies
     \end{center}             
     \begin{center}
-      \includegraphics<1>[width=1.0\textwidth]{../../figures/misc/wr_family_1.eps}
-      \includegraphics<2>[width=1.0\textwidth]{../../figures/misc/wr_family_2.eps}
+      \includegraphics<1>[width=1.0\textwidth]{misc/wr_family_1.eps}
+      \includegraphics<2>[width=1.0\textwidth]{misc/wr_family_2.eps}
     \end{center}
 
     \begin{center}
@@ -619,7 +621,7 @@ The White Rabbit in charge of real time
 \begin{frame}{Thank you}
 
     \begin{center}
-    \includegraphics[height=4.0cm]{../../figures/misc/white_rabbit_end.eps}
+    \includegraphics[height=4.0cm]{misc/white_rabbit_end.eps}
     \end{center}
 
    \begin{center}
@@ -642,8 +644,8 @@ The White Rabbit in charge of real time
 
 \begin{frame}{Link Delay Model}
  \begin{center}
- \includegraphics<1>[height=4cm]{../../figures/protocol/wrLinkModel_1.eps}
- \includegraphics<2>[height=4cm]{../../figures/protocol/wrLinkModel_init.eps}
+ \includegraphics<1>[height=4cm]{protocol/wrLinkModel_1.eps}
+ \includegraphics<2>[height=4cm]{protocol/wrLinkModel_init.eps}
  \end{center}
 \end{frame}
 
@@ -656,7 +658,7 @@ The White Rabbit in charge of real time
   \vspace{0.2cm}
 
  \begin{center}
- \includegraphics[height=2.5cm]{../../figures/protocol/delaymodel.eps}
+ \includegraphics[height=2.5cm]{protocol/delaymodel.eps}
  \end{center}
 
  \only<2> {
@@ -705,7 +707,7 @@ The White Rabbit in charge of real time
   \end{itemize}
   \column{0.3\textwidth}
 	\begin{center}
-	\includegraphics[width=1.1\textwidth]{../../figures/protocol/wr-ptp-exchange.eps}
+	\includegraphics[width=1.1\textwidth]{protocol/wr-ptp-exchange.eps}
 	\end{center}
 \end{columns}
 
@@ -717,7 +719,7 @@ The White Rabbit in charge of real time
       \item White Rabbit Node (White Rabbit PTP Core)
     \end{itemize}
     \begin{center}
-    \includegraphics[width=.5\textwidth]{../../figures/network/wr_network-enhanced_pro.eps}
+    \includegraphics[width=.5\textwidth]{network/wr_network-enhanced_pro.eps}
     \end{center}
 \end{frame}
 
@@ -727,14 +729,14 @@ The White Rabbit in charge of real time
 	\end{block}
 	\begin{block}{3 layers of design:}
 	\begin{center}
-	\includegraphics[width=\textwidth]{../../figures/switch/wrSwitch.ps}
+	\includegraphics[width=\textwidth]{switch/wrSwitch.ps}
 	\end{center}
 	\end{block}
 \end{frame}
 
 \begin{frame}{WR Switch: hardware}
 	\begin{center}
-	\includegraphics[width=.7\textwidth]{../../figures/switch/scb_backplane.ps}
+	\includegraphics[width=.7\textwidth]{switch/scb_backplane.ps}
 	\end{center}
 	\begin{itemize}
 	\item Xilinx Virtex 6, Atmel AT91SAM9G45
@@ -747,7 +749,7 @@ The White Rabbit in charge of real time
 \begin{frame}{WR Switch: gateware}
 	Implemented in Xilinx Virtex6 FPGA:
 	\begin{center}
-	\includegraphics[width=.9\textwidth]{../../figures/switch/switch_hdl.ps}
+	\includegraphics[width=.9\textwidth]{switch/switch_hdl.ps}
 	\end{center}
 \end{frame}
 
@@ -787,18 +789,18 @@ The White Rabbit in charge of real time
 		\item $I^2C$, 1-Wire, UART, GPIO
 	\end{itemize}
 	\begin{center}
-		\includegraphics[width=.7\textwidth]{../../figures/node/wrpc_overview.eps}
+		\includegraphics[width=.7\textwidth]{node/wrpc_overview.eps}
 	\end{center}
 \end{frame}
 
 \begin{frame}{WR PTP Core: HDL design}
 	\begin{center}
-	\includegraphics[width=\textwidth]{../../figures/node/wrpc_inside_simple.ps}
+	\includegraphics[width=\textwidth]{node/wrpc_inside_simple.ps}
 	\end{center}
 \end{frame}
 \begin{frame}{WR PTP Core: HDL design}
 	\begin{center}
-	\includegraphics[width=\textwidth]{../../figures/node/wrpc_basic_top.ps}
+	\includegraphics[width=\textwidth]{node/wrpc_basic_top.ps}
 	\end{center}
 \end{frame}
 

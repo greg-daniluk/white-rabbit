@@ -61,6 +61,8 @@
    \addtocounter{framenumber}{\value{framenumberappendix}} 
 }
 
+\graphicspath{ {../../figures/} }
+
 %%%%%%%%%%%%5
 %\usepackage{geometry}
 %\geometry{verbose,letterpaper}
@@ -92,7 +94,7 @@ Maciej Lipi\'{n}ski \\
 
 
 
-\pgfdeclareimage[height=0.6cm]{wr-logo}{../../figures/logo/WRlogo.ps}
+\pgfdeclareimage[height=0.6cm]{wr-logo}{logo/WRlogo.ps}
 \logo{\pgfuseimage{wr-logo}}
 \AtBeginSection[]
 
@@ -130,7 +132,7 @@ Maciej Lipi\'{n}ski \\
 		\begin{center}
 % 		\pause
 		\hspace{-0.5cm}
-		\includegraphics[width=1.1\textwidth]{../../figures/misc/rabbit.eps}
+		\includegraphics[width=1.1\textwidth]{misc/rabbit.eps}
 		\end{center}
 	\end{columns}
 
@@ -157,7 +159,7 @@ Maciej Lipi\'{n}ski \\
 
   \column{.6\textwidth}
     \begin{center}
-    \includegraphics[width=1.0\textwidth]{../../figures/network/WR_network-ethernet.eps}
+    \includegraphics[width=1.0\textwidth]{network/WR_network-ethernet.eps}
     \end{center}
 \end{columns}
 
@@ -180,7 +182,7 @@ Maciej Lipi\'{n}ski \\
 
   \column{.6\textwidth}
     \begin{center}
-    \includegraphics[width=1.0\textwidth]{../../figures/network/wr_network-enhanced.eps}
+    \includegraphics[width=1.0\textwidth]{network/wr_network-enhanced.eps}
     \end{center}
 \end{columns}
 
@@ -212,10 +214,10 @@ Maciej Lipi\'{n}ski \\
 %   \column{0.6\textwidth}
 % 
 %       \begin{center}
-%       \includegraphics[width=1.0\textwidth]{../../figures/misc/GMT-2.eps} 
-% %       \includegraphics<1>[width=1.0\textwidth]{../../figures/misc/GMT-1.eps} \pause
-% %       \includegraphics<2>[width=1.0\textwidth]{../../figures/misc/GMT-2.eps} \pause
-% %       \includegraphics<3>[width=1.0\textwidth]{../../figures/misc/GMT2WR.eps}
+%       \includegraphics[width=1.0\textwidth]{misc/GMT-2.eps} 
+% %       \includegraphics<1>[width=1.0\textwidth]{misc/GMT-1.eps} \pause
+% %       \includegraphics<2>[width=1.0\textwidth]{misc/GMT-2.eps} \pause
+% %       \includegraphics<3>[width=1.0\textwidth]{misc/GMT2WR.eps}
 %       \end{center}
 % 
 % \end{columns}
@@ -239,7 +241,7 @@ Maciej Lipi\'{n}ski \\
 
   \column{.6\textwidth}
     \begin{center}
-    \includegraphics[height=1.0\textwidth]{../../figures/network/wr_network-new.ps}
+    \includegraphics[height=1.0\textwidth]{network/wr_network-new.ps}
     \end{center}
 \end{columns}
 
@@ -272,7 +274,7 @@ Maciej Lipi\'{n}ski \\
 \begin{columns}[c]
   \column{1.5in}
       \begin{center}
-	\includegraphics[height=5cm]{../../figures/protocol/ptp_exchange.eps}
+	\includegraphics[height=5cm]{protocol/ptp_exchange.eps}
       \end{center}
   \column{2.5in}
       \begin{itemize}
@@ -319,7 +321,7 @@ Maciej Lipi\'{n}ski \\
    	\item All network devices use the same physical layer clock
     \item Clock is encoded in the Ethernet carrier and recovered by the receiver chip (PHY).
   \end{itemize}
-  \includegraphics[width=.9\textwidth]{../../figures/misc/synce.eps}
+  \includegraphics[width=.9\textwidth]{misc/synce.eps}
   \end{center}
 
 \end{frame}
@@ -333,7 +335,7 @@ Maciej Lipi\'{n}ski \\
       \item PTP limitation: timestamping granularity
       \item Solution: take advantage of SyncE and measure phase shift
     \end{itemize}
-		\includegraphics[width=.9\textwidth]{../../figures/misc/phase_tracking_v2_simple.eps}
+		\includegraphics[width=.9\textwidth]{misc/phase_tracking_v2_simple.eps}
 	\end{center}
 
 \end{frame}
@@ -369,7 +371,7 @@ Maciej Lipi\'{n}ski \\
 % \begin{frame}{WR Link Delay Model}
 % 
 %   \begin{center}
-%   \includegraphics[height=4cm]{../../figures/protocol/wrLinkModel.eps}
+%   \includegraphics[height=4cm]{protocol/wrLinkModel.eps}
 %   \end{center}
 % 
 %   \begin{columns}[c]
@@ -527,7 +529,7 @@ Maciej Lipi\'{n}ski \\
 
   \column{.6\textwidth}
     \begin{center}
-    \includegraphics[height=1.0\textwidth]{../../figures/network/wr_network-new.ps}
+    \includegraphics[height=1.0\textwidth]{network/wr_network-new.ps}
     \end{center}
 \end{columns}
 
@@ -539,8 +541,8 @@ Maciej Lipi\'{n}ski \\
 \begin{frame}{Data Distribution in WR Control System}
 
     \begin{center}
-%     \includegraphics<1>[width=1.1\textwidth]{../../figures/applications/CERN/WRControlNetwork.ps} \pause
-    \includegraphics[width=1.1\textwidth]{../../figures/applications/CERN/WRControlNetwork2.ps}
+%     \includegraphics<1>[width=1.1\textwidth]{applications/CERN/WRControlNetwork.ps} \pause
+    \includegraphics[width=1.1\textwidth]{applications/CERN/WRControlNetwork2.ps}
     \end{center}
 
 
@@ -572,7 +574,7 @@ Maciej Lipi\'{n}ski \\
    % \vspace{-1cm}
    % \hspace{-6cm}
     \begin{center}
-    \includegraphics[height=0.6\textheight]{../../figures/robustness/CommunicationChannel.ps}
+    \includegraphics[height=0.6\textheight]{robustness/CommunicationChannel.ps}
     \end{center}
 
 \end{columns}
@@ -599,7 +601,7 @@ Maciej Lipi\'{n}ski \\
   \end{itemize}
   
   	\begin{center}
-      \includegraphics[width=.7\textwidth]{../../figures/robustness/FEC.eps}
+      \includegraphics[width=.7\textwidth]{robustness/FEC.eps}
     \end{center}
   
 \end{frame}
@@ -627,7 +629,7 @@ Maciej Lipi\'{n}ski \\
 % 
   \column{0.6\textwidth}
     \begin{center}
-    \includegraphics[width=0.65\textwidth]{../../figures/network/wr_network-new.ps}
+    \includegraphics[width=0.65\textwidth]{network/wr_network-new.ps}
     \end{center}
 \end{columns}
 
@@ -654,8 +656,8 @@ Maciej Lipi\'{n}ski \\
 % 
   \column{0.6\textwidth}
     \begin{center}
-%     \includegraphics<1>[width=0.65\textwidth]{../../figures/network/wr_network-new.ps} \pause
-    \includegraphics[width=0.9\textwidth]{../../figures/applications/CERN/event3.eps}
+%     \includegraphics<1>[width=0.65\textwidth]{network/wr_network-new.ps} \pause
+    \includegraphics[width=0.9\textwidth]{applications/CERN/event3.eps}
     \end{center}
 
 \end{columns}
@@ -685,7 +687,7 @@ Maciej Lipi\'{n}ski \\
 
     \begin{center}
     %\includegraphics<1>[width=1.0\textwidth]{fig/WRNcomponents.eps}  \pause
-    \includegraphics[width=1.0\textwidth]{../../figures/network/WRnetwork-eva.eps}  
+    \includegraphics[width=1.0\textwidth]{network/WRnetwork-eva.eps}  
 %     \includegraphics[width=1.0\textwidth]{figs/WRNcomponents-2.eps}
     \end{center}
 
@@ -697,7 +699,7 @@ Maciej Lipi\'{n}ski \\
 \begin{frame}{White Rabbit Switch (V3)}
 
     \begin{center}
-    \includegraphics[width=6.0cm]{../../figures/switch/wrSwitchV3.ps}
+    \includegraphics[width=6.0cm]{switch/wrSwitchV3.ps}
     \end{center}
 
 	\begin{itemize}
@@ -717,7 +719,7 @@ Maciej Lipi\'{n}ski \\
 \begin{frame}{WR Node: WR PTP Core}
 
     \begin{center}
-    \includegraphics[width=1.0\textwidth]{../../figures/node/wrpc_box.eps}
+    \includegraphics[width=1.0\textwidth]{node/wrpc_box.eps}
     \end{center}
 
 \end{frame}
@@ -728,7 +730,7 @@ Maciej Lipi\'{n}ski \\
 \begin{frame}{WR Node: SPEC board}
 
     \begin{center}
-    \includegraphics[width=7cm]{../../figures/node/shw_kit-1}
+    \includegraphics[width=7cm]{node/shw_kit-1}
     \end{center}
 
   \begin{columns}[c]
@@ -778,7 +780,7 @@ Maciej Lipi\'{n}ski \\
 \begin{frame}{WR at CERN}
 
       \begin{center}
-      \includegraphics[width=.7\textwidth]{../../figures/applications/CERN/accNetworks.eps}
+      \includegraphics[width=.7\textwidth]{applications/CERN/accNetworks.eps}
       \end{center}
 
   \begin{itemize}
@@ -796,7 +798,7 @@ Maciej Lipi\'{n}ski \\
 \begin{frame}{WR at CERN}
 
     \begin{center}
-      \includegraphics[width=.8\textwidth]{../../figures/applications/CERN/NT-overview.eps}
+      \includegraphics[width=.8\textwidth]{applications/CERN/NT-overview.eps}
     \end{center}
 
 \end{frame}
@@ -806,7 +808,7 @@ Maciej Lipi\'{n}ski \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Ethernet Clock Distribution a.k.a. Distributed DDS}
   \begin{center}
-    \includegraphics[width=\columnwidth]{../../figures/applications/remote_dds.eps}
+    \includegraphics[width=\columnwidth]{applications/remote_dds.eps}
   \end{center}
   \begin{block}{Distributed Direct Digital Synthesis}
     \begin{itemize}
@@ -823,7 +825,7 @@ Maciej Lipi\'{n}ski \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Distributed Oscilloscope}
   \begin{center}
-    \includegraphics[width=0.9\textwidth]{../../figures/applications/distr_oscill.eps}
+    \includegraphics[width=0.9\textwidth]{applications/distr_oscill.eps}
     \end{center}
     \begin{block}{}
       \begin{itemize}
@@ -840,7 +842,7 @@ Maciej Lipi\'{n}ski \\
 \begin{frame}{CERN Neutrinos to Gran Sasso (CNGS)}
 
     \begin{center}
-      \includegraphics[height=0.5\textheight]{../../figures/applications/cngs-general.eps}
+      \includegraphics[height=0.5\textheight]{applications/cngs-general.eps}
 %       \includegraphics<2>[height=0.7\textheight]{figs/cngs-timing-3.eps}
     \end{center}
 
@@ -861,7 +863,7 @@ Maciej Lipi\'{n}ski \\
 
     \begin{center}
 %       \includegraphics<1>[height=0.5\textheight]{figs/cngs-general.v2.eps} \pause
-      \includegraphics[height=0.7\textheight]{../../figures/applications/cngs-timing-31.eps}
+      \includegraphics[height=0.7\textheight]{applications/cngs-timing-31.eps}
     \end{center}
 
     \begin{center}
@@ -882,7 +884,7 @@ Maciej Lipi\'{n}ski \\
 % \begin{frame}{National Instruments}
 % 
 %     \begin{center}
-%       \includegraphics[width=1.0\textwidth]{../../figures/applications/ni.eps} 
+%       \includegraphics[width=1.0\textwidth]{applications/ni.eps} 
 %     \end{center}
 % 
 % \end{frame}
@@ -916,13 +918,13 @@ Maciej Lipi\'{n}ski \\
 
 
     \begin{center}
-      \includegraphics<1>[width=0.85\textwidth]{../../figures/applications/gsi.eps}   \pause
-      \includegraphics<2>[width=0.85\textwidth]{../../figures/applications/tunka.eps}        \pause
-      \includegraphics<3>[width=0.85\textwidth]{../../figures/applications/lhaaso.eps}       \pause
-      \includegraphics<4>[width=0.85\textwidth]{../../figures/applications/superGPS.eps}       \pause
-      \includegraphics<5>[width=0.85\textwidth]{../../figures/applications/cta.eps}          \pause
-      \includegraphics<6>[width=0.85\textwidth]{../../figures/applications/iter.eps}         \pause
-      \includegraphics<7>[width=0.85\textwidth]{../../figures/applications/KM3NeT.eps}       
+      \includegraphics<1>[width=0.85\textwidth]{applications/gsi.eps}   \pause
+      \includegraphics<2>[width=0.85\textwidth]{applications/tunka.eps}        \pause
+      \includegraphics<3>[width=0.85\textwidth]{applications/lhaaso.eps}       \pause
+      \includegraphics<4>[width=0.85\textwidth]{applications/superGPS.eps}       \pause
+      \includegraphics<5>[width=0.85\textwidth]{applications/cta.eps}          \pause
+      \includegraphics<6>[width=0.85\textwidth]{applications/iter.eps}         \pause
+      \includegraphics<7>[width=0.85\textwidth]{applications/KM3NeT.eps}       
     \end{center}
 
   \column{0.6\textwidth}         
@@ -935,8 +937,8 @@ Maciej Lipi\'{n}ski \\
 \begin{frame}{WR time transfer performance: lab tests}
 
     \begin{center}
-    \includegraphics<1>[height=7.0cm]{../../figures/measurements/measSystem.ps}   \pause
-    \includegraphics<2>[height=6.0cm]{../../figures/measurements/measResults-new.eps}
+    \includegraphics<1>[height=7.0cm]{measurements/measSystem.ps}   \pause
+    \includegraphics<2>[height=6.0cm]{measurements/measResults-new.eps}
     \end{center}
 
 \end{frame}
@@ -951,7 +953,7 @@ Maciej Lipi\'{n}ski \\
 	  \begin{center}
 
 		\hspace{-1cm}
-		\includegraphics[width=1.1\textwidth]{../../figures/measurements/histogram-small.eps}
+		\includegraphics[width=1.1\textwidth]{measurements/histogram-small.eps}
 		\begin{itemize}
 		       \item System performance
 		       \begin{itemize}
@@ -966,7 +968,7 @@ Maciej Lipi\'{n}ski \\
 	  \end{center}
 	\column{0.6\textwidth}
 		\begin{center}
-		\includegraphics[width=0.93\textwidth]{../../figures/measurements/performance_testing_setup-detail.v2.eps}
+		\includegraphics[width=0.93\textwidth]{measurements/performance_testing_setup-detail.v2.eps}
 		\end{center}
   \end{columns}
 \end{frame}
@@ -989,7 +991,7 @@ Maciej Lipi\'{n}ski \\
 	  \end{center}
 	\column{0.6\textwidth}
 		\begin{center}
-		\includegraphics[width=0.9\textwidth]{../../figures/measurements/MTIE2.eps}
+		\includegraphics[width=0.9\textwidth]{measurements/MTIE2.eps}
 		\end{center}
   \end{columns}
 \end{frame}
@@ -1071,7 +1073,7 @@ Maciej Lipi\'{n}ski \\
 % \begin{columns}[c]
 % \column{2.0in}
 %     \begin{center}
-%     \includegraphics[width=3.5cm]{../../figures/misc/fourRabbits.ps}
+%     \includegraphics[width=3.5cm]{misc/fourRabbits.ps}
 %     \end{center}
 % \column{2.0in}
 %     \begin{center}
@@ -1082,7 +1084,7 @@ Maciej Lipi\'{n}ski \\
 % \end{columns}
 % 
 % \begin{center}
-% \includegraphics[width=9.5cm]{../../figures/misc/WRfamily.ps}
+% \includegraphics[width=9.5cm]{misc/WRfamily.ps}
 % \end{center}
 % \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1092,7 +1094,7 @@ Maciej Lipi\'{n}ski \\
 \begin{frame}{Questions and Answers}
 
     \begin{center}
-    \includegraphics[height=4.0cm]{../../figures/logo/WRlogo.ps}
+    \includegraphics[height=4.0cm]{logo/WRlogo.ps}
     \end{center}
 
 \end{frame}
@@ -1108,8 +1110,8 @@ Maciej Lipi\'{n}ski \\
 % \begin{frame}{WR performance}
 % 
 %     \begin{center}
-%     \includegraphics<1>[height=7.0cm]{../../figures/measurements/measSystem.ps}   \pause
-%     \includegraphics<2>[height=6.0cm]{../../figures/measurements/measResults-new.eps}
+%     \includegraphics<1>[height=7.0cm]{measurements/measSystem.ps}   \pause
+%     \includegraphics<2>[height=6.0cm]{measurements/measResults-new.eps}
 %     \end{center}
 % 
 % \end{frame}
@@ -1146,7 +1148,7 @@ Maciej Lipi\'{n}ski \\
     \end{center}
   \column{0.6\textwidth}
     \begin{center}
-      \includegraphics[width=6.5cm]{../../figures/applications/CERN/accelerators.eps}
+      \includegraphics[width=6.5cm]{applications/CERN/accelerators.eps}
     \end{center}
 \end{columns}
 
@@ -1158,7 +1160,7 @@ Maciej Lipi\'{n}ski \\
 \begin{frame}{A Simplified Explanation of CERN Control System (1)}
 
       \begin{center}
-      \includegraphics[width=1.0\textwidth]{../../figures/applications/CERN/event1.eps}
+      \includegraphics[width=1.0\textwidth]{applications/CERN/event1.eps}
       \end{center}
 
   \begin{itemize}
@@ -1176,7 +1178,7 @@ Maciej Lipi\'{n}ski \\
 \begin{frame}{A Simplified Explanation of CERN Control System (2)}
 
       \begin{center}
-      \includegraphics[width=1.0\textwidth]{../../figures/applications/CERN/event2.eps}
+      \includegraphics[width=1.0\textwidth]{applications/CERN/event2.eps}
       \end{center}
 
   \begin{itemize}
@@ -1195,7 +1197,7 @@ Maciej Lipi\'{n}ski \\
 \begin{frame}{A Simplified Explanation of CERN Control System (3)}
 
       \begin{center}
-      \includegraphics[width=.8\textwidth]{../../figures/applications/CERN/event3.eps}
+      \includegraphics[width=.8\textwidth]{applications/CERN/event3.eps}
       \end{center}
 
   \begin{itemize}
@@ -1227,7 +1229,7 @@ Maciej Lipi\'{n}ski \\
   \column{0.6\textwidth}
     \begin{center}
       \begin{center}
-      \includegraphics[width=.8\textwidth]{../../figures/applications/CERN/gw.eps}
+      \includegraphics[width=.8\textwidth]{applications/CERN/gw.eps}
       \end{center}
     \end{center}
 \end{columns}
@@ -1241,7 +1243,7 @@ Maciej Lipi\'{n}ski \\
 % \begin{frame}{A simplified explanation of CERN control system (5)}
 % 
 %       \begin{center}
-%       \includegraphics[width=.7\textwidth]{../../figures/applications/CERN/accNetworks.eps}
+%       \includegraphics[width=.7\textwidth]{applications/CERN/accNetworks.eps}
 %       \end{center}
 % 
 %   \begin{itemize}
@@ -1271,7 +1273,7 @@ Maciej Lipi\'{n}ski \\
   \end{itemize}
 
   \begin{center}
-  \includegraphics[height=3cm]{../../figures/protocol/wrLink.ps}
+  \includegraphics[height=3cm]{protocol/wrLink.ps}
   \end{center}
 
 \end{frame}
@@ -1283,7 +1285,7 @@ Maciej Lipi\'{n}ski \\
 \begin{frame}{Fine Delay Measurement}
 
   \begin{center}
-  \includegraphics[width=10.0cm]{../../figures/protocol/link_model.eps}
+  \includegraphics[width=10.0cm]{protocol/link_model.eps}
   \end{center}
 
 \end{frame}
@@ -1302,7 +1304,7 @@ Maciej Lipi\'{n}ski \\
    \vspace{0.2cm}
 
   \begin{center}
-  \includegraphics[height=2.5cm]{../../figures/protocol/delaymodel.eps}
+  \includegraphics[height=2.5cm]{protocol/delaymodel.eps}
   \end{center}
 
 \begin{columns}[c]
@@ -1331,7 +1333,7 @@ Maciej Lipi\'{n}ski \\
 \begin{frame}{Fixed Delays}
 
   \begin{center}
-  \includegraphics[width=11.0cm]{../../figures/protocol/asymmetries.eps}
+  \includegraphics[width=11.0cm]{protocol/asymmetries.eps}
   \end{center}
 
 \end{frame}
@@ -1344,7 +1346,7 @@ Maciej Lipi\'{n}ski \\
 \begin{frame}{Link Asymmetry}
 
   \begin{center}
-  \includegraphics[height=4cm]{../../figures/protocol/wrLinkModel_init.eps}
+  \includegraphics[height=4cm]{protocol/wrLinkModel_init.eps}
   \end{center}
 
 \end{frame}
@@ -1354,7 +1356,7 @@ Maciej Lipi\'{n}ski \\
 \begin{frame}{Link Delay Model: fiber optic solution}
 
   \begin{center}
-  \includegraphics[height=4cm]{../../figures/protocol/wrLinkModel.eps}
+  \includegraphics[height=4cm]{protocol/wrLinkModel.eps}
   \end{center}
 
   \begin{columns}[c]
@@ -1413,7 +1415,7 @@ Maciej Lipi\'{n}ski \\
   \column{.5\textwidth} 
 
     \begin{center}
-    \includegraphics[width=5.0cm]{../../figures/protocol/WR-peer_recognision-1.eps}
+    \includegraphics[width=5.0cm]{protocol/WR-peer_recognision-1.eps}
     \newline
     Two WR devices
     \end{center}
@@ -1421,7 +1423,7 @@ Maciej Lipi\'{n}ski \\
   \column{.5\textwidth}
 
     \begin{center}
-    \includegraphics[width=5.0cm]{../../figures/protocol/WR-peer_recognision-2.eps}
+    \includegraphics[width=5.0cm]{protocol/WR-peer_recognision-2.eps}
     \newline
     WR and non-WR device
     \end{center}
@@ -1438,7 +1440,7 @@ Maciej Lipi\'{n}ski \\
   \column{.5\textwidth} 
 
       \begin{center}
-      \includegraphics[width=5.5cm]{../../figures/protocol/wrLinkSetup.eps}
+      \includegraphics[width=5.5cm]{protocol/wrLinkSetup.eps}
       \end{center}
 
 
@@ -1462,7 +1464,7 @@ Maciej Lipi\'{n}ski \\
 % \begin{frame}{Modified Best Master Clock Algorithm (mBMCA)}
 % 
 %     \begin{center}
-%     \includegraphics[height=7.0cm]{../../figures/protocol/mBMCvsBMC.eps}
+%     \includegraphics[height=7.0cm]{protocol/mBMCvsBMC.eps}
 %     \end{center}
 % 
 % 
@@ -1476,7 +1478,7 @@ Maciej Lipi\'{n}ski \\
 % %{\it [problem with a presentation flow]}
 % 
 %   \begin{center}
-%   \includegraphics[width=11.8cm]{../../figures/protocol/wrCRS+mBMC.eps}
+%   \includegraphics[width=11.8cm]{protocol/wrCRS+mBMC.eps}
 %   \end{center}
 % 
 % \end{frame}
@@ -1493,7 +1495,7 @@ Maciej Lipi\'{n}ski \\
 	\column{0.5\textwidth}
 		\hspace{-1.0cm}
 		\begin{center}
-		\includegraphics[width=1.1\textwidth]{../../figures/measurements/tempTests-trends.v3.eps}
+		\includegraphics[width=1.1\textwidth]{measurements/tempTests-trends.v3.eps}
 		\end{center}
 
 		\begin{center}
@@ -1510,7 +1512,7 @@ Maciej Lipi\'{n}ski \\
 	\column{0.5\textwidth}
 		\hspace{-0.8cm}
 		\begin{center}
-		\includegraphics[width=1.13\textwidth]{../../figures/measurements/tempTests-2-combo.eps}
+		\includegraphics[width=1.13\textwidth]{measurements/tempTests-2-combo.eps}
 		\end{center}
 
 

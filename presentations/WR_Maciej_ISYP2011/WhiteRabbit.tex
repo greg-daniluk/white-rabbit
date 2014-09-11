@@ -48,6 +48,7 @@
 \usepackage[polish]{babel}
 \usepackage{multirow}
 
+\graphicspath{ {../../figures/} }
 
 %\usepackage[utf8]{inputenc}
 %\usepackage{polski}
@@ -91,7 +92,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 %   \end{center}
 % }
 
-\pgfdeclareimage[height=0.6cm]{wr-logo}{../../figures/logo/WRlogo.ps}
+\pgfdeclareimage[height=0.6cm]{wr-logo}{logo/WRlogo.ps}
 \logo{\pgfuseimage{wr-logo}}
 \AtBeginSection[]
 % {
@@ -117,7 +118,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 
 
     \begin{center}
-    \includegraphics[width=1.0\textwidth]{../../figures/applications/CERN/WRcontrol.ps}
+    \includegraphics[width=1.0\textwidth]{applications/CERN/WRcontrol.ps}
     \end{center}
 
 \end{frame}
@@ -137,7 +138,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 
   \column{.6\textwidth}
     \begin{center}
-    \includegraphics[height=1.0\textwidth]{../../figures/network/wr_network-new.ps}
+    \includegraphics[height=1.0\textwidth]{network/wr_network-new.ps}
     \end{center}
 \end{columns}
 
@@ -178,7 +179,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
   \column{.6\textwidth}
 
   \begin{center}
-  \includegraphics[height=2.5cm]{../../figures/protocol/wrLink.ps}
+  \includegraphics[height=2.5cm]{protocol/wrLink.ps}
   \end{center}
 
   \vspace{2cm}
@@ -186,7 +187,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
   \column{.4\textwidth}
 
   \begin{center}
-  \includegraphics[height=2.6cm]{../../figures/misc/Accuracy_and_precision.ps}
+  \includegraphics[height=2.6cm]{misc/Accuracy_and_precision.ps}
   \end{center}
 
   \vspace{1cm}
@@ -204,7 +205,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 %\beamertemplatesolidbackgroundcolor{black}
 \center Sieć White Rabbit
   \begin{center}
-  \includegraphics[width=11.5cm]{../../figures/network/wrTopology.eps}
+  \includegraphics[width=11.5cm]{network/wrTopology.eps}
 %\includegraphics[height=6cm]{fig/front.eps}
   \end{center}
 \end{frame}
@@ -223,7 +224,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
   \end{itemize}
 
 \column{1.5in}
-    \includegraphics[height=5.5cm]{../../figures/protocol/ptpMSGs.ps} \\
+    \includegraphics[height=5.5cm]{protocol/ptpMSGs.ps} \\
     \small 
     one-way mean delay: \\
     $\mu = \frac{(t_{4}-t_{1}) - (t_{3}-t_{2})}{2}$ \\
@@ -327,7 +328,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
    \vspace{0.2cm}
 
   \begin{center}
-  \includegraphics[height=2.5cm]{../../figures/protocol/delaymodel.eps}
+  \includegraphics[height=2.5cm]{protocol/delaymodel.eps}
   \end{center}
 
 \begin{columns}[c]
@@ -355,7 +356,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 \begin{frame}{Link Delay Model dla światłowodu}
 
   \begin{center}
-  \includegraphics[height=4cm]{../../figures/protocol/wrLinkModel.eps}
+  \includegraphics[height=4cm]{protocol/wrLinkModel.eps}
   \end{center}
 
   \begin{columns}[c]
@@ -400,7 +401,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \subsection{}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\setbeamertemplate{background}{\includegraphics[width=\paperwidth]{../../figures/protocol/wrLinkModel-fdm2.ps}}
+\setbeamertemplate{background}{\includegraphics[width=\paperwidth]{protocol/wrLinkModel-fdm2.ps}}
 \logo{}
 \begin{frame}{Fine Delay Measurement}
 
@@ -415,7 +416,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 \begin{frame}{Fine Delay Measurement}
 
   \begin{center}
-  \includegraphics[width=10.0cm]{../../figures/protocol/link_model.eps}
+  \includegraphics[width=10.0cm]{protocol/link_model.eps}
   \end{center}
 
 \end{frame}
@@ -423,7 +424,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\subsection{}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\setbeamertemplate{background}{\includegraphics[width=\paperwidth]{../../figures/protocol/wrLinkModel-fd.ps}}
+\setbeamertemplate{background}{\includegraphics[width=\paperwidth]{protocol/wrLinkModel-fd.ps}}
 \logo{}
 \begin{frame}{Fixed Delays Measurement}
 
@@ -438,7 +439,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 \begin{frame}{Fixed Delays Measurement}
 
   \begin{center}
-  \includegraphics[width=10.0cm]{../../figures/misc/calibration.eps}
+  \includegraphics[width=10.0cm]{misc/calibration.eps}
   \end{center}
 
 \end{frame}
@@ -543,7 +544,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
   \column{.5\textwidth} 
 
       \begin{center}
-      \includegraphics[width=5.5cm]{../../figures/protocol/wrLinkSetup.eps}
+      \includegraphics[width=5.5cm]{protocol/wrLinkSetup.eps}
       \end{center}
 
 
@@ -626,7 +627,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 %{\it [problem with a presentation flow]}
 
   \begin{center}
-  \includegraphics[width=10cm]{../../figures/robustness/wrCRS2.ps}
+  \includegraphics[width=10cm]{robustness/wrCRS2.ps}
   \end{center}
 
 \end{frame}
@@ -639,7 +640,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 %{\it [problem with a presentation flow]}
 
   \begin{center}
-  \includegraphics[width=11.8cm]{../../figures/protocol/wrCRS_plus_mBMC.eps}
+  \includegraphics[width=11.8cm]{protocol/wrCRS_plus_mBMC.eps}
   \end{center}
 
 \end{frame}
@@ -650,7 +651,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 \begin{frame}{Testy: synchronizacja w układzie kaskadowym}
 
     \begin{center}
-    \includegraphics[height=7.0cm]{../../figures/measurements/measSystem.ps}
+    \includegraphics[height=7.0cm]{measurements/measSystem.ps}
     \end{center}
 
 \end{frame}
@@ -660,7 +661,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 \begin{frame}{Testy: synchronizacja w układzie kaskadowym}
 
     \begin{center}
-    \includegraphics[height=6.0cm]{../../figures/measurements/measResults-new.eps}
+    \includegraphics[height=6.0cm]{measurements/measResults-new.eps}
     \end{center}
 
 
@@ -672,7 +673,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 \begin{frame}{Testy: wpływ temperatury na synchronizację}
 
     \begin{center}
-    \includegraphics[height=6.0cm]{../../figures/measurements/meas_system_wrcore.ps}
+    \includegraphics[height=6.0cm]{measurements/meas_system_wrcore.ps}
     \end{center}
 
 \end{frame}
@@ -682,7 +683,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 \begin{frame}{Testy : Delay vs. temperature}
 
   \begin{center}
-  \includegraphics[width=7cm]{../../figures/measurements/wrpc_delay_vs_temp.eps}
+  \includegraphics[width=7cm]{measurements/wrpc_delay_vs_temp.eps}
 
   Zakres temperatury: 80 degC
   \end{center}
@@ -694,7 +695,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 \begin{frame}{Testy: Offset vs. temperature}
 
   \begin{center}
-    \includegraphics[width=7cm]{../../figures/measurements/wrpc_offset_vs_temp.eps}
+    \includegraphics[width=7cm]{measurements/wrpc_offset_vs_temp.eps}
   \end{center}
   \begin{itemize}
 %    \item Measured on reference clocks (125 MHz) bypassing the FPGA.
@@ -729,7 +730,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 \begin{frame}{Dystrybucja danych kontrolnych}
 
     \begin{center}
-    \includegraphics[width=1.1\textwidth]{../../figures/applications/CERN/WRControlNetwork.ps}
+    \includegraphics[width=1.1\textwidth]{applications/CERN/WRControlNetwork.ps}
     \end{center}
 
 
@@ -740,7 +741,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 \begin{frame}{Wymagania dot. dystrybucji danych w CERN i GSI}
 
     \begin{center}
-    \includegraphics[width=1.1\textwidth]{../../figures/applications/CERN/WRControlNetwork2.ps}
+    \includegraphics[width=1.1\textwidth]{applications/CERN/WRControlNetwork2.ps}
     \end{center}
 
 
@@ -816,7 +817,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
   \column{.4\textwidth} 
 
       \begin{center}
-      \includegraphics[width=4.5cm]{../../figures/robustness/CommunicationChannel.ps}
+      \includegraphics[width=4.5cm]{robustness/CommunicationChannel.ps}
       \end{center}
 
       \vspace{2cm}
@@ -844,7 +845,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 
 
       \begin{center}
-      \includegraphics[width=1.0\textwidth]{../../figures/robustness/FECencoder.ps}
+      \includegraphics[width=1.0\textwidth]{robustness/FECencoder.ps}
       \end{center}
 
 \end{frame}
@@ -914,7 +915,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
   \column{.5\textwidth} 
 
       \begin{center}
-      \includegraphics[width=6cm]{../../figures/network/wr_network-new.ps}
+      \includegraphics[width=6cm]{network/wr_network-new.ps}
       \end{center}
 
       \vspace{2cm}
@@ -934,7 +935,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
   \end{itemize}
 
       \begin{center}
-      \includegraphics[width=1.0\textwidth]{../../figures/robustness/FECandRSTP.ps}
+      \includegraphics[width=1.0\textwidth]{robustness/FECandRSTP.ps}
       \end{center}
 
 
@@ -977,7 +978,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
   \column{.5\textwidth} 
 
       \begin{center}
-      \includegraphics[width=6cm]{../../figures/robustness/latencyEstimation.ps}
+      \includegraphics[width=6cm]{robustness/latencyEstimation.ps}
       \end{center}
 
       
@@ -995,7 +996,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 \begin{frame}{Elementy systemu White Rabbit}
 
       \begin{center}
-      \includegraphics[width=7cm]{../../figures/network/wr_network-new.ps}
+      \includegraphics[width=7cm]{network/wr_network-new.ps}
       \end{center}
 
 \end{frame}
@@ -1006,7 +1007,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 \begin{frame}{White Rabbit Switch (V2)}
 
     \begin{center}
-    \includegraphics[width=7.0cm]{../../figures/switch/wrs_v2.ps}
+    \includegraphics[width=7.0cm]{switch/wrs_v2.ps}
     \end{center}
 
 	\begin{itemize}
@@ -1022,7 +1023,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 \begin{frame}{White Rabbit Switch (V2)}
 
     \begin{center}
-    \includegraphics[width=7.0cm]{../../figures/switch/wrs2_sw_block.ps}
+    \includegraphics[width=7.0cm]{switch/wrs2_sw_block.ps}
     \end{center}
 
 
@@ -1047,7 +1048,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
   \column{.6\textwidth} 
 
     \begin{center}
-    \includegraphics[width=7.0cm]{../../figures/node/wr_node_block.eps}
+    \includegraphics[width=7.0cm]{node/wr_node_block.eps}
     \end{center}
 
 %      \vspace{2cm}
@@ -1071,7 +1072,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 %  \column{.5\textwidth} 
 
     \begin{center}
-    \includegraphics[width=8.0cm]{../../figures/node/wrpc_v1.ps}
+    \includegraphics[width=8.0cm]{node/wrpc_v1.ps}
     \end{center}
 
   \begin{itemize}
@@ -1094,7 +1095,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 \begin{frame}{Simple PCIe FMC carrier (SPEC)}
 
     \begin{center}
-    \includegraphics[width=8.0cm]{../../figures/node/spec_photo.ps}
+    \includegraphics[width=8.0cm]{node/spec_photo.ps}
     \end{center}
 
 
@@ -1105,7 +1106,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 \begin{frame}{WR-compliant Hardware Kit}
 
     \begin{center}
-    \includegraphics[width=6cm]{../../figures/node/shw_kit}
+    \includegraphics[width=6cm]{node/shw_kit}
     \end{center}
 
   \begin{columns}[c]
@@ -1139,7 +1140,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
     
     \begin{center}
 %    \includegraphics[height=4.0cm]{fig/white_rabbit_by_kyoht.ps}
-    \includegraphics[height=4.0cm]{../../figures/logo/WRlogo.ps}
+    \includegraphics[height=4.0cm]{logo/WRlogo.ps}
     \end{center}
 
 \end{frame}

@@ -47,6 +47,9 @@
 \usepackage[utf8]{inputenc}
 \usepackage{multirow}
 \usepackage{amsfonts}
+
+\graphicspath{ {../../figures/} }
+
 %%%%%%%%%%%%5
 %\usepackage{geometry}
 %\geometry{verbose,letterpaper}
@@ -95,7 +98,7 @@ Maciej Lipi\'{n}ski~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Cesar Prados %, T.W\l{}osto
 %   \end{center}
 % }
 
-\pgfdeclareimage[height=0.6cm]{wr-logo}{../../figures/logo/WRlogo.ps}
+\pgfdeclareimage[height=0.6cm]{wr-logo}{logo/WRlogo.ps}
 \logo{\pgfuseimage{wr-logo}}
 \AtBeginSection[]
 % {
@@ -141,7 +144,7 @@ Maciej Lipi\'{n}ski~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Cesar Prados %, T.W\l{}osto
   
 
       \begin{center}
-	\includegraphics[width=.9\textwidth]{../../figures/robustness/sub_domains-old.ps}
+	\includegraphics[width=.9\textwidth]{robustness/sub_domains-old.ps}
       \end{center}    
 
 
@@ -175,15 +178,15 @@ Maciej Lipi\'{n}ski~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Cesar Prados %, T.W\l{}osto
     \vspace{0.3cm}
     \item Support for network redundancy
     \begin{itemize}
-      \item WRPTP \includegraphics[width=.5cm]{../../figures/misc/big-tick.ps}  (possibly further improve)
-      \item Hardware \includegraphics[width=.5cm]{../../figures/misc/underconstruction.ps}
+      \item WRPTP \includegraphics[width=.5cm]{misc/big-tick.ps}  (possibly further improve)
+      \item Hardware \includegraphics[width=.5cm]{misc/underconstruction.ps}
     \end{itemize}
   \end{itemize}
 
   \column{.3\textwidth}
 
       \begin{center}
-	\includegraphics[width=1.1\textwidth]{../../figures/robustness/WRPTPmodif_0.eps}
+	\includegraphics[width=1.1\textwidth]{robustness/WRPTPmodif_0.eps}
       \end{center}  
     
 
@@ -210,15 +213,15 @@ Maciej Lipi\'{n}ski~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Cesar Prados %, T.W\l{}osto
     \vspace{0.3cm}
     \item Support for network redundancy
     \begin{itemize}
-      \item WRPTP \includegraphics[width=.5cm]{../../figures/misc/big-tick.ps}  (possibly further improve)
-      \item Hardware \includegraphics[width=.5cm]{../../figures/misc/underconstruction.ps}
+      \item WRPTP \includegraphics[width=.5cm]{misc/big-tick.ps}  (possibly further improve)
+      \item Hardware \includegraphics[width=.5cm]{misc/underconstruction.ps}
     \end{itemize}
   \end{itemize}
 
   \column{.3\textwidth}
 
       \begin{center}
-	\includegraphics[width=1.1\textwidth]{../../figures/robustness/WRPTPmodif_1.eps}
+	\includegraphics[width=1.1\textwidth]{robustness/WRPTPmodif_1.eps}
       \end{center}  
     
 
@@ -245,15 +248,15 @@ Maciej Lipi\'{n}ski~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Cesar Prados %, T.W\l{}osto
     \vspace{0.3cm}
     \item Support for network redundancy
     \begin{itemize}
-      \item WRPTP \includegraphics[width=.5cm]{../../figures/misc/big-tick.ps}  (possibly further improve)
-      \item Hardware \includegraphics[width=.5cm]{../../figures/misc/underconstruction.ps}
+      \item WRPTP \includegraphics[width=.5cm]{misc/big-tick.ps}  (possibly further improve)
+      \item Hardware \includegraphics[width=.5cm]{misc/underconstruction.ps}
     \end{itemize}
   \end{itemize}
 
   \column{.3\textwidth}
 
       \begin{center}
-	\includegraphics[width=1.1\textwidth]{../../figures/robustness/WRPTPmodif_2.eps}
+	\includegraphics[width=1.1\textwidth]{robustness/WRPTPmodif_2.eps}
       \end{center}  
     
 
@@ -315,10 +318,10 @@ Maciej Lipi\'{n}ski~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Cesar Prados %, T.W\l{}osto
 \begin{frame}{Quality of Service (WR Switch)}
 
   \begin{itemize}
-    \item Cut-through \includegraphics[width=.5cm]{../../figures/misc/big-tick.ps}
-    \item Separate resources for Special Traffic \includegraphics[width=.5cm]{../../figures/misc/underconstruction.ps}
-    \item Output queuing \includegraphics[width=.5cm]{../../figures/misc/underconstruction.ps}
-    \item Switch firmware optimization (SWcore + RTU) \includegraphics[width=.5cm]{../../figures/misc/underconstruction.ps}
+    \item Cut-through \includegraphics[width=.5cm]{misc/big-tick.ps}
+    \item Separate resources for Special Traffic \includegraphics[width=.5cm]{misc/underconstruction.ps}
+    \item Output queuing \includegraphics[width=.5cm]{misc/underconstruction.ps}
+    \item Switch firmware optimization (SWcore + RTU) \includegraphics[width=.5cm]{misc/underconstruction.ps}
   \end{itemize}
 
 \end{frame}
@@ -331,8 +334,8 @@ Maciej Lipi\'{n}ski~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Cesar Prados %, T.W\l{}osto
 
   \begin{itemize}
     \item Well-researched, concepts agreed
-    \item Encoder \includegraphics[width=.5cm]{../../figures/misc/big-tick.ps}  not optimized for resources
-    \item Decoder \includegraphics[width=.5cm]{../../figures/misc/underconstruction.ps}~~(MSc thesis):
+    \item Encoder \includegraphics[width=.5cm]{misc/big-tick.ps}  not optimized for resources
+    \item Decoder \includegraphics[width=.5cm]{misc/underconstruction.ps}~~(MSc thesis):
     \begin{itemize}
       \item Hardware-accelerated LM32
       \item Eventually to be encoder-decoder
@@ -341,7 +344,7 @@ Maciej Lipi\'{n}ski~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Cesar Prados %, T.W\l{}osto
   \end{itemize}
 
       \begin{center}
-	\includegraphics[width=.9\textwidth]{../../figures/robustness/FEC.v2.ps}
+	\includegraphics[width=.9\textwidth]{robustness/FEC.v2.ps}
       \end{center}  
 
 \end{frame}
@@ -368,7 +371,7 @@ Maciej Lipi\'{n}ski~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Cesar Prados %, T.W\l{}osto
 \begin{frame}{FEC: Linear Code and 8b/10b II}
  
  \begin{center}
- \includegraphics[scale=0.25]{../../figures/robustness/8b_10b_Golay.ps}
+ \includegraphics[scale=0.25]{robustness/8b_10b_Golay.ps}
  \end{center}
 
 \end{frame}
@@ -399,7 +402,7 @@ Maciej Lipi\'{n}ski~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Cesar Prados %, T.W\l{}osto
 \begin{frame}{Topology Redundancy}
 
       \begin{center}
-	\includegraphics[width=.65\textwidth]{../../figures/network/WR_funny_network.ps}
+	\includegraphics[width=.65\textwidth]{network/WR_funny_network.ps}
       \end{center}
 
 \end{frame}
@@ -421,7 +424,7 @@ Maciej Lipi\'{n}ski~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Cesar Prados %, T.W\l{}osto
   \end{itemize}
 
       \begin{center}
-	\includegraphics[width=.9\textwidth]{../../figures/robustness/TopologyResolutionUnit.eps}
+	\includegraphics[width=.9\textwidth]{robustness/TopologyResolutionUnit.eps}
       \end{center}
 
 \end{frame}
@@ -442,14 +445,14 @@ Maciej Lipi\'{n}ski~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Cesar Prados %, T.W\l{}osto
       \item hardware support
       \item software support
      \end{itemize}
-    \item Basic concept  \includegraphics[width=.5cm]{../../figures/misc/big-tick.ps}
-    \item Implementation \includegraphics[width=.5cm]{../../figures/misc/underconstruction.ps}
+    \item Basic concept  \includegraphics[width=.5cm]{misc/big-tick.ps}
+    \item Implementation \includegraphics[width=.5cm]{misc/underconstruction.ps}
   \end{itemize}
 
  \column{.35\textwidth}
 
       \begin{center}
-	\includegraphics[width=1.1\textwidth]{../../figures/robustness/portRoles.v2.eps}
+	\includegraphics[width=1.1\textwidth]{robustness/portRoles.v2.eps}
       \end{center}
 
  \end{columns}
@@ -476,7 +479,7 @@ Maciej Lipi\'{n}ski~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Cesar Prados %, T.W\l{}osto
 \begin{frame}{Link Aggregation Control Protocol plus FEC II}
 
       \begin{center}
-	        \includegraphics[scale=0.30]{../../figures/robustness/WR_LA_3.ps}
+	        \includegraphics[scale=0.30]{robustness/WR_LA_3.ps}
       \end{center}
 \end{frame}
 
@@ -512,7 +515,7 @@ Pros of LAC-FEC
 
       \begin{center}
 %	\includegraphics[width=1.0\textwidth]{fig/NT-overview.v2.eps}
-	\includegraphics[width=0.8\textwidth]{../../figures/applications/CERN/NT-overview_legend.eps}
+	\includegraphics[width=0.8\textwidth]{applications/CERN/NT-overview_legend.eps}
       \end{center}  
 
 \end{frame}
@@ -523,7 +526,7 @@ Pros of LAC-FEC
 \begin{frame}{WR@CERN: VLANs}
 
       \begin{center}
-	\includegraphics[width=1.1\textwidth]{../../figures/applications/CERN/NT-VLANs.v2.eps}
+	\includegraphics[width=1.1\textwidth]{applications/CERN/NT-VLANs.v2.eps}
       \end{center}  
 
 \end{frame}
@@ -535,7 +538,7 @@ Pros of LAC-FEC
 
 
       \begin{center}
-	\includegraphics[width=.7\textwidth]{../../figures/applications/CERN/NT-timing.v2.eps}
+	\includegraphics[width=.7\textwidth]{applications/CERN/NT-timing.v2.eps}
       \end{center}  
 
 \end{frame}
@@ -548,7 +551,7 @@ Pros of LAC-FEC
 
 
       \begin{center}
-	\includegraphics[scale=0.30]{../../figures/applications/gmt-at--fair.ppt.ps}
+	\includegraphics[scale=0.30]{applications/gmt-at--fair.ppt.ps}
       \end{center}  
 
 \end{frame}
@@ -561,39 +564,39 @@ Pros of LAC-FEC
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Status}
 
-%     Basic concept  \includegraphics[width=.5cm]{../../figures/misc/big-tick.ps}
-%     Implementation \includegraphics[width=.5cm]{../../figures/misc/underconstruction.ps}
+%     Basic concept  \includegraphics[width=.5cm]{misc/big-tick.ps}
+%     Implementation \includegraphics[width=.5cm]{misc/underconstruction.ps}
 
 \begin{columns}[c]
   \column{.5\textwidth}
 
     \begin{block}{{\bf Synchronization Resilience}}
-      \includegraphics[width=.5cm]{../../figures/misc/big-tick.ps}~~WRPTP support - improvements for further study \\
-      \includegraphics[width=.5cm]{../../figures/misc/underconstruction.ps}~~Hardware support
+      \includegraphics[width=.5cm]{misc/big-tick.ps}~~WRPTP support - improvements for further study \\
+      \includegraphics[width=.5cm]{misc/underconstruction.ps}~~Hardware support
     \end{block}
 
     \begin{block}{{\bf Deterministic Packet Delivery}}
-      \includegraphics[width=.5cm]{../../figures/misc/big-tick.ps}~~Cut-through \\
-      \includegraphics[width=.5cm]{../../figures/misc/underconstruction.ps}~~Separate resources \\
-      \includegraphics[width=.5cm]{../../figures/misc/underconstruction.ps}~~Output queuing \\
-      \includegraphics[width=.5cm]{../../figures/misc/underconstruction.ps}~~Optimization
+      \includegraphics[width=.5cm]{misc/big-tick.ps}~~Cut-through \\
+      \includegraphics[width=.5cm]{misc/underconstruction.ps}~~Separate resources \\
+      \includegraphics[width=.5cm]{misc/underconstruction.ps}~~Output queuing \\
+      \includegraphics[width=.5cm]{misc/underconstruction.ps}~~Optimization
     \end{block}
 
   \column{.5\textwidth}
     \begin{block}{{\bf Data Resilience}}
 
-      \includegraphics[width=.5cm]{../../figures/misc/big-tick.ps}~~FEC Encoder - more work \\
-      \includegraphics[width=.5cm]{../../figures/misc/underconstruction.ps}~~FEC Decoder
+      \includegraphics[width=.5cm]{misc/big-tick.ps}~~FEC Encoder - more work \\
+      \includegraphics[width=.5cm]{misc/underconstruction.ps}~~FEC Decoder
 
     \end{block}
 
     \begin{block}{ {\bf Topology redundancy}}
-      \includegraphics[width=.5cm]{../../figures/misc/big-tick.ps}~~Extensive study \\
-      \includegraphics[width=.5cm]{../../figures/misc/underconstruction.ps}~~Hardware/software
+      \includegraphics[width=.5cm]{misc/big-tick.ps}~~Extensive study \\
+      \includegraphics[width=.5cm]{misc/underconstruction.ps}~~Hardware/software
     \end{block}
 
     \begin{block}{  {\bf Diagnostics}}
-      \includegraphics[width=.5cm]{../../figures/misc/underconstruction.ps}~~Software
+      \includegraphics[width=.5cm]{misc/underconstruction.ps}~~Software
     \end{block}
 
   \end{columns}
@@ -602,27 +605,27 @@ Pros of LAC-FEC
 %   \begin{itemize}
 %     \item {\bf Synchronization Resilience} \\
 % 
-%       \includegraphics[width=.5cm]{../../figures/misc/big-tick.ps}~~WRPTP support - improvements for further study \\
-%       \includegraphics[width=.5cm]{../../figures/misc/underconstruction.ps}~~Hardware support
+%       \includegraphics[width=.5cm]{misc/big-tick.ps}~~WRPTP support - improvements for further study \\
+%       \includegraphics[width=.5cm]{misc/underconstruction.ps}~~Hardware support
 % 
 %     \item {\bf Deterministic Packet Delivery} \\
 % 
-%       \includegraphics[width=.5cm]{../../figures/misc/big-tick.ps}~~Cut-through \\
-%       \includegraphics[width=.5cm]{../../figures/misc/underconstruction.ps}~~Separate resources \\
-%       \includegraphics[width=.5cm]{../../figures/misc/underconstruction.ps}~~Output queuing \\
-%       \includegraphics[width=.5cm]{../../figures/misc/underconstruction.ps}~~Optimization
+%       \includegraphics[width=.5cm]{misc/big-tick.ps}~~Cut-through \\
+%       \includegraphics[width=.5cm]{misc/underconstruction.ps}~~Separate resources \\
+%       \includegraphics[width=.5cm]{misc/underconstruction.ps}~~Output queuing \\
+%       \includegraphics[width=.5cm]{misc/underconstruction.ps}~~Optimization
 % 
 %     \item {\bf Data Resilience}\\
 % 
-%       \includegraphics[width=.5cm]{../../figures/misc/big-tick.ps}~~FEC Encoder - need more work \\
-%       \includegraphics[width=.5cm]{../../figures/misc/underconstruction.ps}~~FEC Decoder
+%       \includegraphics[width=.5cm]{misc/big-tick.ps}~~FEC Encoder - need more work \\
+%       \includegraphics[width=.5cm]{misc/underconstruction.ps}~~FEC Decoder
 % 
 %     \item {\bf Topology redundancy} \\
 % 
-%       \includegraphics[width=.5cm]{../../figures/misc/underconstruction.ps}~~Extensive study \\
-%       \includegraphics[width=.5cm]{../../figures/misc/underconstruction.ps}~~Hardware/software
+%       \includegraphics[width=.5cm]{misc/underconstruction.ps}~~Extensive study \\
+%       \includegraphics[width=.5cm]{misc/underconstruction.ps}~~Hardware/software
 % 
-%     \item {\bf Diagnostics} \includegraphics[width=.5cm]{../../figures/misc/underconstruction.ps}
+%     \item {\bf Diagnostics} \includegraphics[width=.5cm]{misc/underconstruction.ps}
 %   \end{itemize}
 \end{frame}
 
@@ -663,7 +666,7 @@ Pros of LAC-FEC
 
     
     \begin{center}
-    \includegraphics[height=6.0cm]{../../figures/logo/WRlogo.ps}
+    \includegraphics[height=6.0cm]{logo/WRlogo.ps}
     \end{center}
 
 \end{frame}

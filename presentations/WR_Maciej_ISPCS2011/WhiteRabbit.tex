@@ -46,6 +46,8 @@
 \usepackage[polish,english]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{multirow}
+
+\graphicspath{ {../../figures/} }
 %%%%%%%%%%%%5
 %\usepackage{geometry}
 %\geometry{verbose,letterpaper}
@@ -83,7 +85,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 %   \end{center}
 % }
 
-\pgfdeclareimage[height=0.6cm]{wr-logo}{../../figures/logo/WRlogo.ps}
+\pgfdeclareimage[height=0.6cm]{wr-logo}{logo/WRlogo.ps}
 \logo{\pgfuseimage{wr-logo}}
 \AtBeginSection[]
 % {
@@ -176,7 +178,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
   \end{itemize}
 
   \begin{center}
-  \includegraphics[height=3cm]{../../figures/protocol/wrLink.ps}
+  \includegraphics[height=3cm]{protocol/wrLink.ps}
   \end{center}
 
 \end{frame}
@@ -187,7 +189,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 
 \center A White Rabbit Network
   \begin{center}
-  \includegraphics[width=11.5cm]{../../figures/network/wrTopology.eps}
+  \includegraphics[width=11.5cm]{network/wrTopology.eps}
   \end{center}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -283,7 +285,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
    \vspace{0.2cm}
 
   \begin{center}
-  \includegraphics[height=2.5cm]{../../figures/protocol/delaymodel.eps}
+  \includegraphics[height=2.5cm]{protocol/delaymodel.eps}
   \end{center}
 
 \begin{columns}[c]
@@ -311,7 +313,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 \begin{frame}{Link Delay Model: fiber optic solution}
 
   \begin{center}
-  \includegraphics[height=4cm]{../../figures/protocol/wrLinkModel.eps}
+  \includegraphics[height=4cm]{protocol/wrLinkModel.eps}
   \end{center}
 
   \begin{columns}[c]
@@ -356,7 +358,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \subsection{}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\setbeamertemplate{background}{\includegraphics[width=\paperwidth]{../../figures/protocol/wrLinkModel-fdm2.ps}}
+\setbeamertemplate{background}{\includegraphics[width=\paperwidth]{protocol/wrLinkModel-fdm2.ps}}
 \logo{}
 \begin{frame}{Fine Delay Measurement}
 
@@ -371,7 +373,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 \begin{frame}{Fine Delay Measurement}
 
   \begin{center}
-  \includegraphics[width=10.0cm]{../../figures/protocol/link_model.eps}
+  \includegraphics[width=10.0cm]{protocol/link_model.eps}
   \end{center}
 
 \end{frame}
@@ -379,7 +381,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\subsection{}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\setbeamertemplate{background}{\includegraphics[width=\paperwidth]{../../figures/protocol/wrLinkModel-fd.ps}}
+\setbeamertemplate{background}{\includegraphics[width=\paperwidth]{protocol/wrLinkModel-fd.ps}}
 \logo{}
 \begin{frame}{Fixed Delays Measurement}
 
@@ -394,7 +396,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 \begin{frame}{Fixed Delays Measurement}
 
   \begin{center}
-  \includegraphics[width=10.0cm]{../../figures/misc/calibration.eps}
+  \includegraphics[width=10.0cm]{misc/calibration.eps}
   \end{center}
 
 \end{frame}
@@ -478,13 +480,13 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
   \column{.5\textwidth} 
 
     \begin{center}
-    \includegraphics[width=5.5cm]{../../figures/protocol/WR-peer_recognision-1.eps}
+    \includegraphics[width=5.5cm]{protocol/WR-peer_recognision-1.eps}
     \end{center}
 
   \column{.5\textwidth}
 
     \begin{center}
-    \includegraphics[width=5.5cm]{../../figures/protocol/WR-peer_recognision-2.eps}
+    \includegraphics[width=5.5cm]{protocol/WR-peer_recognision-2.eps}
     \end{center}
 
   \end{columns}
@@ -499,7 +501,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
   \column{.5\textwidth} 
 
       \begin{center}
-      \includegraphics[width=5.5cm]{../../figures/protocol/wrLinkSetup.eps}
+      \includegraphics[width=5.5cm]{protocol/wrLinkSetup.eps}
       \end{center}
 
 
@@ -582,7 +584,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 %{\it [problem with a presentation flow]}
 
   \begin{center}
-  \includegraphics[width=11.8cm]{../../figures/protocol/wrCRS_plus_mBMC.eps}
+  \includegraphics[width=11.8cm]{protocol/wrCRS_plus_mBMC.eps}
   \end{center}
 
 \end{frame}
@@ -593,7 +595,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 \begin{frame}{Test bed}
 
     \begin{center}
-    \includegraphics[height=7.0cm]{../../figures/measurements/measSystem.ps}
+    \includegraphics[height=7.0cm]{measurements/measSystem.ps}
     \end{center}
 
 \end{frame}
@@ -603,7 +605,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 \begin{frame}{Test results}
 
     \begin{center}
-    \includegraphics[height=6.0cm]{../../figures/measurements/measResults-new.eps}
+    \includegraphics[height=6.0cm]{measurements/measResults-new.eps}
     \end{center}
 
 
@@ -614,7 +616,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 \begin{frame}{White Rabbit Switch (V2)}
 
     \begin{center}
-    \includegraphics[width=8.0cm]{../../figures/switch/old_switches2.ps}
+    \includegraphics[width=8.0cm]{switch/old_switches2.ps}
     \end{center}
 
 	\begin{itemize}
@@ -635,7 +637,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
 \begin{frame}{WR-compliant Hardware Kit}
 
     \begin{center}
-    \includegraphics[width=6cm]{../../figures/node/shw_kit.ps}
+    \includegraphics[width=6cm]{node/shw_kit.ps}
     \end{center}
 
   \begin{columns}[c]
@@ -693,7 +695,7 @@ Maciej Lipi\'{n}ski %, T.W\l{}ostowski, J.Serrano, P.Alvarez
     
     \begin{center}
 %    \includegraphics[height=4.0cm]{fig/white_rabbit_by_kyoht.ps}
-    \includegraphics[height=4.0cm]{../../figures/logo/WRlogo.ps}
+    \includegraphics[height=4.0cm]{logo/WRlogo.ps}
     \end{center}
 
 \end{frame}

@@ -69,6 +69,8 @@
    \addtocounter{framenumber}{\value{framenumberappendix}} 
 }
 
+\graphicspath{ {../../figures/} }
+
 %%%%%%%%%%%%5
 %\usepackage{geometry}
 %\geometry{verbose,letterpaper}
@@ -98,9 +100,9 @@ Erik van der Bij \& Maciej Lipi\'{n}ski
 \date{22 July 2013 \\ IFCS - EFTF\\Prague}
 
 
-%\pgfdeclareimage[height=0.6cm]{wr-logo}{../../figures/logo/WRlogo.ps}
+%\pgfdeclareimage[height=0.6cm]{wr-logo}{logo/WRlogo.ps}
 
-\pgfdeclareimage[height=0.6cm]{wr-logo}{../../figures/logo/WRlogo.pdf}
+\pgfdeclareimage[height=0.6cm]{wr-logo}{logo/WRlogo.pdf}
 \logo{\pgfuseimage{wr-logo}}
 \AtBeginSection[]
 
@@ -136,8 +138,8 @@ Erik van der Bij \& Maciej Lipi\'{n}ski
 	\column{0.3\textwidth}
 		\begin{center}
 		\hspace{-0.5cm}
-%		\includegraphics[width=1.1\textwidth]{../../figures/misc/rabbit.eps}  erik
-		\includegraphics[width=1.1\textwidth]{../../figures/misc/rabbit.pdf}
+%		\includegraphics[width=1.1\textwidth]{misc/rabbit.eps}  erik
+		\includegraphics[width=1.1\textwidth]{misc/rabbit.pdf}
 
 		\end{center}
 	\end{columns}
@@ -165,9 +167,9 @@ Erik van der Bij \& Maciej Lipi\'{n}ski
 
   \column{.6\textwidth}
     \begin{center}
-%    \includegraphics[width=1.0\textwidth]{../../figures/network/WR_network-ethernet.eps}
-%     \includegraphics[width=1.0\textwidth]{../../figures/network/WR_network-ethernet.pdf}
-    \includegraphics[width=1.0\textwidth]{../../figures/network/wr_network-ethernet.jpg}
+%    \includegraphics[width=1.0\textwidth]{network/WR_network-ethernet.eps}
+%     \includegraphics[width=1.0\textwidth]{network/WR_network-ethernet.pdf}
+    \includegraphics[width=1.0\textwidth]{network/wr_network-ethernet.jpg}
     
 
     \end{center}
@@ -194,9 +196,9 @@ precision  (tens of ps sdev skew max)}
 
   \column{.6\textwidth}
     \begin{center}
-%    \includegraphics[width=1.0\textwidth]{../../figures/network/wr_network-enhanced.eps}
-%     \includegraphics[width=1.0\textwidth]{../../figures/network/wr_network-enhanced.pdf}
-    \includegraphics[width=1.0\textwidth]{../../figures/network/wr_network-enhanced_pro.jpg}
+%    \includegraphics[width=1.0\textwidth]{network/wr_network-enhanced.eps}
+%     \includegraphics[width=1.0\textwidth]{network/wr_network-enhanced.pdf}
+    \includegraphics[width=1.0\textwidth]{network/wr_network-enhanced_pro.jpg}
     \end{center}
 \end{columns}
 
@@ -232,11 +234,11 @@ precision  (tens of ps sdev skew max)}
 
 
     \begin{center}
-      \includegraphics<1>[width=0.80\textwidth]{../../figures/applications/OperaTiming2.pdf} \pause
-      \includegraphics<2>[width=0.6\textwidth]{../../figures/applications/gsiANDcern.pdf}   \pause
-      \includegraphics<3>[width=0.85\textwidth]{../../figures/applications/lhaaso.pdf}       \pause
-      \includegraphics<4>[width=0.85\textwidth]{../../figures/applications/cta.pdf}          \pause
-      \includegraphics<5>[width=0.85\textwidth]{../../figures/applications/KM3NeT.pdf}       
+      \includegraphics<1>[width=0.80\textwidth]{applications/OperaTiming2.pdf} \pause
+      \includegraphics<2>[width=0.6\textwidth]{applications/gsiANDcern.pdf}   \pause
+      \includegraphics<3>[width=0.85\textwidth]{applications/lhaaso.pdf}       \pause
+      \includegraphics<4>[width=0.85\textwidth]{applications/cta.pdf}          \pause
+      \includegraphics<5>[width=0.85\textwidth]{applications/KM3NeT.pdf}       
     \end{center}
 
   \column{0.6\textwidth}         
@@ -269,11 +271,11 @@ precision  (tens of ps sdev skew max)}
   \column{0.6\textwidth}
 
       \begin{center}
-%      \includegraphics<1>[width=1.0\textwidth]{../../figures/misc/GMT-1.eps} \pause
-%      \includegraphics<2>[width=1.0\textwidth]{../../figures/misc/GMT-2.eps} 
+%      \includegraphics<1>[width=1.0\textwidth]{misc/GMT-1.eps} \pause
+%      \includegraphics<2>[width=1.0\textwidth]{misc/GMT-2.eps} 
 
-      \includegraphics<1>[width=1.0\textwidth]{../../figures/misc/GMT-1.pdf} \pause
-      \includegraphics<2>[width=1.0\textwidth]{../../figures/misc/GMT-2.pdf} 
+      \includegraphics<1>[width=1.0\textwidth]{misc/GMT-1.pdf} \pause
+      \includegraphics<2>[width=1.0\textwidth]{misc/GMT-2.pdf} 
       \end{center}
 
 \end{columns}
@@ -297,9 +299,9 @@ precision  (tens of ps sdev skew max)}
 
   \column{.6\textwidth}
     \begin{center}
-%    \includegraphics[height=1.0\textwidth]{../../figures/network/wr_network-new.ps}
-%    \includegraphics[height=1.0\textwidth]{../../figures/network/wr_network-new.pdf}
-   \includegraphics[height=1.0\textwidth]{../../figures/network/wr_network-enhanced_pro.jpg}
+%    \includegraphics[height=1.0\textwidth]{network/wr_network-new.ps}
+%    \includegraphics[height=1.0\textwidth]{network/wr_network-new.pdf}
+   \includegraphics[height=1.0\textwidth]{network/wr_network-enhanced_pro.jpg}
     \end{center}
 \end{columns}
 
@@ -332,8 +334,8 @@ precision  (tens of ps sdev skew max)}
 \begin{columns}[c]
   \column{1.5in}
       \begin{center}
-%	\includegraphics[height=5cm]{../../figures/protocol/ptp_exchange.eps}
-	\includegraphics[height=5cm]{../../figures/protocol/ptp_exchange.pdf}
+%	\includegraphics[height=5cm]{protocol/ptp_exchange.eps}
+	\includegraphics[height=5cm]{protocol/ptp_exchange.pdf}
       \end{center}
   \column{2.5in}
       \begin{itemize}
@@ -349,8 +351,8 @@ precision  (tens of ps sdev skew max)}
 \begin{frame}{WR Precision Time Protocol Extension}
 
   \begin{center}
-%  \includegraphics[height=4cm]{../../figures/protocol/wrLinkModel.eps}
-  \includegraphics[height=4cm]{../../figures/protocol/wrLinkModel.pdf}
+%  \includegraphics[height=4cm]{protocol/wrLinkModel.eps}
+  \includegraphics[height=4cm]{protocol/wrLinkModel.pdf}
 
   \end{center}
 
@@ -387,8 +389,8 @@ precision  (tens of ps sdev skew max)}
 \vspace{-0.2cm}
 
 \begin{center}
-%\includegraphics[height=5cm]{../../figures/misc/synce.eps}
-\includegraphics[height=5cm]{../../figures/misc/synce.pdf}
+%\includegraphics[height=5cm]{misc/synce.eps}
+\includegraphics[height=5cm]{misc/synce.pdf}
 \end{center}
 
 \end{frame}
@@ -405,9 +407,9 @@ precision  (tens of ps sdev skew max)}
     \end{itemize}
 
   \begin{center}
-%  \includegraphics[height=2.7cm]{../../figures/misc/phase_tracking.eps}
-%   \includegraphics[height=2.7cm]{../../figures/misc/phase_tracking.pdf}
-  \includegraphics[height=3.7cm]{../../figures/misc/phase_tracking_v2.jpg}
+%  \includegraphics[height=2.7cm]{misc/phase_tracking.eps}
+%   \includegraphics[height=2.7cm]{misc/phase_tracking.pdf}
+  \includegraphics[height=3.7cm]{misc/phase_tracking_v2.jpg}
   \end{center}
 
 \end{frame}
@@ -440,11 +442,11 @@ precision  (tens of ps sdev skew max)}
 \begin{frame}{WR time transfer performance: lab tests}
 
     \begin{center}
-%    \includegraphics<1>[height=7.0cm]{../../figures/measurements/measSystem.ps}   \pause
-%    \includegraphics<2>[height=6.0cm]{../../figures/measurements/measResults-new.eps}
-%    \includegraphics<1>[height=7.0cm]{../../figures/measurements/measSystem.pdf}   \pause
-    \includegraphics<1>[height=7.0cm]{../../figures/measurements/meas_setup.jpg}   \pause
-    \includegraphics<2>[height=6.0cm]{../../figures/measurements/measResults-new.pdf}
+%    \includegraphics<1>[height=7.0cm]{measurements/measSystem.ps}   \pause
+%    \includegraphics<2>[height=6.0cm]{measurements/measResults-new.eps}
+%    \includegraphics<1>[height=7.0cm]{measurements/measSystem.pdf}   \pause
+    \includegraphics<1>[height=7.0cm]{measurements/meas_setup.jpg}   \pause
+    \includegraphics<2>[height=6.0cm]{measurements/measResults-new.pdf}
     \end{center}
 
 \end{frame}
@@ -459,8 +461,8 @@ precision  (tens of ps sdev skew max)}
 	  \begin{center}
 
 		\hspace{-1cm}
-%		\includegraphics[width=1.1\textwidth]{../../figures/measurements/histogram-small.eps}
-		\includegraphics[width=1.1\textwidth]{../../figures/measurements/histogram-small.pdf}
+%		\includegraphics[width=1.1\textwidth]{measurements/histogram-small.eps}
+		\includegraphics[width=1.1\textwidth]{measurements/histogram-small.pdf}
 		\begin{itemize}
 		       \item Duration: 31 d, 7 h, 40 s ($2.7*10^6$ samples)
 		       \item WR Nodes with TDC used
@@ -474,8 +476,8 @@ precision  (tens of ps sdev skew max)}
 	  \end{center}
 	\column{0.6\textwidth}
 		\begin{center}
-%		\includegraphics[width=0.93\textwidth]{../../figures/measurements/performance_testing_setup-detail.v2.eps}
-		\includegraphics[width=0.93\textwidth]{../../figures/measurements/performance_testing_setup-detail_v2.pdf}
+%		\includegraphics[width=0.93\textwidth]{measurements/performance_testing_setup-detail.v2.eps}
+		\includegraphics[width=0.93\textwidth]{measurements/performance_testing_setup-detail_v2.pdf}
 		\end{center}
   \end{columns}
 \end{frame}
@@ -504,7 +506,7 @@ precision  (tens of ps sdev skew max)}
 %	  \end{center}
 %	\column{0.6\textwidth}
 %		\begin{center}
-%		\includegraphics[width=0.9\textwidth]{../../figures/measurements/MTIE2.pdf}
+%		\includegraphics[width=0.9\textwidth]{measurements/MTIE2.pdf}
 %		\end{center}
 %  \end{columns}
 %\end{frame}
@@ -518,7 +520,7 @@ precision  (tens of ps sdev skew max)}
 	\column{0.5\textwidth}
 		\hspace{-1.0cm}
 		\begin{center}
-		\includegraphics[width=1.1\textwidth]{../../figures/measurements/tempTests-trends_v3.pdf}
+		\includegraphics[width=1.1\textwidth]{measurements/tempTests-trends_v3.pdf}
 		\end{center}
 
 		\begin{center}
@@ -535,7 +537,7 @@ precision  (tens of ps sdev skew max)}
 	\column{0.5\textwidth}
 		\hspace{-0.8cm}
 		\begin{center}
-		\includegraphics[width=1.13\textwidth]{../../figures/measurements/tempTests-2-combo.pdf}
+		\includegraphics[width=1.13\textwidth]{measurements/tempTests-2-combo.pdf}
 		\end{center}
 
 
@@ -558,7 +560,7 @@ precision  (tens of ps sdev skew max)}
 
   \column{.6\textwidth}
     \begin{center}
-    \includegraphics[height=1.0\textwidth]{../../figures/network/wr_network-enhanced_pro.jpg}
+    \includegraphics[height=1.0\textwidth]{network/wr_network-enhanced_pro.jpg}
     \end{center}
 \end{columns}
 
@@ -591,7 +593,7 @@ precision  (tens of ps sdev skew max)}
    % \vspace{-1cm}
    % \hspace{-6cm}
     \begin{center}
-    \includegraphics[height=0.8\textheight]{../../figures/robustness/communication_channel-pro}
+    \includegraphics[height=0.8\textheight]{robustness/communication_channel-pro}
     \end{center}
 
 \end{columns}
@@ -618,7 +620,7 @@ precision  (tens of ps sdev skew max)}
   \end{itemize}
   
   	\begin{center}
-      \includegraphics[width=.7\textwidth]{../../figures/robustness/FEC.pdf}
+      \includegraphics[width=.7\textwidth]{robustness/FEC.pdf}
     \end{center}
   
 \end{frame}
@@ -638,7 +640,7 @@ precision  (tens of ps sdev skew max)}
 % 
   \column{0.6\textwidth}
     \begin{center}
-    \includegraphics[width=0.8\textwidth]{../../figures/network/wr_network-enhanced_pro.jpg}
+    \includegraphics[width=0.8\textwidth]{network/wr_network-enhanced_pro.jpg}
     \end{center}
 \end{columns}
 \end{frame}
@@ -664,7 +666,7 @@ precision  (tens of ps sdev skew max)}
 %% 
 %  \column{0.6\textwidth}
 %    \begin{center}
-%    \includegraphics[width=0.65\textwidth]{../../figures/network/wr_network-enhanced_pro.jpg}
+%    \includegraphics[width=0.65\textwidth]{network/wr_network-enhanced_pro.jpg}
 %    \end{center}
 %\end{columns}
 %\end{frame}
@@ -693,8 +695,8 @@ precision  (tens of ps sdev skew max)}
 %% 
 %  \column{0.6\textwidth}
 %    \begin{center}
-%    \includegraphics<1>[width=0.65\textwidth]{../../figures/network/wr_network-enhanced_pro.jpg}% \pause
-%%    \includegraphics<2>[width=0.9\textwidth]{../../figures/robustness/event3.pdf} 
+%    \includegraphics<1>[width=0.65\textwidth]{network/wr_network-enhanced_pro.jpg}% \pause
+%%    \includegraphics<2>[width=0.9\textwidth]{robustness/event3.pdf} 
 %    \end{center}
 %
 %\end{columns}
@@ -709,8 +711,8 @@ precision  (tens of ps sdev skew max)}
 
 
     \begin{center}
-    \includegraphics<1>[width=1.0\textwidth]{../../figures/network/WRnetwork-eva.pdf}  % \pause
-%    \includegraphics<2>[width=1.0\textwidth]{../../figures/network/WRNcomponents-2.pdf}
+    \includegraphics<1>[width=1.0\textwidth]{network/WRnetwork-eva.pdf}  % \pause
+%    \includegraphics<2>[width=1.0\textwidth]{network/WRNcomponents-2.pdf}
     \end{center}
 
 \end{frame}
@@ -721,8 +723,8 @@ precision  (tens of ps sdev skew max)}
 \begin{frame}{White Rabbit Switch (V3)}
 
     \begin{center}
-%     \includegraphics[width=6.0cm]{../../figures/switch/wrSwitchV3.pdf}
-     \includegraphics[width=6.0cm]{../../figures/switch/wrSwitchV3.jpg}
+%     \includegraphics[width=6.0cm]{switch/wrSwitchV3.pdf}
+     \includegraphics[width=6.0cm]{switch/wrSwitchV3.jpg}
     \end{center}
 
 	\begin{itemize}
@@ -742,9 +744,9 @@ precision  (tens of ps sdev skew max)}
 \begin{frame}{WR Node: WR PTP Core}
 
     \begin{center}
-%    \includegraphics<1>[width=1.0\textwidth]{../../figures/node/wrpc_box.pdf} \pause%
-    \includegraphics<1>[width=1.0\textwidth]{../../figures/node/wrpc_overview.png} \pause
-    \includegraphics<2>[width=1.0\textwidth]{../../figures/node/wrpc_inside.png}
+%    \includegraphics<1>[width=1.0\textwidth]{node/wrpc_box.pdf} \pause%
+    \includegraphics<1>[width=1.0\textwidth]{node/wrpc_overview.png} \pause
+    \includegraphics<2>[width=1.0\textwidth]{node/wrpc_inside.png}
     \end{center}
 
 \end{frame}
@@ -755,8 +757,8 @@ precision  (tens of ps sdev skew max)}
 \begin{frame}{WR Node: SPEC board}
 
     \begin{center}
-%    \includegraphics[width=7cm]{../../figures/node/shw_kit-1.pdf}
-    \includegraphics[width=7cm]{../../figures/node/spec.jpg}
+%    \includegraphics[width=7cm]{node/shw_kit-1.pdf}
+    \includegraphics[width=7cm]{node/spec.jpg}
     \end{center}
 
   \begin{columns}[c]
@@ -785,7 +787,7 @@ precision  (tens of ps sdev skew max)}
 \begin{frame}{WR Node: SPEC board - PCI Express}
 
     \begin{center}
-    \includegraphics[width=1.0\textwidth]{../../figures/node/specInterior.pdf}
+    \includegraphics[width=1.0\textwidth]{node/specInterior.pdf}
     \end{center}
 
 \end{frame}
@@ -796,15 +798,15 @@ precision  (tens of ps sdev skew max)}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{WR Node: SVEC board - VME}
     \begin{center}
-      \includegraphics[width=0.8\textwidth]{../../figures/node/svectop_s.png}
-%    \includegraphics[width=1.0\textwidth]{../../figures/node/specInterior.pdf}
+      \includegraphics[width=0.8\textwidth]{node/svectop_s.png}
+%    \includegraphics[width=1.0\textwidth]{node/specInterior.pdf}
     \end{center}
 \end{frame}
 
 
 \begin{frame}{WR Node: SPEXI board - PXI Express}
     \begin{center}
-      \includegraphics[width=0.7\textwidth]{../../figures/node/spexi_v0.png} 
+      \includegraphics[width=0.7\textwidth]{node/spexi_v0.png} 
     \end{center}
 \end{frame}
 
@@ -823,8 +825,8 @@ precision  (tens of ps sdev skew max)}
 %    \column{.5\textwidth}
 %
 %    \begin{center}
-%      \includegraphics<1>[width=0.7\textwidth]{../../figures/node/stm.pdf}   \pause
-%      \includegraphics<2>[width=0.8\textwidth]{../../figures/node/spexi_v0.png} 
+%      \includegraphics<1>[width=0.7\textwidth]{node/stm.pdf}   \pause
+%      \includegraphics<2>[width=0.8\textwidth]{node/spexi_v0.png} 
 %    \end{center}
 %
 %    \column{.01\textwidth}
@@ -855,8 +857,8 @@ precision  (tens of ps sdev skew max)}
 \begin{frame}{WR at CERN}
 
     \begin{center}
-%       \includegraphics[width=.8\textwidth]{../../figures/applications/CERN/NT-overview.pdf}
-      \includegraphics[width=.7\textwidth]{../../figures/applications/CERN/NT-overview.jpg}
+%       \includegraphics[width=.8\textwidth]{applications/CERN/NT-overview.pdf}
+      \includegraphics[width=.7\textwidth]{applications/CERN/NT-overview.jpg}
     \end{center}
 
 \end{frame}
@@ -866,7 +868,7 @@ precision  (tens of ps sdev skew max)}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Ethernet Clock distribution a.k.a. Distributed DDS}
   \begin{center}
-    \includegraphics[width=\columnwidth]{../../figures/applications/remote_dds.pdf}
+    \includegraphics[width=\columnwidth]{applications/remote_dds.pdf}
   \end{center}
   \begin{block}{Distributed Direct Digital Synthesis}
     \begin{itemize}
@@ -882,9 +884,9 @@ precision  (tens of ps sdev skew max)}
 
 \begin{frame}{Distributed DDS - prototype - CERN}
   \begin{center}
-    \includegraphics<1>[width=0.95\textwidth]{../../figures/applications/rf_demo6.pdf} \pause
-    \includegraphics<2>[width=0.95\textwidth]{../../figures/applications/rf_demo5.pdf} \pause
-    \includegraphics<3>[width=0.95\textwidth]{../../figures/applications/rf_demo8.pdf}
+    \includegraphics<1>[width=0.95\textwidth]{applications/rf_demo6.pdf} \pause
+    \includegraphics<2>[width=0.95\textwidth]{applications/rf_demo5.pdf} \pause
+    \includegraphics<3>[width=0.95\textwidth]{applications/rf_demo8.pdf}
     \end{center}
 %    \begin{block}{}
 %      \begin{itemize}
@@ -925,7 +927,7 @@ precision  (tens of ps sdev skew max)}
       \end{itemize}
     \column{.4\textwidth}
       \begin{center}
-	\includegraphics[width=1.0\textwidth]{../../figures/applications/rx_10MHz_CsClock_pedro.png}
+	\includegraphics[width=1.0\textwidth]{applications/rx_10MHz_CsClock_pedro.png}
       \end{center}
     \column{.01\textwidth}
   \end{columns}
@@ -938,7 +940,7 @@ precision  (tens of ps sdev skew max)}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{frame}{Distributed oscilloscope}
   \begin{center}
-    \includegraphics[width=0.9\textwidth]{../../figures/applications/distr_oscill.pdf}
+    \includegraphics[width=0.9\textwidth]{applications/distr_oscill.pdf}
     \end{center}
     \begin{block}{}
       \begin{itemize}
@@ -975,7 +977,7 @@ precision  (tens of ps sdev skew max)}
 %      \end{itemize}
 %    \column{.4\textwidth}
 %      \begin{center}
-%	\includegraphics[width=0.9\textwidth]{../../figures/applications/CNGS2.pdf}
+%	\includegraphics[width=0.9\textwidth]{applications/CNGS2.pdf}
 %      \end{center}
 %    \column{.01\textwidth}
 %  \end{columns}
@@ -985,8 +987,8 @@ precision  (tens of ps sdev skew max)}
 
 \begin{frame}{NL: Time Distribution over 120 km with amplifiers}
   \begin{center}
-    \includegraphics<1>[width=0.9\textwidth]{../../figures/applications/VU1.pdf} \pause
-    \includegraphics<2>[width=0.9\textwidth]{../../figures/applications/VU2.pdf}
+    \includegraphics<1>[width=0.9\textwidth]{applications/VU1.pdf} \pause
+    \includegraphics<2>[width=0.9\textwidth]{applications/VU2.pdf}
     \end{center}
 %    \begin{block}{}
 %      \begin{itemize}
@@ -1000,8 +1002,8 @@ precision  (tens of ps sdev skew max)}
 
 \begin{frame}{FI: Time Distribution over 900 km with amplifiers}
   \begin{center}
-    \includegraphics<1>[width=0.9\textwidth]{../../figures/applications/mikes1.pdf} \pause
-    \includegraphics<2>[width=0.9\textwidth]{../../figures/applications/mikes2.pdf}
+    \includegraphics<1>[width=0.9\textwidth]{applications/mikes1.pdf} \pause
+    \includegraphics<2>[width=0.9\textwidth]{applications/mikes2.pdf}
     \end{center}
 
 \end{frame}
@@ -1013,8 +1015,8 @@ precision  (tens of ps sdev skew max)}
 % \begin{frame}{Time Transfer}
 % 
 %       \begin{center}
-% 	\includegraphics<1>[width=0.9\textwidth]{../../figures/measurements/teAndHist4.eps} \pause
-% 	\includegraphics<2>[width=0.9\textwidth]{../../figures/measurements/MTIE-corrections-long-data.eps}	
+% 	\includegraphics<1>[width=0.9\textwidth]{measurements/teAndHist4.eps} \pause
+% 	\includegraphics<2>[width=0.9\textwidth]{measurements/MTIE-corrections-long-data.eps}	
 %       \end{center}
 % 
 %  
@@ -1045,7 +1047,7 @@ precision  (tens of ps sdev skew max)}
     \column{.25\textwidth}
 
     \begin{center}
-      \includegraphics[width=1.0\textwidth]{../../figures/ohwr/ohr_logo.pdf}  
+      \includegraphics[width=1.0\textwidth]{ohwr/ohr_logo.pdf}  
     \end{center}
 
     \column{.01\textwidth}
@@ -1058,7 +1060,7 @@ precision  (tens of ps sdev skew max)}
 \begin{frame}{Open Hardware Repository \href{http://ohwr.org}{-- www.ohwr.org}}
 
  \begin{center}
-   \includegraphics[height=6cm]{../../figures/ohwr/ohr_spec_top.pdf}
+   \includegraphics[height=6cm]{ohwr/ohr_spec_top.pdf}
  \end{center} 
 
 \end{frame}
@@ -1154,7 +1156,7 @@ precision  (tens of ps sdev skew max)}
 \begin{frame}{Questions and answers}
 
     \begin{center}
-    \includegraphics[height=4.0cm]{../../figures/logo/WRlogo.jpg}
+    \includegraphics[height=4.0cm]{logo/WRlogo.jpg}
     \end{center}
 
 \begin{center}
@@ -1200,7 +1202,7 @@ precision  (tens of ps sdev skew max)}
     \end{center}
   \column{0.6\textwidth}
     \begin{center}
-      \includegraphics[width=6.5cm]{../../figures/applications/CERN/accelerators.pdf}
+      \includegraphics[width=6.5cm]{applications/CERN/accelerators.pdf}
     \end{center}
 \end{columns}
 
@@ -1212,7 +1214,7 @@ precision  (tens of ps sdev skew max)}
 \begin{frame}{A simplified explanation of CERN control system (1)}
 
       \begin{center}
-      \includegraphics[width=1.0\textwidth]{../../figures/applications/CERN/event1.pdf}
+      \includegraphics[width=1.0\textwidth]{applications/CERN/event1.pdf}
       \end{center}
 
   \begin{itemize}
@@ -1230,7 +1232,7 @@ precision  (tens of ps sdev skew max)}
 \begin{frame}{A simplified explanation of CERN control system (2)}
 
       \begin{center}
-      \includegraphics[width=1.0\textwidth]{../../figures/applications/CERN/event2.pdf}
+      \includegraphics[width=1.0\textwidth]{applications/CERN/event2.pdf}
       \end{center}
 
   \begin{itemize}
@@ -1249,7 +1251,7 @@ precision  (tens of ps sdev skew max)}
 \begin{frame}{A simplified explanation of CERN control system (3)}
 
       \begin{center}
-      \includegraphics[width=.8\textwidth]{../../figures/applications/CERN/event3.pdf}
+      \includegraphics[width=.8\textwidth]{applications/CERN/event3.pdf}
       \end{center}
 
   \begin{itemize}
@@ -1281,7 +1283,7 @@ precision  (tens of ps sdev skew max)}
   \column{0.6\textwidth}
     \begin{center}
       \begin{center}
-      \includegraphics[width=.8\textwidth]{../../figures/applications/CERN/gw.pdf}
+      \includegraphics[width=.8\textwidth]{applications/CERN/gw.pdf}
       \end{center}
     \end{center}
 \end{columns}
@@ -1295,7 +1297,7 @@ precision  (tens of ps sdev skew max)}
 \begin{frame}{A simplified explanation of CERN control system (5)}
 
       \begin{center}
-      \includegraphics[width=.7\textwidth]{../../figures/applications/CERN/accNetworks.pdf}
+      \includegraphics[width=.7\textwidth]{applications/CERN/accNetworks.pdf}
       \end{center}
 
   \begin{itemize}
@@ -1325,7 +1327,7 @@ precision  (tens of ps sdev skew max)}
   \end{itemize}
 
   \begin{center}
-  \includegraphics[height=3cm]{../../figures/protocol/wrLink.pdf}
+  \includegraphics[height=3cm]{protocol/wrLink.pdf}
   \end{center}
 
 \end{frame}
@@ -1362,7 +1364,7 @@ precision  (tens of ps sdev skew max)}
 \begin{frame}{Fine Delay Measurement}
 
   \begin{center}
-  \includegraphics[width=10.0cm]{../../figures/protocol/link_model.pdf}
+  \includegraphics[width=10.0cm]{protocol/link_model.pdf}
   \end{center}
 
 \end{frame}
@@ -1373,7 +1375,7 @@ precision  (tens of ps sdev skew max)}
 \begin{frame}{Link Asymmetry}
 
   \begin{center}
-  \includegraphics[height=4cm]{../../figures/protocol/wrLinkModel_init.pdf}
+  \includegraphics[height=4cm]{protocol/wrLinkModel_init.pdf}
   \end{center}
 
 \end{frame}
@@ -1393,7 +1395,7 @@ precision  (tens of ps sdev skew max)}
 
   \begin{center}
 DELAYMODEL.EPS FILE
-%  \includegraphics[height=2.5cm]{../../figures/protocol/delaymodel.eps}   ERIK PROBLEM CONVERTING FILE
+%  \includegraphics[height=2.5cm]{protocol/delaymodel.eps}   ERIK PROBLEM CONVERTING FILE
   \end{center}
 
 \begin{columns}[c]
@@ -1421,7 +1423,7 @@ DELAYMODEL.EPS FILE
 \begin{frame}{Fixed Delays}
 
   \begin{center}
-  \includegraphics[width=11.0cm]{../../figures/protocol/asymmetries.pdf}
+  \includegraphics[width=11.0cm]{protocol/asymmetries.pdf}
   \end{center}
 
 \end{frame}
@@ -1432,7 +1434,7 @@ DELAYMODEL.EPS FILE
 \begin{frame}{Link Delay Model: fiber optic solution}
 
   \begin{center}
-  \includegraphics[height=4cm]{../../figures/protocol/wrLinkModel.pdf}
+  \includegraphics[height=4cm]{protocol/wrLinkModel.pdf}
   \end{center}
 
   \begin{columns}[c]
@@ -1491,7 +1493,7 @@ DELAYMODEL.EPS FILE
   \column{.5\textwidth} 
 
     \begin{center}
-    \includegraphics[width=5.0cm]{../../figures/protocol/WR-peer_recognision-1.pdf}
+    \includegraphics[width=5.0cm]{protocol/WR-peer_recognision-1.pdf}
     \newline
     Two WR devices
     \end{center}
@@ -1499,7 +1501,7 @@ DELAYMODEL.EPS FILE
   \column{.5\textwidth}
 
     \begin{center}
-    \includegraphics[width=5.0cm]{../../figures/protocol/WR-peer_recognision-2.pdf}
+    \includegraphics[width=5.0cm]{protocol/WR-peer_recognision-2.pdf}
     \newline
     WR and non-WR device
     \end{center}
@@ -1516,7 +1518,7 @@ DELAYMODEL.EPS FILE
   \column{.5\textwidth} 
 
       \begin{center}
-      \includegraphics[width=5.5cm]{../../figures/protocol/wrLinkSetup.pdf}
+      \includegraphics[width=5.5cm]{protocol/wrLinkSetup.pdf}
       \end{center}
 
 
@@ -1540,7 +1542,7 @@ DELAYMODEL.EPS FILE
 \begin{frame}{Modified Best Master Clock Algorithm (mBMCA)}
 
     \begin{center}
-    \includegraphics[height=7.0cm]{../../figures/protocol/mBMCvsBMC.pdf}
+    \includegraphics[height=7.0cm]{protocol/mBMCvsBMC.pdf}
     \end{center}
 
 
@@ -1554,7 +1556,7 @@ DELAYMODEL.EPS FILE
 %{\it [problem with a presentation flow]}
 
   \begin{center}
-  \includegraphics[width=11.8cm]{../../figures/protocol/wrCRS_plus_mBMC.pdf}
+  \includegraphics[width=11.8cm]{protocol/wrCRS_plus_mBMC.pdf}
   \end{center}
 
 \end{frame}
