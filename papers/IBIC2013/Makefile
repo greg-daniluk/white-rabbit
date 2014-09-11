@@ -1,12 +1,10 @@
-THBL2.pdf : THBL2.ps
-	ps2pdf -dEmbedAllFonts=true THBL2.ps THBL2.pdf
+all : THBL2.pdf
 
-THBL2.ps : THBL2.dvi
-	dvips THBL2.dvi -j0-D600 -o THBL2.ps
+.PHONY : all clean
 
-THBL2.dvi: THBL2.tex
-	latex THBL2.tex
-	latex THBL2.tex
+THBL2.pdf : THBL2.tex
+	pdflatex -dPDFSETTINGS=/prepress -dSubsetFonts=true -dEmbedAllFonts=true -dMaxSubsetPct=100 -dCompatibilityLevel=1.4 $^
+	pdflatex -dPDFSETTINGS=/prepress -dSubsetFonts=true -dEmbedAllFonts=true -dMaxSubsetPct=100 -dCompatibilityLevel=1.4 $^
 
 clean:
-	rm *.aux *.dvi *.log *.pdf *.ps
+	rm *.aux *.log *.pdf

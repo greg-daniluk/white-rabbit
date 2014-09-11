@@ -1,8 +1,8 @@
-all : WhiteRabbit_joburg.pdf
+all : robustness.pdf
 
 .PHONY : all clean
 
-WhiteRabbit_joburg.pdf : WhiteRabbit_joburg.tex
+robustness.pdf : robustness.tex 
 	pdflatex $^
 	pdflatex $^
 

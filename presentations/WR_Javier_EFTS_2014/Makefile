@@ -1,8 +1,8 @@
-all : robustness.pdf
+all : wr_efts_07_2014.pdf
 
 .PHONY : all clean
 
-robustness.pdf : robustness.tex
+wr_efts_07_2014.pdf : wr_efts_07_2014.tex
 	pdflatex $^
 	pdflatex $^
 

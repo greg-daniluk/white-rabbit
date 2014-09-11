@@ -3,12 +3,10 @@ all : WhiteRabbit.pdf
 .PHONY : all clean
 
 WhiteRabbit.pdf : WhiteRabbit.tex 
-	latex $^
+	pdflatex -dPDFSETTINGS=/prepress -dSubsetFonts=true -dEmbedAllFonts=true -dMaxSubsetPct=100 -dCompatibilityLevel=1.4 $^
 	bibtex WhiteRabbit
-	latex $^
-	latex $^
-	dvips WhiteRabbit
-	ps2pdf  -dPDFX -dEmbedAllFonts=true -dSubsetFonts=true -dEPSCrop=true WhiteRabbit.ps
+	pdflatex -dPDFSETTINGS=/prepress -dSubsetFonts=true -dEmbedAllFonts=true -dMaxSubsetPct=100 -dCompatibilityLevel=1.4 $^
+	pdflatex -dPDFSETTINGS=/prepress -dSubsetFonts=true -dEmbedAllFonts=true -dMaxSubsetPct=100 -dCompatibilityLevel=1.4 $^
 
 clean :
 #	$(MAKE) clean -C fig 

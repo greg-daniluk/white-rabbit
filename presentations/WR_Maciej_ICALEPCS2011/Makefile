@@ -3,11 +3,8 @@ all : WhiteRabbit.pdf
 .PHONY : all clean
 
 WhiteRabbit.pdf : WhiteRabbit.tex
-	latex $^
-	latex $^
-	dvips WhiteRabbit
-
-	ps2pdf WhiteRabbit.ps
+	pdflatex $^
+	pdflatex $^
 
 clean :
 #	$(MAKE) clean -C fig 
